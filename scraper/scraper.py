@@ -74,13 +74,24 @@ def run_scraper():
         
         page.click(calculation_tab_selector)
         
-        data_box_selector = '#gatsby-focus-wrapper > div > div.right-main > div.content.hsr > div.tab-inside.active > div.dps-comparison.row.row-cols-xl-1.row-cols-1 > div:nth-child(1) > div'
+        one_target_box_selector = '#gatsby-focus-wrapper > div > div.right-main > div.content.hsr > div.tab-inside.active > div.dps-comparison.row.row-cols-xl-1.row-cols-1 > div:nth-child(1) > div'
         
-        if scroll_until_element_visible(page, data_box_selector):
+        if scroll_until_element_visible(page, one_target_box_selector):
             print("Scrolled the box into view")
         else:
             print("Warning: Reached maximum scroll attempts")
+            
+        # Define the specific selector for the percentage text
+        e6_selector = '#gatsby-focus-wrapper > div > div.right-main > div.content.hsr > div.tab-inside.active > div.dps-comparison.row.row-cols-xl-1.row-cols-1 > div:nth-child(1) > div > div > div:nth-child(1) > div.chart > div:nth-child(2) > div.data.smaller > span.percent'
         
+        # Scroll to make sure the element with percentage is visible
+        print("Searching for the percentage element...")
+        if scroll_until_element_visible(page, e6_selector, max_attempts=15):
+            # Get the text from the percentage element
+            percent_text = page.locator(e6_selector).text_content()
+            print(f"Found percentage text: {percent_text}")
+        else:
+            print("Could not find the percentage element")
         
         # Pause to see the page (remove in production)
         input("Press Enter to close the browser...")
