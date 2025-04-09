@@ -143,40 +143,4 @@ def plot_eidolon_value(avg_dmg, dmg_per_pull, marginal_value):
     output_path = output_dir / "marginal_value.png"
     plt.savefig(output_path, dpi=300)
     print(f"Plot saved as '{output_path}'")
-
-    # For compatibility, also save the combined figure
-    fig, (ax1, ax2, ax3) = plt.subplots(3, 1, figsize=(12, 18))
-
-    # Recreate all plots in the combined figure
-    sns.barplot(
-        x=list(avg_dmg.keys()), y=list(avg_dmg.values()), palette="viridis", ax=ax1
-    )
-    ax1.set_title("Average Damage Percentage by Eidolon")
-    ax1.set_xlabel("Eidolon Level")
-    ax1.set_ylabel("Damage Percentage (%)")
-    for i, v in enumerate(avg_dmg.values()):
-        ax1.text(i, v + 5, f"{v:.1f}%", ha="center")
-
-    sns.barplot(
-        x="Eidolon", y="Damage per Pull", data=dmg_pull_df, palette="rocket", ax=ax2
-    )
-    ax2.set_title("Damage per Pull Efficiency")
-    ax2.set_xlabel("Eidolon Level")
-    ax2.set_ylabel("Damage % per Pull")
-    for i, v in enumerate(dmg_per_pull.values()):
-        ax2.text(i, v + 0.01, f"{v:.3f}", ha="center")
-
-    sns.barplot(
-        x="Transition", y="Marginal Value", data=marginal_df, palette="mako", ax=ax3
-    )
-    ax3.set_title("Marginal Value of Each Eidolon Upgrade")
-    ax3.set_xlabel("Eidolon Transition")
-    ax3.set_ylabel("Damage % per Additional Pull")
-    for i, v in enumerate(marginal_value.values()):
-        ax3.text(i, v + 0.01, f"{v:.3f}", ha="center")
-
-    plt.tight_layout()
-    output_path = output_dir / "eidolon_value_analysis.png"
-    plt.savefig(output_path, dpi=300)
-    print(f"Plot saved as '{output_path}'")
-    plt.show()
+    
