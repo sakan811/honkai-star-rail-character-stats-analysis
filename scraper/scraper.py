@@ -17,7 +17,8 @@ def run_scraper():
         print(f"Successfully loaded: {page.title()}")
         
         # Wait for the tabs to be available in the DOM
-        page.wait_for_selector('.tabs .single-tab')
+        calculation_tab_selector = '#gatsby-focus-wrapper > div > div.right-main > div.content.hsr > div.tabs > div.single-tab.Quantum.active'
+        page.wait_for_selector(calculation_tab_selector)
         
         # Find the calculation tab using text content
         print("Looking for Calculation tab...")
