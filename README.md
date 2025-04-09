@@ -58,7 +58,7 @@ Example data format:
 This tool generates three different visualizations to help analyze Eidolon value:
 
 1. **Average Damage by Eidolon**: Raw damage increase per Eidolon level
-2. **Damage per Pull Efficiency**: Overall value proposition of pulls invested 
+2. **Damage per Pull Efficiency**: Overall value proposition of pulls invested
 3. **Marginal Value of Each Eidolon**: Return on investment for each Eidolon upgrade
 
 For detailed explanations of each plot with examples, see [VISUALS.md](docs/VISUALS.md).

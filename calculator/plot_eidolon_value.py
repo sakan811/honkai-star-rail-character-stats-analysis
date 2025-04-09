@@ -60,88 +60,123 @@ def calculate_marginal_value(avg_dmg, pulls_per_eidolon):
     return result
 
 
-def plot_eidolon_value(avg_dmg, dmg_per_pull, marginal_value):
-    """Create visualization for eidolon value analysis."""
-    # Set up the plot style
-    sns.set(style="whitegrid", context="talk")
-
-    # Create output directory if it doesn't exist
+def _create_barplot(data, x_key, y_key, title, xlabel, ylabel, 
+                  palette, label_format, y_offset, filename, title_suffix=""):
+    """
+    Create a standardized bar plot with consistent styling and save to file.
+    
+    Args:
+        data: DataFrame containing the data to plot
+        x_key: Column name for x-axis values
+        y_key: Column name for y-axis values
+        title: Plot title
+        xlabel: X-axis label
+        ylabel: Y-axis label
+        palette: Color palette name
+        label_format: Format string for bar labels
+        y_offset: Vertical offset for bar labels
+        filename: Output filename
+        title_suffix: Optional suffix to append to the title
+    """
+    plt.figure(figsize=(12, 6.3))
+    ax = plt.gca()
+    
+    sns.barplot(
+        x=x_key, y=y_key, hue=x_key,
+        data=data, palette=palette, legend=False, ax=ax
+    )
+    
+    ax.set_title(f"{title}{title_suffix}", pad=15)
+    ax.set_xlabel(xlabel)
+    ax.set_ylabel(ylabel)
+    
+    # Add value labels to bars
+    for i, v in enumerate(data[y_key]):
+        ax.text(i, v + y_offset, label_format.format(v), ha="center")
+    
+    plt.tight_layout()
+    
     output_dir = Path("output")
     output_dir.mkdir(exist_ok=True)
+    output_path = output_dir / filename
+    
+    plt.savefig(output_path, dpi=300)
+    print(f"Plot saved as '{output_path}'")
+    plt.close()
 
+
+def plot_eidolon_value(avg_dmg, dmg_per_pull, marginal_value, character_name=None):
+    """Create visualization for eidolon value analysis.
+    
+    Args:
+        avg_dmg: Dictionary of average damage by eidolon
+        dmg_per_pull: Dictionary of damage per pull efficiency
+        marginal_value: Dictionary of marginal value of each eidolon
+        character_name: Optional name of the character being analyzed
+    """
+    # Set up the plot style
+    sns.set(style="whitegrid", context="talk")
+    
+    # Create title suffix with character name if provided
+    title_suffix = f" ({character_name})" if character_name else ""
+    
     # Figure 1: Average Damage Percentage by Eidolon
-    plt.figure(figsize=(10, 6))
-    ax1 = plt.gca()    
-    sns.barplot(
-        x=list(avg_dmg.keys()), y=list(avg_dmg.values()), hue=list(avg_dmg.keys()),
-        palette="viridis", legend=False, ax=ax1
+    avg_dmg_df = pd.DataFrame({
+        "Eidolon": list(avg_dmg.keys()),
+        "Damage": list(avg_dmg.values()),
+    })
+    
+    _create_barplot(
+        data=avg_dmg_df,
+        x_key="Eidolon",
+        y_key="Damage",
+        title="Honkai: Star Rail Average Damage Percentage by Eidolon",
+        xlabel="Eidolon Level",
+        ylabel="Damage Percentage (%)",
+        palette="viridis",
+        label_format="{:.1f}%",
+        y_offset=5,
+        filename=f"{title_suffix}_avg_damage_by_eidolon.png",
+        title_suffix=title_suffix
     )
-    ax1.set_title("Average Damage Percentage by Eidolon")
-    ax1.set_xlabel("Eidolon Level")
-    ax1.set_ylabel("Damage Percentage (%)")
-
-    # Add value labels to the bars
-    for i, v in enumerate(avg_dmg.values()):
-        ax1.text(i, v + 5, f"{v:.1f}%", ha="center")
-
-    plt.tight_layout()
-    output_path = output_dir / "avg_damage_by_eidolon.png"
-    plt.savefig(output_path, dpi=300)
-    print(f"Plot saved as '{output_path}'")
-    plt.close()
-
+    
     # Figure 2: Damage per Pull Efficiency
-    plt.figure(figsize=(10, 6))
-    ax2 = plt.gca()
-    # Convert to DataFrame for better plotting
-    dmg_pull_df = pd.DataFrame(
-        {
-            "Eidolon": list(dmg_per_pull.keys()),
-            "Damage per Pull": list(dmg_per_pull.values()),
-        }
-    )    
-    sns.barplot(
-        x="Eidolon", y="Damage per Pull", hue="Eidolon",
-        data=dmg_pull_df, palette="rocket", legend=False, ax=ax2
+    dmg_pull_df = pd.DataFrame({
+        "Eidolon": list(dmg_per_pull.keys()),
+        "Damage per Pull": list(dmg_per_pull.values()),
+    })
+    
+    _create_barplot(
+        data=dmg_pull_df,
+        x_key="Eidolon",
+        y_key="Damage per Pull",
+        title="Honkai: Star Rail Damage per Pull Efficiency",
+        xlabel="Eidolon Level",
+        ylabel="Damage % per Pull",
+        palette="rocket",
+        label_format="{:.3f}",
+        y_offset=0.01,
+        filename=f"{title_suffix}_damage_per_pull.png",
+        title_suffix=title_suffix
     )
-    ax2.set_title("Damage per Pull Efficiency")
-    ax2.set_xlabel("Eidolon Level")
-    ax2.set_ylabel("Damage % per Pull")
-
-    # Add value labels
-    for i, v in enumerate(dmg_per_pull.values()):
-        ax2.text(i, v + 0.01, f"{v:.3f}", ha="center")
-
-    plt.tight_layout()
-    output_path = output_dir / "damage_per_pull.png"
-    plt.savefig(output_path, dpi=300)
-    print(f"Plot saved as '{output_path}'")
-    plt.close()
-
+    
     # Figure 3: Marginal Value of Each Eidolon
-    plt.figure(figsize=(10, 6))
-    ax3 = plt.gca()
-    # Convert to DataFrame
-    marginal_df = pd.DataFrame(
-        {
-            "Transition": list(marginal_value.keys()),
-            "Marginal Value": list(marginal_value.values()),
-        }
-    )    
-    sns.barplot(
-        x="Transition", y="Marginal Value", hue="Transition",
-        data=marginal_df, palette="mako", legend=False, ax=ax3
+    marginal_df = pd.DataFrame({
+        "Transition": list(marginal_value.keys()),
+        "Marginal Value": list(marginal_value.values()),
+    })
+    
+    _create_barplot(
+        data=marginal_df,
+        x_key="Transition",
+        y_key="Marginal Value",
+        title="Honkai: Star Rail Marginal Value of Each Eidolon Upgrade",
+        xlabel="Eidolon Transition",
+        ylabel="Damage % per Additional Pull",
+        palette="mako",
+        label_format="{:.3f}",
+        y_offset=0.01,
+        filename=f"{title_suffix}_marginal_value.png",
+        title_suffix=title_suffix
     )
-    ax3.set_title("Marginal Value of Each Eidolon Upgrade")
-    ax3.set_xlabel("Eidolon Transition")
-    ax3.set_ylabel("Damage % per Additional Pull")
-
-    # Add value labels
-    for i, v in enumerate(marginal_value.values()):
-        ax3.text(i, v + 0.01, f"{v:.3f}", ha="center")
-
-    plt.tight_layout()
-    output_path = output_dir / "marginal_value.png"
-    plt.savefig(output_path, dpi=300)
-    print(f"Plot saved as '{output_path}'")
     
