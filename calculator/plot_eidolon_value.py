@@ -71,9 +71,10 @@ def plot_eidolon_value(avg_dmg, dmg_per_pull, marginal_value):
 
     # Figure 1: Average Damage Percentage by Eidolon
     plt.figure(figsize=(10, 6))
-    ax1 = plt.gca()
+    ax1 = plt.gca()    
     sns.barplot(
-        x=list(avg_dmg.keys()), y=list(avg_dmg.values()), palette="viridis", ax=ax1
+        x=list(avg_dmg.keys()), y=list(avg_dmg.values()), hue=list(avg_dmg.keys()),
+        palette="viridis", legend=False, ax=ax1
     )
     ax1.set_title("Average Damage Percentage by Eidolon")
     ax1.set_xlabel("Eidolon Level")
@@ -98,10 +99,10 @@ def plot_eidolon_value(avg_dmg, dmg_per_pull, marginal_value):
             "Eidolon": list(dmg_per_pull.keys()),
             "Damage per Pull": list(dmg_per_pull.values()),
         }
-    )
-
+    )    
     sns.barplot(
-        x="Eidolon", y="Damage per Pull", data=dmg_pull_df, palette="rocket", ax=ax2
+        x="Eidolon", y="Damage per Pull", hue="Eidolon",
+        data=dmg_pull_df, palette="rocket", legend=False, ax=ax2
     )
     ax2.set_title("Damage per Pull Efficiency")
     ax2.set_xlabel("Eidolon Level")
@@ -126,10 +127,10 @@ def plot_eidolon_value(avg_dmg, dmg_per_pull, marginal_value):
             "Transition": list(marginal_value.keys()),
             "Marginal Value": list(marginal_value.values()),
         }
-    )
-
+    )    
     sns.barplot(
-        x="Transition", y="Marginal Value", data=marginal_df, palette="mako", ax=ax3
+        x="Transition", y="Marginal Value", hue="Transition",
+        data=marginal_df, palette="mako", legend=False, ax=ax3
     )
     ax3.set_title("Marginal Value of Each Eidolon Upgrade")
     ax3.set_xlabel("Eidolon Transition")
