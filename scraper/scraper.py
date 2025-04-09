@@ -1,5 +1,7 @@
 from playwright.sync_api import sync_playwright, Page
 
+from scraper.constants import CALCULATIONS_TAB_SELECTOR, CASTORICE_URL, E1_SELECTOR, E2_SELECTOR, E3_SELECTOR, E4_SELECTOR, E5_SELECTOR, E6_SELECTOR, ONE_TARGET_BOX_SELECTOR, TAB_SELECTOR
+
 def scroll_until_element_visible(page: Page, selector: str, max_attempts: int = 10, scroll_amount: int = 200, timeout_ms: int = 500):
     """
     Scroll the page until the element matching the selector becomes visible.
@@ -58,41 +60,34 @@ def run_scraper():
         
         # Navigate to the target URL
         print("Navigating to Castorice's page...")
-        page.goto("https://www.prydwen.gg/star-rail/characters/castorice")
-        
-        # Define the calculation tab selector
-        tab_selector = '#gatsby-focus-wrapper > div > div.right-main > div.content.hsr > div.tabs'
-        calculation_tab_selector = '#gatsby-focus-wrapper > div > div.right-main > div.content.hsr > div.tabs > div:nth-child(5) > p'
-        
+        page.goto(CASTORICE_URL)
+                
         # Scroll down gradually until the calculation tab is found
         print("Scrolling to find the calculation tab...")
         
-        if scroll_until_element_visible(page, tab_selector):
+        if scroll_until_element_visible(page, TAB_SELECTOR):
             print("Scrolled the tab into view")
         else:
             print("Warning: Reached maximum scroll attempts")
         
-        page.click(calculation_tab_selector)
+        page.click(CALCULATIONS_TAB_SELECTOR)
         
-        one_target_box_selector = '#gatsby-focus-wrapper > div > div.right-main > div.content.hsr > div.tab-inside.active > div.dps-comparison.row.row-cols-xl-1.row-cols-1 > div:nth-child(1) > div'
-        
-        if scroll_until_element_visible(page, one_target_box_selector):
+        if scroll_until_element_visible(page, ONE_TARGET_BOX_SELECTOR):
             print("Scrolled the box into view")
         else:
             print("Warning: Reached maximum scroll attempts")
-            
-        # Define the specific selector for the percentage text
-        e6_selector = '#gatsby-focus-wrapper > div > div.right-main > div.content.hsr > div.tab-inside.active > div.dps-comparison.row.row-cols-xl-1.row-cols-1 > div:nth-child(1) > div > div > div:nth-child(1) > div.chart > div:nth-child(2) > div.data.smaller > span.percent'
         
-        # Scroll to make sure the element with percentage is visible
-        print("Searching for the percentage element...")
-        if scroll_until_element_visible(page, e6_selector, max_attempts=15):
-            # Get the text from the percentage element
-            percent_text = page.locator(e6_selector).text_content()
-            print(f"Found percentage text: {percent_text}")
-        else:
-            print("Could not find the percentage element")
-        
+        eidolen_selectors = [E6_SELECTOR, E5_SELECTOR, E4_SELECTOR, E3_SELECTOR, E2_SELECTOR, E1_SELECTOR]
+        for selector in eidolen_selectors:
+            # Scroll to make sure the element with percentage is visible
+            print("Searching for the percentage element...")
+            if scroll_until_element_visible(page, selector, max_attempts=15):
+                # Get the text from the percentage element
+                percent_text = page.locator(selector).text_content()
+                print(f"Found percentage text: {percent_text}")
+            else:
+                print("Could not find the percentage element")
+                    
         # Pause to see the page (remove in production)
         input("Press Enter to close the browser...")
         
