@@ -1,3 +1,4 @@
+from os import path
 import matplotlib.pyplot as plt
 import seaborn as sns
 import pandas as pd
@@ -61,7 +62,7 @@ def calculate_marginal_value(avg_dmg, pulls_per_eidolon):
 
 
 def _create_barplot(data, x_key, y_key, title, xlabel, ylabel, 
-                  palette, label_format, y_offset, filename, title_suffix=""):
+                  palette, label_format, y_offset, filename, title_suffix="", character_name=None):
     """
     Create a standardized bar plot with consistent styling and save to file.
     
@@ -77,6 +78,7 @@ def _create_barplot(data, x_key, y_key, title, xlabel, ylabel,
         y_offset: Vertical offset for bar labels
         filename: Output filename
         title_suffix: Optional suffix to append to the title
+        character_name: Optional name of the character being analyzed
     """
     plt.figure(figsize=(12, 6.3))
     ax = plt.gca()
@@ -93,11 +95,10 @@ def _create_barplot(data, x_key, y_key, title, xlabel, ylabel,
     # Add value labels to bars
     for i, v in enumerate(data[y_key]):
         ax.text(i, v + y_offset, label_format.format(v), ha="center")
-    
     plt.tight_layout()
     
-    output_dir = Path("output")
-    output_dir.mkdir(exist_ok=True)
+    output_dir = Path(path.join("output", f"{character_name}")) if character_name else Path("output")
+    output_dir.mkdir(parents=True, exist_ok=True)
     output_path = output_dir / filename
     
     plt.savefig(output_path, dpi=300)
@@ -115,10 +116,10 @@ def plot_eidolon_value(avg_dmg, dmg_per_pull, marginal_value, character_name=Non
         character_name: Optional name of the character being analyzed
     """
     # Set up the plot style
-    sns.set(style="whitegrid", context="talk")
+    sns.set_theme(style="whitegrid", context="talk")
     
     # Create title suffix with character name if provided
-    title_suffix = f" ({character_name})" if character_name else ""
+    title_suffix = f" - {character_name}" if character_name else ""
     
     # Figure 1: Average Damage Percentage by Eidolon
     avg_dmg_df = pd.DataFrame({
@@ -136,8 +137,9 @@ def plot_eidolon_value(avg_dmg, dmg_per_pull, marginal_value, character_name=Non
         palette="viridis",
         label_format="{:.1f}%",
         y_offset=5,
-        filename=f"{title_suffix}_avg_damage_by_eidolon.png",
-        title_suffix=title_suffix
+        filename=f"{character_name}_avg_damage_by_eidolon.png",
+        title_suffix=title_suffix,
+        character_name=character_name
     )
     
     # Figure 2: Damage per Pull Efficiency
@@ -156,8 +158,9 @@ def plot_eidolon_value(avg_dmg, dmg_per_pull, marginal_value, character_name=Non
         palette="rocket",
         label_format="{:.3f}",
         y_offset=0.01,
-        filename=f"{title_suffix}_damage_per_pull.png",
-        title_suffix=title_suffix
+        filename=f"{character_name}_damage_per_pull.png",
+        title_suffix=title_suffix,
+        character_name=character_name
     )
     
     # Figure 3: Marginal Value of Each Eidolon
@@ -176,7 +179,8 @@ def plot_eidolon_value(avg_dmg, dmg_per_pull, marginal_value, character_name=Non
         palette="mako",
         label_format="{:.3f}",
         y_offset=0.01,
-        filename=f"{title_suffix}_marginal_value.png",
-        title_suffix=title_suffix
+        filename=f"{character_name}_marginal_value.png",
+        title_suffix=title_suffix,
+        character_name=character_name
     )
     

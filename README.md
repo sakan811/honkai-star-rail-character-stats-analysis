@@ -10,7 +10,7 @@ Eidolons in Honkai: Star Rail can significantly boost a character's combat perfo
 2. Damage efficiency per pull
 3. Marginal value of each Eidolon upgrade
 
-References:
+Data is based on:
 
 - <https://www.prydwen.gg/>
 
