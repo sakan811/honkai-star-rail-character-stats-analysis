@@ -46,6 +46,18 @@ This chart shows the additional damage gained per additional pull required when 
 
 In many characters, certain Eidolons (like E1 or E2) might show significantly higher marginal value than others, suggesting these are good stopping points for free-to-play or low-spending players.
 
+### 4. Light Cone (LC) Analysis
+
+In addition to Eidolon levels, the analysis also includes the character's signature Light Cone (LC). Light Cones are weapons in Honkai: Star Rail that significantly boost a character's capabilities with tailored passive effects.
+
+**What the LC data point tells you:**
+
+- How the signature Light Cone compares to Eidolon investments in terms of damage increase
+- Whether pulling for the Light Cone offers better value than certain Eidolon levels
+- The damage increase from acquiring the Light Cone without additional Eidolons (E0 + LC)
+
+The E0-LC transition in the Marginal Value chart specifically shows the value of pulling for a signature Light Cone compared to investing those same pulls into character Eidolons.
+
 ## Interpreting the Results
 
 When analyzing these plots together, consider:
