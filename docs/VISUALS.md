@@ -46,7 +46,6 @@ This chart shows the additional damage gained per additional pull required when 
 
 In many characters, certain Eidolons (like E1 or E2) might show significantly higher marginal value than others, suggesting these are good stopping points for free-to-play or low-spending players.
 
-
 ## Interpreting the Results
 
 When analyzing these plots together, consider:

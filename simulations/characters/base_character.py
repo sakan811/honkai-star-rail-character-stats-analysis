@@ -186,7 +186,7 @@ class Character:
             Damage increase percentage
         """
         base_turn = 5
-
+        
         base_energy_regen = 30.0
         base_turn_until_ult = self.ult_energy / base_energy_regen
 
@@ -204,5 +204,5 @@ class Character:
 
         # Calculate damage increase
         damage_increase = (new_cycle_dmg / base_cycle_dmg) - 1
-
+        
         return damage_increase

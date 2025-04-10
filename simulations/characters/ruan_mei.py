@@ -46,18 +46,19 @@ class RuanMei(Character):
         if has_lc:
             lc_increased_break_effect = 0.6
             dmg_multiplier = 0.24
-            general_dmg_increase = self.calculate_dmg_increased_by_skill_points(
-                1
-            ) + self.calculate_dmg_increased_from_energy_regen(10)
+            skill_dmg_increase = self.calculate_dmg_increased_by_skill_points(1)
+            energy_gain_increase = self.calculate_dmg_increased_from_energy_regen(10)
         else:
             lc_increased_break_effect = 0
             dmg_multiplier = 0.0
-            general_dmg_increase = 0
+            skill_dmg_increase = 0
+            energy_gain_increase = 0
 
         def_ignore_buff = 1 + def_ignore
         speed_buff = 1 + self.SPD_INCREASED_FROM_TALENT_PERCENT
         dmg_multiplier_buff = 1 + dmg_multiplier
-        general_dmg_increase_buff = 1 + general_dmg_increase
+        skill_dmg_increase_buff = 1 + skill_dmg_increase
+        energy_gain_increase_buff = 1 + energy_gain_increase
 
         atk = self.atk * (1 + atk_increase)
         base_dmg = self.calculate_dmg(atk, self.skill_multiplier)
@@ -79,7 +80,8 @@ class RuanMei(Character):
             * def_ignore_buff
             * speed_buff
             * dmg_multiplier_buff
-            * general_dmg_increase_buff
+            * skill_dmg_increase_buff
+            * energy_gain_increase_buff
         )
 
         talent_break_dmg = base_break_dmg * self.TALENT_BREAK_DMG_MULTIPLIER
@@ -92,7 +94,8 @@ class RuanMei(Character):
             * def_ignore_buff
             * speed_buff
             * dmg_multiplier_buff
-            * general_dmg_increase_buff
+            * skill_dmg_increase_buff
+            * energy_gain_increase_buff
         )
 
         final_ult_break_dmg = (
@@ -102,7 +105,8 @@ class RuanMei(Character):
             * def_ignore_buff
             * speed_buff
             * dmg_multiplier_buff
-            * general_dmg_increase_buff
+            * skill_dmg_increase_buff
+            * energy_gain_increase_buff
         )
 
         break_dmg = final_talent_break_dmg + final_ult_break_dmg

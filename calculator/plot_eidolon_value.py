@@ -5,37 +5,40 @@ import pandas as pd
 from pathlib import Path
 
 
-def convert_simulation_data_to_avg_dmg(simulation_data: dict[str, float]) -> dict[str, float]:
+def convert_simulation_data_to_avg_dmg(
+    simulation_data: dict[str, float],
+) -> dict[str, float]:
     """
     Convert simulation data to a format suitable for plotting eidolon value.
-    
+
     Args:
         simulation_data: Dictionary with keys like 'base_dmg', 'e1_dmg', etc.
-        
+
     Returns:
         dict[str, float]: Dictionary mapping eidolon levels to normalized damage percentages
     """
     # Map simulation keys to eidolon levels
     key_to_eidolon = {
         "base_dmg": "E0",
-        "e1_dmg": "E1", 
+        "e1_dmg": "E1",
         "e2_dmg": "E2",
         "e3_dmg": "E3",
         "e4_dmg": "E4",
         "e5_dmg": "E5",
         "e6_dmg": "E6",
+        "lc_dmg": "LC",
     }
-    
+
     # Extract base damage as reference
     base_dmg = simulation_data["base_dmg"]
-    
+
     # Calculate normalized damage percentages
     avg_dmg = {
         key_to_eidolon[key]: (value / base_dmg) * 100
         for key, value in simulation_data.items()
         if key in key_to_eidolon
     }
-    
+
     return avg_dmg
 
 
@@ -50,8 +53,10 @@ def calculate_pulls_per_eidolon():
     Returns:
         Dictionary mapping eidolon levels to cumulative pull counts
     """
-    # Approximately 108 pulls per copy on average with the 50/50 system
-    pulls_per_copy = 108
+    # Approximately 77 pulls per copy on average with the 50/50 system
+    pulls_per_copy = 77
+    # Approximately 69 pulls per copy on average with the 75/25 system
+    lc_pulls = 69
 
     return {
         "E0": pulls_per_copy,  # First copy (base character)
@@ -61,6 +66,7 @@ def calculate_pulls_per_eidolon():
         "E4": pulls_per_copy * 5,  # Fifth copy
         "E5": pulls_per_copy * 6,  # Sixth copy
         "E6": pulls_per_copy * 7,  # Seventh copy
+        "LC": lc_pulls + pulls_per_copy,  # Signature Light Cone
     }
 
 
@@ -80,9 +86,13 @@ def calculate_marginal_value(avg_dmg, pulls_per_eidolon):
     eidolons = list(avg_dmg.keys())
     result = {}
 
-    for i in range(1, len(eidolons)):
-        prev_eidolon = eidolons[i - 1]
-        curr_eidolon = eidolons[i]
+    # First, ensure we have the standard Eidolon transitions (E0-E1, E1-E2, etc.)
+    standard_eidolons = [e for e in eidolons if e.startswith('E')]
+    standard_eidolons.sort(key=lambda x: int(x[1:]))  # Sort by Eidolon number
+    
+    for i in range(1, len(standard_eidolons)):
+        prev_eidolon = standard_eidolons[i - 1]
+        curr_eidolon = standard_eidolons[i]
 
         dmg_increase = avg_dmg[curr_eidolon] - avg_dmg[prev_eidolon]
         pull_increase = (
@@ -91,6 +101,14 @@ def calculate_marginal_value(avg_dmg, pulls_per_eidolon):
 
         marginal_value = dmg_increase / pull_increase
         result[f"{prev_eidolon}-{curr_eidolon}"] = marginal_value
+    
+    # Add E0-LC transition if LC exists in the data
+    if "LC" in eidolons:
+        dmg_increase = avg_dmg["LC"] - avg_dmg["E0"]
+        pull_increase = pulls_per_eidolon["LC"] - pulls_per_eidolon["E0"]
+        
+        marginal_value = dmg_increase / pull_increase
+        result["E0-LC"] = marginal_value
 
     return result
 
