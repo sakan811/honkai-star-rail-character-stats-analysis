@@ -87,9 +87,9 @@ def calculate_marginal_value(avg_dmg, pulls_per_eidolon):
     result = {}
 
     # First, ensure we have the standard Eidolon transitions (E0-E1, E1-E2, etc.)
-    standard_eidolons = [e for e in eidolons if e.startswith('E')]
+    standard_eidolons = [e for e in eidolons if e.startswith("E")]
     standard_eidolons.sort(key=lambda x: int(x[1:]))  # Sort by Eidolon number
-    
+
     for i in range(1, len(standard_eidolons)):
         prev_eidolon = standard_eidolons[i - 1]
         curr_eidolon = standard_eidolons[i]
@@ -101,12 +101,12 @@ def calculate_marginal_value(avg_dmg, pulls_per_eidolon):
 
         marginal_value = dmg_increase / pull_increase
         result[f"{prev_eidolon}-{curr_eidolon}"] = marginal_value
-    
+
     # Add E0-LC transition if LC exists in the data
     if "LC" in eidolons:
         dmg_increase = avg_dmg["LC"] - avg_dmg["E0"]
         pull_increase = pulls_per_eidolon["LC"] - pulls_per_eidolon["E0"]
-        
+
         marginal_value = dmg_increase / pull_increase
         result["E0-LC"] = marginal_value
 

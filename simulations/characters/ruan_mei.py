@@ -46,8 +46,8 @@ class RuanMei(Character):
         if has_lc:
             lc_increased_break_effect = 0.6
             dmg_multiplier = 0.24
-            skill_dmg_increase = self.calculate_dmg_increased_by_skill_points(1)
-            energy_gain_increase = self.calculate_dmg_increased_from_energy_regen(10)
+            skill_dmg_increase = self.calculate_dmg_increased_by_skill_points(1, 3)
+            energy_gain_increase = self.calculate_dmg_increased_from_energy_regen(10, 3)
         else:
             lc_increased_break_effect = 0
             dmg_multiplier = 0.0

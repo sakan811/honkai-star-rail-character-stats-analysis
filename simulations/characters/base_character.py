@@ -146,16 +146,17 @@ class Character:
         raise NotImplementedError("Subclasses should implement this method.")
 
     def calculate_dmg_increased_by_skill_points(
-        self, additional_skill_points: int
+        self, additional_skill_points: int, affected_team_members: int = 1
     ) -> float:
         """
         Calculate the damage increase from additional skill points
 
-        Parameters:
-        - additional_skill_points: Extra skill points gained
+        Args:
+            additional_skill_points: Extra skill points gained
+            affected_team_members: Number of team members affected
 
         Returns:
-        - Damage increase percentage
+            Damage increase percentage
         """
         base_skill_point = 3
         new_skills_point = base_skill_point + additional_skill_points
@@ -171,22 +172,23 @@ class Character:
         # Calculate damage increase
         damage_increase = (new_cycle_dmg / base_cycle_dmg) - 1
 
-        return damage_increase
+        return damage_increase / affected_team_members
 
     def calculate_dmg_increased_from_energy_regen(
-        self, additional_energy_gain: float
+        self, additional_energy_gain: float, affected_team_members: int = 1
     ) -> float:
         """
         Calculate the damage increase from energy regeneration.
 
         Args:
             additional_energy_gain (float): The additional energy gained.
+            affected_team_members (int): Number of team members affected.
 
         Returns:
             Damage increase percentage
         """
         base_turn = 5
-        
+
         base_energy_regen = 30.0
         base_turn_until_ult = self.ult_energy / base_energy_regen
 
@@ -204,5 +206,5 @@ class Character:
 
         # Calculate damage increase
         damage_increase = (new_cycle_dmg / base_cycle_dmg) - 1
-        
-        return damage_increase
+
+        return damage_increase / affected_team_members
