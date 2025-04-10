@@ -61,11 +61,23 @@ def calculate_marginal_value(avg_dmg, pulls_per_eidolon):
     return result
 
 
-def _create_barplot(data, x_key, y_key, title, xlabel, ylabel, 
-                  palette, label_format, y_offset, filename, title_suffix="", character_name=None):
+def _create_barplot(
+    data,
+    x_key,
+    y_key,
+    title,
+    xlabel,
+    ylabel,
+    palette,
+    label_format,
+    y_offset,
+    filename,
+    title_suffix="",
+    character_name=None,
+):
     """
     Create a standardized bar plot with consistent styling and save to file.
-    
+
     Args:
         data: DataFrame containing the data to plot
         x_key: Column name for x-axis values
@@ -82,25 +94,28 @@ def _create_barplot(data, x_key, y_key, title, xlabel, ylabel,
     """
     plt.figure(figsize=(12, 6.3))
     ax = plt.gca()
-    
+
     sns.barplot(
-        x=x_key, y=y_key, hue=x_key,
-        data=data, palette=palette, legend=False, ax=ax
+        x=x_key, y=y_key, hue=x_key, data=data, palette=palette, legend=False, ax=ax
     )
-    
+
     ax.set_title(f"{title}{title_suffix}", pad=15)
     ax.set_xlabel(xlabel)
     ax.set_ylabel(ylabel)
-    
+
     # Add value labels to bars
     for i, v in enumerate(data[y_key]):
         ax.text(i, v + y_offset, label_format.format(v), ha="center")
     plt.tight_layout()
-    
-    output_dir = Path(path.join("output", f"{character_name}")) if character_name else Path("output")
+
+    output_dir = (
+        Path(path.join("output", f"{character_name}"))
+        if character_name
+        else Path("output")
+    )
     output_dir.mkdir(parents=True, exist_ok=True)
     output_path = output_dir / filename
-    
+
     plt.savefig(output_path, dpi=300)
     print(f"Plot saved as '{output_path}'")
     plt.close()
@@ -108,7 +123,7 @@ def _create_barplot(data, x_key, y_key, title, xlabel, ylabel,
 
 def plot_eidolon_value(avg_dmg, dmg_per_pull, marginal_value, character_name=None):
     """Create visualization for eidolon value analysis.
-    
+
     Args:
         avg_dmg: Dictionary of average damage by eidolon
         dmg_per_pull: Dictionary of damage per pull efficiency
@@ -117,16 +132,18 @@ def plot_eidolon_value(avg_dmg, dmg_per_pull, marginal_value, character_name=Non
     """
     # Set up the plot style
     sns.set_theme(style="whitegrid", context="talk")
-    
+
     # Create title suffix with character name if provided
     title_suffix = f" - {character_name}" if character_name else ""
-    
+
     # Figure 1: Average Damage Percentage by Eidolon
-    avg_dmg_df = pd.DataFrame({
-        "Eidolon": list(avg_dmg.keys()),
-        "Damage": list(avg_dmg.values()),
-    })
-    
+    avg_dmg_df = pd.DataFrame(
+        {
+            "Eidolon": list(avg_dmg.keys()),
+            "Damage": list(avg_dmg.values()),
+        }
+    )
+
     _create_barplot(
         data=avg_dmg_df,
         x_key="Eidolon",
@@ -139,15 +156,17 @@ def plot_eidolon_value(avg_dmg, dmg_per_pull, marginal_value, character_name=Non
         y_offset=5,
         filename=f"{character_name}_avg_damage_by_eidolon.png",
         title_suffix=title_suffix,
-        character_name=character_name
+        character_name=character_name,
     )
-    
+
     # Figure 2: Damage per Pull Efficiency
-    dmg_pull_df = pd.DataFrame({
-        "Eidolon": list(dmg_per_pull.keys()),
-        "Damage per Pull": list(dmg_per_pull.values()),
-    })
-    
+    dmg_pull_df = pd.DataFrame(
+        {
+            "Eidolon": list(dmg_per_pull.keys()),
+            "Damage per Pull": list(dmg_per_pull.values()),
+        }
+    )
+
     _create_barplot(
         data=dmg_pull_df,
         x_key="Eidolon",
@@ -160,15 +179,17 @@ def plot_eidolon_value(avg_dmg, dmg_per_pull, marginal_value, character_name=Non
         y_offset=0.01,
         filename=f"{character_name}_damage_per_pull.png",
         title_suffix=title_suffix,
-        character_name=character_name
+        character_name=character_name,
     )
-    
+
     # Figure 3: Marginal Value of Each Eidolon
-    marginal_df = pd.DataFrame({
-        "Transition": list(marginal_value.keys()),
-        "Marginal Value": list(marginal_value.values()),
-    })
-    
+    marginal_df = pd.DataFrame(
+        {
+            "Transition": list(marginal_value.keys()),
+            "Marginal Value": list(marginal_value.values()),
+        }
+    )
+
     _create_barplot(
         data=marginal_df,
         x_key="Transition",
@@ -181,6 +202,5 @@ def plot_eidolon_value(avg_dmg, dmg_per_pull, marginal_value, character_name=Non
         y_offset=0.01,
         filename=f"{character_name}_marginal_value.png",
         title_suffix=title_suffix,
-        character_name=character_name
+        character_name=character_name,
     )
-    

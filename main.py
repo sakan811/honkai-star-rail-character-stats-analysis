@@ -11,7 +11,7 @@ from calculator.value_calculator import ValueCalculator
 def main():
     # Path to the data file
     data_path = Path(__file__).parent / "data" / "castorice.json"
-    
+
     # Extract character name from the data file path (remove the .json extension)
     character_name = data_path.stem.title()
 
@@ -32,6 +32,7 @@ def main():
 
     # Generate the visualizations
     plot_eidolon_value(avg_dmg, dmg_per_pull, marginal_value, character_name)
+
 
 if __name__ == "__main__":
     main()
