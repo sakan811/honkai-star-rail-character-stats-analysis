@@ -171,3 +171,29 @@ class Character:
             Damage increase percentage
         """
         raise NotImplementedError("Subclasses should implement this method.")
+    
+    def calculate_dmg_increased_from_e1(self) -> float:
+        """
+        Calculate the damage increase from E1 ability.
+        
+        Compares two scenarios:
+        1. Base scenario: No E1 ability
+        2. Enhanced scenario: E1 ability active
+        
+        Returns:
+            float: Percentage increase in damage from E1 ability
+        """
+        raise NotImplementedError("Subclasses should implement this method.")
+    
+    def calculate_dmg_increased_from_e2(self) -> float:
+        """
+        Calculate the damage increase from E2 ability.
+        
+        Compares two scenarios:
+        1. Base scenario: No E2 ability
+        2. Enhanced scenario: E2 ability active
+        
+        Returns:
+            float: Percentage increase in damage from E2 ability
+        """
+        raise NotImplementedError("Subclasses should implement this method.")

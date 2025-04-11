@@ -1,3 +1,5 @@
+from calendar import c
+from email.mime import base
 from typing import Optional
 
 from simulations.characters.base_character import Character
@@ -13,6 +15,7 @@ class RuanMei(Character):
 
     def __init__(self):
         super().__init__()
+        self.ruan_mei_ult_energy: int = 130
 
     def calculate_final_dmg(
         self,
@@ -25,7 +28,7 @@ class RuanMei(Character):
         has_lc: Optional[bool] = None,
     ) -> float:
         if has_e1:
-            def_ignore = 0.2
+            def_ignore = self.calculate_dmg_increased_from_e1()
         else:
             def_ignore = 0.0
         if has_e2:
@@ -265,4 +268,45 @@ class RuanMei(Character):
         base_dmg = simulate_dmg(base_duration)
         enhanced_dmg = simulate_dmg(enhanced_duration)
 
+        return self.calculate_percent_change(base_dmg, enhanced_dmg)
+    
+    def calculate_dmg_increased_from_e1(self) -> float:
+        ult_duration = 3
+        energy_gain = 30
+        
+        def simulate_dmg(has_e1: bool = False) -> float:
+            ult_energy = self.ruan_mei_ult_energy
+            current_ult_energy = 0
+            total_damage = 0
+            current_ult_duration = 0
+            total_turns = 1000
+            
+            if has_e1:
+                def_ignore = 0.2
+            else:
+                def_ignore = 0.0
+                        
+            for _ in range(total_turns):
+                if current_ult_energy >= ult_energy:
+                    is_ult_active = True
+                    current_ult_energy = 0
+                    current_ult_duration = ult_duration
+                else:
+                    is_ult_active = False
+                    current_ult_duration = 0
+                
+                if is_ult_active:
+                    skil_dmg = self.calculate_dmg(self.atk, self.skill_multiplier) * (1 + self.RES_PEN_FROM_ULT) * (1 + def_ignore)
+                    current_ult_duration -= 1
+                else:
+                    skil_dmg = self.calculate_dmg(self.atk, self.skill_multiplier)
+
+                total_damage += skil_dmg
+                current_ult_energy += energy_gain
+                    
+            return total_damage
+
+        base_dmg = simulate_dmg()
+        enhanced_dmg = simulate_dmg(True)
+        
         return self.calculate_percent_change(base_dmg, enhanced_dmg)
