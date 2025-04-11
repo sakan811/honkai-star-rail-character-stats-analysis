@@ -149,11 +149,11 @@ class RuanMei(Character):
         ) -> float:
             """
             Simulate damage over time with given skill point parameters
-            
+
             Args:
                 starting_points (int): Starting skill points
                 with_periodic_gain (bool): Whether to include periodic skill point gain
-                
+
             Returns:
                 float: Total damage calculated over the simulation period
             """
@@ -212,12 +212,49 @@ class RuanMei(Character):
         return damage_increase
 
     def calculate_dmg_increased_from_increased_ult_duration(self) -> float:
-        base_turn_duration = 3
-        new_turn_duration = 4
+        """
+        Calculate the damage increase from extended ultimate duration.
 
-        dmg = self.calculate_dmg(self.atk, self.skill_multiplier)
-        buffed_dmg = dmg * (1 + self.RES_PEN_FROM_ULT)
-        base_dmg = (buffed_dmg * base_turn_duration) + dmg
-        new_dmg = buffed_dmg * new_turn_duration
+        Compares two scenarios:
+        1. Base scenario: Ultimate lasts 3 turns followed by 1 turn without ultimate
+        2. Enhanced scenario: Ultimate lasts 4 turns
 
-        return self.calculate_percent_change(base_dmg, new_dmg)
+        Returns:
+            float: Percentage increase in damage from the extended ultimate duration
+        """
+        # Constants
+        base_duration = 3
+        enhanced_duration = 4
+
+        # Damage values
+        normal_dmg = self.calculate_dmg(self.atk, self.skill_multiplier)
+        buffed_dmg = normal_dmg * (1 + self.RES_PEN_FROM_ULT)
+
+        def simulate_dmg(ult_duration: int) -> float:
+            total_turns = 1000
+            total_damage = 0
+            turns_with_ult = ult_duration
+            turns_until_ult = 5
+            ult_counter = 0
+
+            for _ in range(total_turns):
+                if ult_counter >= turns_until_ult:
+                    # Reset ult counter after using ultimate
+                    ult_counter = 0
+                    turns_with_ult = ult_duration
+
+                # If within ultimate duration, apply buffed damage
+                if turns_with_ult > 0:
+                    total_damage += buffed_dmg
+                    turns_with_ult -= 1
+                else:
+                    total_damage += normal_dmg
+                    ult_counter += 1
+
+            return total_damage
+
+        # Calculate damage for base and enhanced scenarios
+        base_dmg = simulate_dmg(base_duration)
+        enhanced_dmg = simulate_dmg(enhanced_duration)
+
+        return self.calculate_percent_change(base_dmg, enhanced_dmg)
