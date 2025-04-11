@@ -32,7 +32,7 @@ class RuanMei(Character):
         else:
             def_ignore = 0.0
         if has_e2:
-            atk_increase = 0.4
+            atk_increase = self.calculate_dmg_increased_from_e2()
         else:
             atk_increase = 0.0
         if has_e3:
@@ -53,7 +53,7 @@ class RuanMei(Character):
             ult_duration_increase = 0
         if has_lc:
             lc_increased_break_effect = 0.6
-            dmg_multiplier = 0.24
+            dmg_multiplier = self.calculate_dmg_increased_from_lc()
             skill_dmg_increase = self.calculate_dmg_increased_by_skill_points()
             energy_gain_increase = self.calculate_dmg_increased_from_energy_regen()
         else:
@@ -310,3 +310,93 @@ class RuanMei(Character):
         enhanced_dmg = simulate_dmg(True)
         
         return self.calculate_percent_change(base_dmg, enhanced_dmg)
+    
+    def calculate_dmg_increased_from_e2(self) -> float:
+        def simulate_dmg(has_e2: bool = False) -> float:
+            # Constants
+            enemy_toughness = 100
+            toughness_reduction_per_turn = 30
+            weakness_broken_duration_max = 2
+            total_turns = 1000
+            
+            # Initial state
+            current_enemy_toughness = enemy_toughness
+            total_damage = 0
+            weakness_broken_duration = 0
+            is_broken = False
+                
+            for _ in range(total_turns):
+                if current_enemy_toughness <= 0 and not is_broken:
+                    is_broken = True
+                    weakness_broken_duration = weakness_broken_duration_max
+                    
+                if is_broken:
+                    if has_e2:
+                        atk = self.atk * 1.4
+                        skil_dmg = self.calculate_dmg(atk, self.skill_multiplier) * 1.1
+                        total_damage += skil_dmg
+                    else:
+                        skil_dmg = self.calculate_dmg(self.atk, self.skill_multiplier) * 1.1               
+                        total_damage += skil_dmg
+                else:
+                    skil_dmg = self.calculate_dmg(self.atk, self.skill_multiplier)
+                    total_damage += skil_dmg                
+                # Apply toughness reduction when not broken
+                if not is_broken:
+                    current_enemy_toughness -= toughness_reduction_per_turn
+                
+                # Manage broken state duration
+                if is_broken:
+                    weakness_broken_duration -= 1
+                    if weakness_broken_duration <= 0:
+                        # Reset broken state, but don't immediately refill toughness
+                        is_broken = False
+                        current_enemy_toughness = enemy_toughness
+
+            return total_damage
+        
+        base_dmg = simulate_dmg()
+        enhanced_dmg = simulate_dmg(True)
+        return self.calculate_percent_change(base_dmg, enhanced_dmg)
+    
+    
+    def calculate_dmg_increased_from_lc(self) -> float:
+        def simulate_dmg(has_lc: bool = False) -> float:
+            ult_energy = self.ruan_mei_ult_energy
+            current_ult_energy = 0
+            total_damage = 0
+            current_ult_duration = 0
+            ult_duration = 3
+            energy_gain = 30
+            total_turns = 1000
+            
+            if has_lc:
+                dmg_multiplier = 0.24
+            else:
+                dmg_multiplier = 0.0
+                        
+            for _ in range(total_turns):
+                if current_ult_energy >= ult_energy:
+                    is_ult_active = True
+                    current_ult_energy = 0
+                    current_ult_duration = ult_duration
+                else:
+                    is_ult_active = False
+                    current_ult_duration = 0
+                
+                if is_ult_active:
+                    skil_dmg = self.calculate_dmg(self.atk, self.skill_multiplier) * (1 + self.RES_PEN_FROM_ULT) * (1 + dmg_multiplier)
+                    current_ult_duration -= 1
+                else:
+                    skil_dmg = self.calculate_dmg(self.atk, self.skill_multiplier)
+
+                total_damage += skil_dmg
+                current_ult_energy += energy_gain
+                    
+            return total_damage
+        
+        base_dmg = simulate_dmg()
+        enhanced_dmg = simulate_dmg(True)
+        
+        return self.calculate_percent_change(base_dmg, enhanced_dmg)
+            

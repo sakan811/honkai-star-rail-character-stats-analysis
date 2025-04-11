@@ -197,3 +197,16 @@ class Character:
             float: Percentage increase in damage from E2 ability
         """
         raise NotImplementedError("Subclasses should implement this method.")
+    
+    def calculate_dmg_increased_from_lc(self) -> float:
+        """
+        Calculate the damage increase from signature light cone ability.
+        
+        Compares two scenarios:
+        1. Base scenario: No light cone ability
+        2. Enhanced scenario: Light cone ability active
+        
+        Returns:
+            float: Percentage increase in damage from light cone ability
+        """
+        raise NotImplementedError("Subclasses should implement this method.")
