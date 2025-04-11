@@ -145,66 +145,29 @@ class Character:
 
         raise NotImplementedError("Subclasses should implement this method.")
 
-    def calculate_dmg_increased_by_skill_points(
-        self, additional_skill_points: int, affected_team_members: int = 1
-    ) -> float:
+    def calculate_dmg_increased_by_skill_points(self) -> float:
         """
         Calculate the damage increase from additional skill points
 
-        Args:
-            additional_skill_points: Extra skill points gained
-            affected_team_members: Number of team members affected
-
         Returns:
             Damage increase percentage
         """
-        base_skill_point = 3
-        new_skills_point = base_skill_point + additional_skill_points
+        raise NotImplementedError("Subclasses should implement this method.")
 
-        # Get single skill damage
-        single_skill_dmg = self.calculate_dmg(self.atk, self.skill_multiplier)
-        non_skill_dmg = 1000
-
-        # Calculate damage per cycle
-        base_cycle_dmg = (single_skill_dmg * base_skill_point) + non_skill_dmg
-        new_cycle_dmg = (single_skill_dmg * new_skills_point) + non_skill_dmg
-
-        # Calculate damage increase
-        damage_increase = (new_cycle_dmg / base_cycle_dmg) - 1
-
-        return damage_increase / affected_team_members
-
-    def calculate_dmg_increased_from_energy_regen(
-        self, additional_energy_gain: float, affected_team_members: int = 1
-    ) -> float:
+    def calculate_dmg_increased_from_energy_regen(self) -> float:
         """
         Calculate the damage increase from energy regeneration.
 
-        Args:
-            additional_energy_gain (float): The additional energy gained.
-            affected_team_members (int): Number of team members affected.
+        Returns:
+            Damage increase percentage
+        """
+        raise NotImplementedError("Subclasses should implement this method.")
+
+    def calculate_dmg_increased_from_increased_ult_duration(self) -> float:
+        """
+        Calculate the damage increase from increased Ult duration.
 
         Returns:
             Damage increase percentage
         """
-        base_turn = 5
-
-        base_energy_regen = 30.0
-        base_turn_until_ult = self.ult_energy / base_energy_regen
-
-        new_energy_regen = base_energy_regen + additional_energy_gain
-        new_turn_until_ult = self.ult_energy / new_energy_regen
-
-        base_ult_used = base_turn / base_turn_until_ult
-        new_ult_used = base_turn / new_turn_until_ult
-
-        ult_dmg = self.calculate_dmg(self.atk, self.ult_multiplier)
-        non_skill_dmg = 1000
-
-        base_cycle_dmg = (ult_dmg * base_ult_used) + non_skill_dmg
-        new_cycle_dmg = (ult_dmg * new_ult_used) + non_skill_dmg
-
-        # Calculate damage increase
-        damage_increase = (new_cycle_dmg / base_cycle_dmg) - 1
-
-        return damage_increase / affected_team_members
+        raise NotImplementedError("Subclasses should implement this method.")
