@@ -4,7 +4,7 @@ from typing import Optional
 class Character:
     def __init__(
         self,
-        hp: float = 3000,
+        hp: int = 3000,
         atk: float = 2000,
         crit_rate: float = 0.5,
         crit_dmg: float = 1,
@@ -38,7 +38,7 @@ class Character:
         self.has_e6 = has_e6
         self.has_lc = has_lc
 
-    def calculate_dmg(self, atk, multiplier) -> float:
+    def calculate_dmg(self, atk: float, multiplier: float) -> float:
         """
         Calculate damage based on attack and a multiplier.
 
@@ -50,6 +50,19 @@ class Character:
             float: The calculated damage.
         """
         return atk * multiplier
+
+    def calculate_dmg_with_hp(self, hp: int, multiplier: float) -> float:
+        """
+        Calculate damage based on HP and a multiplier.
+
+        Args:
+            hp (int): The HP value.
+            multiplier (float): The damage multiplier.
+
+        Returns:
+            float: The calculated damage.
+        """
+        return hp * multiplier
 
     def calculate_break_dmg(
         self, base_break_dmg: float = 2000, break_effect: float = 1.0
