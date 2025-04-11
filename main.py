@@ -1,6 +1,6 @@
-from simulations.characters.ruan_mei import RuanMei
+from simulations.characters.harmony.ruan_mei import RuanMei
 from simulations.simulation import run_simulations
-from calculator.plot_eidolon_value import (
+from simulations.visuals.plot_eidolon_value import (
     convert_simulation_data_to_avg_dmg,
     calculate_pulls_per_eidolon,
     calculate_dmg_per_pull,
@@ -15,11 +15,6 @@ def main():
 
     # Run simulations
     simulation_data = run_simulations(ruan_mei)
-
-    # Print raw simulation results
-    print("Raw simulation results:")
-    for key, value in simulation_data.items():
-        print(f"{key}: {value:.2f}")
 
     print("\nGenerating plots...")
 

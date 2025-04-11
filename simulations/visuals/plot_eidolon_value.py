@@ -1,6 +1,5 @@
 from os import path
 import matplotlib.pyplot as plt
-from numpy import pad
 import seaborn as sns
 import pandas as pd
 from pathlib import Path
@@ -146,7 +145,7 @@ def _create_barplot(
         title_suffix: Optional suffix to append to the title
         character_name: Optional name of the character being analyzed
     """
-    plt.figure(figsize=(12, 6.3))    
+    plt.figure(figsize=(12, 6.3))
     ax = plt.gca()
 
     sns.barplot(
@@ -154,13 +153,18 @@ def _create_barplot(
     )
 
     # Wrap long titles to fit better on the plot
-    wrapped_title = "\n".join([line.strip() for line in textwrap.fill(
-        f"{title}{title_suffix}", 
-        width=60, 
-        break_long_words=False, 
-        break_on_hyphens=False
-    ).split("\n")])
-    
+    wrapped_title = "\n".join(
+        [
+            line.strip()
+            for line in textwrap.fill(
+                f"{title}{title_suffix}",
+                width=60,
+                break_long_words=False,
+                break_on_hyphens=False,
+            ).split("\n")
+        ]
+    )
+
     ax.set_title(wrapped_title, pad=20)
     ax.set_xlabel(xlabel, labelpad=10)
     ax.set_ylabel(ylabel)
