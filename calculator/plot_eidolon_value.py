@@ -4,6 +4,7 @@ from numpy import pad
 import seaborn as sns
 import pandas as pd
 from pathlib import Path
+import textwrap
 
 
 def convert_simulation_data_to_avg_dmg(
@@ -145,14 +146,22 @@ def _create_barplot(
         title_suffix: Optional suffix to append to the title
         character_name: Optional name of the character being analyzed
     """
-    plt.figure(figsize=(12, 6.3))
+    plt.figure(figsize=(12, 6.3))    
     ax = plt.gca()
 
     sns.barplot(
         x=x_key, y=y_key, hue=x_key, data=data, palette=palette, legend=False, ax=ax
     )
 
-    ax.set_title(f"{title}{title_suffix}", pad=20)
+    # Wrap long titles to fit better on the plot
+    wrapped_title = "\n".join([line.strip() for line in textwrap.fill(
+        f"{title}{title_suffix}", 
+        width=60, 
+        break_long_words=False, 
+        break_on_hyphens=False
+    ).split("\n")])
+    
+    ax.set_title(wrapped_title, pad=20)
     ax.set_xlabel(xlabel, labelpad=10)
     ax.set_ylabel(ylabel)
 

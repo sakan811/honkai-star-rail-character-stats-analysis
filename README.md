@@ -13,45 +13,7 @@ Eidolons in Honkai: Star Rail can significantly boost a character's combat perfo
 Data is based on:
 
 - <https://www.prydwen.gg/>
-
-## How It Works
-
-### Data Structure
-
-The analysis uses character data stored in JSON files under the `data/` directory. Each character file contains damage percentages for different Eidolon levels under various target scenarios (single-target, 3-target, 5-target).
-
-Example data format:
-
-```json
-{
-    "1-target": {
-        "dmg-percent": {
-            "E0": 100,
-            "E1": 123,
-            "E2": 169,
-            ...
-        }
-    },
-    "3-target": {
-        "dmg-percent": {
-            ...
-        }
-    }
-}
-```
-
-### Calculation Methodology
-
-1. **Average Damage Calculation**: For each Eidolon level, damage percentages are averaged across all target scenarios (1-target, 3-target, 5-target), with E0 normalized to 100%.
-
-2. **Pull Estimation**: The system estimates an average of 108 pulls per copy, taking into account:
-   - 50/50 chance to get the rate-up character
-   - Guarantee system (guaranteed rate-up character after losing a 50/50)
-   - Hard pity at 90 pulls
-
-3. **Damage per Pull**: Calculated by dividing the damage percentage by the cumulative number of pulls required.
-
-4. **Marginal Value**: Calculated as the additional damage gained per additional pull required when upgrading from one Eidolon level to the next.
+- <https://starrailstation.com/en>
 
 ## Generated Plots
 
@@ -65,11 +27,10 @@ For detailed explanations of each plot with examples, see [VISUALS.md](docs/VISU
 
 ## Usage
 
-1. Place character data in the `data/` directory in the correct JSON format
-2. Run the analysis:
+1. Run the analysis:
 
-```bash
-make run
-```
+    ```bash
+    make run
+    ```
 
-3. Generated plots will be saved to the `output/` directory
+2. Generated plots will be saved to the `output/` directory

@@ -9,6 +9,7 @@ This document provides detailed information about the visualizations generated b
 ### Characters
 
 - [Castorice](./character_visuals/CASTORICE.md)
+- [Ruan Mei](./character_visuals/RUAN_MEI.md)
 
 ## Plots Explaination
 
