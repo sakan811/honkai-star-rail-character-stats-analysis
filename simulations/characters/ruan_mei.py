@@ -187,29 +187,37 @@ class RuanMei(Character):
         return self.calculate_percent_change(base_dmg, enhanced_dmg)
 
     def calculate_dmg_increased_from_energy_regen(self) -> float:
-        base_turn = 5
+        turns_per_wave = 5
         additional_energy_gain_per_wave = 10
-        energy_gain_per_turn = additional_energy_gain_per_wave / base_turn
 
         base_energy_regen = 30.0
-        base_turn_until_ult = self.ult_energy / base_energy_regen
-
-        new_energy_regen = base_energy_regen + energy_gain_per_turn
-        new_turn_until_ult = self.ult_energy / new_energy_regen
-
-        base_ult_used = base_turn / base_turn_until_ult
-        new_ult_used = base_turn / new_turn_until_ult
-
-        ult_dmg = self.calculate_dmg(self.atk, self.ult_multiplier)
-        non_skill_dmg = 1000
-
-        base_cycle_dmg = (ult_dmg * base_ult_used) + non_skill_dmg
-        new_cycle_dmg = (ult_dmg * new_ult_used) + non_skill_dmg
-
-        # Calculate damage increase
-        damage_increase = (new_cycle_dmg / base_cycle_dmg) - 1
-
-        return damage_increase
+       
+        def simulate_dmg(has_buff: bool = False) -> float:
+            ult_energy = self.ult_energy
+            current_ult_energy = 0
+            total_damage = 0
+            total_turns = 1000
+            
+            skil_dmg = self.calculate_dmg(self.atk, self.skill_multiplier)
+            ult_dmg = self.calculate_dmg(self.atk, self.ult_multiplier)
+            
+            for i in range(total_turns):
+                if i % turns_per_wave == 0 and has_buff:
+                    current_ult_energy += additional_energy_gain_per_wave
+                
+                if current_ult_energy >= ult_energy:
+                    total_damage += ult_dmg
+                    current_ult_energy = 0
+                else:
+                    total_damage += skil_dmg
+                    current_ult_energy += base_energy_regen
+                    
+            return total_damage
+            
+        base_dmg = simulate_dmg()
+        enhanced_dmg = simulate_dmg(True)
+       
+        return self.calculate_percent_change(base_dmg, enhanced_dmg)
 
     def calculate_dmg_increased_from_increased_ult_duration(self) -> float:
         """
