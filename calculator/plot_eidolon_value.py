@@ -1,5 +1,6 @@
 from os import path
 import matplotlib.pyplot as plt
+from numpy import pad
 import seaborn as sns
 import pandas as pd
 from pathlib import Path
@@ -151,8 +152,8 @@ def _create_barplot(
         x=x_key, y=y_key, hue=x_key, data=data, palette=palette, legend=False, ax=ax
     )
 
-    ax.set_title(f"{title}{title_suffix}", pad=15)
-    ax.set_xlabel(xlabel)
+    ax.set_title(f"{title}{title_suffix}", pad=20)
+    ax.set_xlabel(xlabel, labelpad=10)
     ax.set_ylabel(ylabel)
 
     # Add value labels to bars
@@ -200,8 +201,8 @@ def plot_eidolon_value(avg_dmg, dmg_per_pull, marginal_value, character_name=Non
         data=avg_dmg_df,
         x_key="Eidolon",
         y_key="Damage",
-        title="Honkai: Star Rail Average Damage Percentage by Eidolon",
-        xlabel="Eidolon Level",
+        title="Honkai: Star Rail Average Damage Percentage by Eidolon and Signature Light Cone",
+        xlabel="Eidolon Level and Signature Light Cone",
         ylabel="Damage Percentage (%)",
         palette="viridis",
         label_format="{:.1f}%",
@@ -224,7 +225,7 @@ def plot_eidolon_value(avg_dmg, dmg_per_pull, marginal_value, character_name=Non
         x_key="Eidolon",
         y_key="Damage per Pull",
         title="Honkai: Star Rail Damage per Pull Efficiency",
-        xlabel="Eidolon Level",
+        xlabel="Eidolon Level and Signature Light Cone",
         ylabel="Damage % per Pull",
         palette="rocket",
         label_format="{:.3f}",
@@ -246,8 +247,8 @@ def plot_eidolon_value(avg_dmg, dmg_per_pull, marginal_value, character_name=Non
         data=marginal_df,
         x_key="Transition",
         y_key="Marginal Value",
-        title="Honkai: Star Rail Marginal Value of Each Eidolon Upgrade",
-        xlabel="Eidolon Transition",
+        title="Honkai: Star Rail Marginal Value of Each Eidolon and Signature Light Cone Upgrade",
+        xlabel="Eidolon and Signature Light Cone Transition",
         ylabel="Damage % per Additional Pull",
         palette="mako",
         label_format="{:.3f}",
