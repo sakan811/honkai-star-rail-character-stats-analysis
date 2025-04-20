@@ -37,6 +37,15 @@ class Character:
         self.has_e5 = has_e5
         self.has_e6 = has_e6
         self.has_lc = has_lc
+        
+    def get_name(self) -> str:
+        """
+        Get the name of the character.
+
+        Returns:
+            str: The name of the character.
+        """
+        return self.__class__.__name__
 
     def calculate_dmg(self, atk: float, multiplier: float) -> float:
         """
@@ -221,5 +230,44 @@ class Character:
 
         Returns:
             float: Percentage increase in damage from light cone ability
+        """
+        raise NotImplementedError("Subclasses should implement this method.")
+
+    def calculate_dmg_increased_from_e4(self) -> float:
+        """
+        Calculate the damage increase from E4 ability.
+
+        Compares two scenarios:
+        1. Base scenario: No E4 ability
+        2. Enhanced scenario: E4 ability active
+
+        Returns:
+            float: Percentage increase in damage from E4 ability
+        """
+        raise NotImplementedError("Subclasses should implement this method.")
+
+    def calculate_dmg_increased_from_e6(self) -> float:
+        """
+        Calculate the damage increase from E6 ability.
+
+        Compares two scenarios:
+        1. Base scenario: No E6 ability
+        2. Enhanced scenario: E6 ability active
+
+        Returns:
+            float: Percentage increase in damage from E6 ability
+        """
+        raise NotImplementedError("Subclasses should implement this method.")
+
+    def calculate_dmg_increased_from_talent(self) -> float:
+        """
+        Calculate the damage increase from talent ability.
+
+        Compares two scenarios:
+        1. Base scenario: No talent ability
+        2. Enhanced scenario: Talent ability active
+
+        Returns:
+            float: Percentage increase in damage from talent ability
         """
         raise NotImplementedError("Subclasses should implement this method.")
