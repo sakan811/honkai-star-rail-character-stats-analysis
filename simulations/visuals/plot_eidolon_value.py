@@ -1,4 +1,5 @@
 from os import path
+from typing import Dict
 import matplotlib.pyplot as plt
 import seaborn as sns
 import pandas as pd
@@ -71,7 +72,9 @@ def calculate_pulls_per_eidolon():
     }
 
 
-def calculate_dmg_per_pull(avg_dmg, pulls_per_eidolon):
+def calculate_dmg_per_pull(
+    avg_dmg: Dict[str, float], pulls_per_eidolon: Dict[str, int]
+) -> Dict[str, float]:
     """Calculate damage per pull for each eidolon level."""
     return {
         eidolon: (dmg_percent / pulls_per_eidolon[eidolon])
@@ -79,13 +82,15 @@ def calculate_dmg_per_pull(avg_dmg, pulls_per_eidolon):
     }
 
 
-def calculate_marginal_value(avg_dmg, pulls_per_eidolon):
+def calculate_marginal_value(
+    avg_dmg: Dict[str, float], pulls_per_eidolon: Dict[str, int]
+) -> Dict[str, float]:
     """
     Calculate the marginal value (additional damage per additional pull)
     for each eidolon transition.
     """
     eidolons = list(avg_dmg.keys())
-    result = {}
+    result: Dict[str, float] = {}
 
     # First, ensure we have the standard Eidolon transitions (E0-E1, E1-E2, etc.)
     standard_eidolons = [e for e in eidolons if e.startswith("E")]
