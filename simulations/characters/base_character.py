@@ -37,7 +37,7 @@ class Character:
         self.has_e5 = has_e5
         self.has_e6 = has_e6
         self.has_lc = has_lc
-        
+
     def get_name(self) -> str:
         """
         Get the name of the character.

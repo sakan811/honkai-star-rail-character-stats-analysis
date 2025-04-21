@@ -2,17 +2,28 @@ from simulations.characters.base_character import Character
 
 
 class Castorice(Character):
-    SKILL_MULTIPLIER = 0.5
-    ENHANCED_SKILL_MULTIPLIER = {"netherwing": 0.3, "castorice": 0.5}
-    BREATH_SCORCHES_THE_SHADOW_MULTIPLIER = {"1st": 0.24, "2nd": 0.28, "3rd": 0.34}
-    CLAW_SPLITS_THE_VEIL_MULTIPLIER = 0.4
-    WINGS_SWEEP_THE_RUINS_MULTIPLIER = 0.4
-    WINGS_SWEEP_THE_RUINS_INSTANCES = 6
-    ULT_RES_PEN = 0.2
-    TALENT_STACK_MULTIPLIER = 0.2
+    # Class constants for base values
+    BASE_SKILL_MULTIPLIER = 0.5
+    BASE_ENHANCED_SKILL_MULTIPLIER = {"netherwing": 0.3, "castorice": 0.5}
+    BASE_BREATH_SCORCHES_THE_SHADOW_MULTIPLIER = {"1st": 0.24, "2nd": 0.28, "3rd": 0.34}
+    BASE_CLAW_SPLITS_THE_VEIL_MULTIPLIER = 0.4
+    BASE_WINGS_SWEEP_THE_RUINS_MULTIPLIER = 0.4
+    BASE_WINGS_SWEEP_THE_RUINS_INSTANCES = 6
+    BASE_TALENT_STACK_MULTIPLIER = 0.2
 
     def __init__(self):
         super().__init__()
+        # Initialize instance attributes with base values
+        self.skill_multiplier = self.BASE_SKILL_MULTIPLIER
+        self.enhanced_skill_multiplier = self.BASE_ENHANCED_SKILL_MULTIPLIER.copy()
+        self.breath_shadow_multiplier = (
+            self.BASE_BREATH_SCORCHES_THE_SHADOW_MULTIPLIER.copy()
+        )
+        self.claw_veil_multiplier = self.BASE_CLAW_SPLITS_THE_VEIL_MULTIPLIER
+        self.wings_ruins_multiplier = self.BASE_WINGS_SWEEP_THE_RUINS_MULTIPLIER
+        self.wings_ruins_instances = self.BASE_WINGS_SWEEP_THE_RUINS_INSTANCES
+        self.talent_stack_multiplier = self.BASE_TALENT_STACK_MULTIPLIER
+        self.ult_res_pen = 0.2
 
     def calculate_final_dmg(
         self,
@@ -25,8 +36,8 @@ class Castorice(Character):
         has_lc: bool | None = None,
     ) -> float:
         if has_e3:
-            self.ULT_RES_PEN = 0.22
-            self.WINGS_SWEEP_THE_RUINS_MULTIPLIER = 0.44
+            self.ult_res_pen = 0.22
+            self.wings_ruins_multiplier = 0.44
 
         if has_e4:
             e4_multiplier = self.calculate_dmg_increased_from_e4()
@@ -34,19 +45,19 @@ class Castorice(Character):
             e4_multiplier = 0
 
         if has_e5:
-            self.ENHANCED_SKILL_MULTIPLIER = {"netherwing": 0.33, "castorice": 0.55}
-            self.SKILL_MULTIPLIER = 0.55
-            self.CLAW_SPLITS_THE_VEIL_MULTIPLIER = 0.44
-            self.BREATH_SCORCHES_THE_SHADOW_MULTIPLIER = {
+            self.enhanced_skill_multiplier = {"netherwing": 0.33, "castorice": 0.55}
+            self.skill_multiplier = 0.55
+            self.claw_veil_multiplier = 0.44
+            self.breath_shadow_multiplier = {
                 "1st": 0.264,
                 "2nd": 0.308,
                 "3rd": 0.374,
             }
-            self.TALENT_STACK_MULTIPLIER = 0.22
+            self.talent_stack_multiplier = 0.22
 
         if has_e6:
             e6_quantum_res_pen = 0.2
-            self.WINGS_SWEEP_THE_RUINS_INSTANCES = 9
+            self.wings_ruins_instances = 9
         else:
             e6_quantum_res_pen = 0.0
 
@@ -56,20 +67,20 @@ class Castorice(Character):
             lc_multiplier = 0
 
         skill_dmg = (
-            self.calculate_dmg_with_hp(self.hp, self.SKILL_MULTIPLIER)
-            * (1 + self.ULT_RES_PEN)
+            self.calculate_dmg_with_hp(self.hp, self.skill_multiplier)
+            * (1 + self.ult_res_pen)
             * (1 + e6_quantum_res_pen)
         )
         enhanced_skill_dmg = (
             sum(
                 [
                     self.calculate_dmg_with_hp(
-                        self.hp, self.ENHANCED_SKILL_MULTIPLIER.get(key, 1)
+                        self.hp, self.enhanced_skill_multiplier.get(key, 1)
                     )
-                    for key, _ in self.ENHANCED_SKILL_MULTIPLIER.items()
+                    for key, _ in self.enhanced_skill_multiplier.items()
                 ]
             )
-            * (1 + self.ULT_RES_PEN)
+            * (1 + self.ult_res_pen)
             * (1 + e6_quantum_res_pen)
         )
 
@@ -77,29 +88,27 @@ class Castorice(Character):
             sum(
                 [
                     self.calculate_dmg_with_hp(
-                        self.hp, self.BREATH_SCORCHES_THE_SHADOW_MULTIPLIER.get(key, 1)
+                        self.hp, self.breath_shadow_multiplier.get(key, 1)
                     )
-                    for key, _ in self.BREATH_SCORCHES_THE_SHADOW_MULTIPLIER.items()
+                    for key, _ in self.breath_shadow_multiplier.items()
                 ]
             )
-            * (1 + self.ULT_RES_PEN)
+            * (1 + self.ult_res_pen)
             * (1 + e6_quantum_res_pen)
         )
         claw_dmg = (
-            self.calculate_dmg_with_hp(self.hp, self.CLAW_SPLITS_THE_VEIL_MULTIPLIER)
-            * (1 + self.ULT_RES_PEN)
+            self.calculate_dmg_with_hp(self.hp, self.claw_veil_multiplier)
+            * (1 + self.ult_res_pen)
             * (1 + e6_quantum_res_pen)
         )
         wings_sweep_dmg = (
             sum(
                 [
-                    self.calculate_dmg_with_hp(
-                        self.hp, self.WINGS_SWEEP_THE_RUINS_MULTIPLIER
-                    )
-                    for _ in range(self.WINGS_SWEEP_THE_RUINS_INSTANCES)
+                    self.calculate_dmg_with_hp(self.hp, self.wings_ruins_multiplier)
+                    for _ in range(self.wings_ruins_instances)
                 ]
             )
-            * (1 + self.ULT_RES_PEN)
+            * (1 + self.ult_res_pen)
             * (1 + e6_quantum_res_pen)
         )
 
@@ -127,7 +136,7 @@ class Castorice(Character):
             (skill_dmg + main_dmg)
             * (
                 1
-                + self.calculate_dmg_increased_from_talent(self.TALENT_STACK_MULTIPLIER)
+                + self.calculate_dmg_increased_from_talent(self.talent_stack_multiplier)
             )
             * (1 + e4_multiplier)
             * (1 + lc_multiplier)
@@ -146,29 +155,27 @@ class Castorice(Character):
                 enhanced_skill_dmg = sum(
                     [
                         self.calculate_dmg_with_hp(
-                            self.hp, self.ENHANCED_SKILL_MULTIPLIER.get(key, 1)
+                            self.hp, self.enhanced_skill_multiplier.get(key, 1)
                         )
-                        for key, _ in self.ENHANCED_SKILL_MULTIPLIER.items()
+                        for key, _ in self.enhanced_skill_multiplier.items()
                     ]
                 )
                 breath_dmg = sum(
                     [
                         self.calculate_dmg_with_hp(
                             self.hp,
-                            self.BREATH_SCORCHES_THE_SHADOW_MULTIPLIER.get(key, 1),
+                            self.breath_shadow_multiplier.get(key, 1),
                         )
-                        for key, _ in self.BREATH_SCORCHES_THE_SHADOW_MULTIPLIER.items()
+                        for key, _ in self.breath_shadow_multiplier.items()
                     ]
                 )
                 claw_dmg = self.calculate_dmg_with_hp(
-                    self.hp, self.CLAW_SPLITS_THE_VEIL_MULTIPLIER
+                    self.hp, self.claw_veil_multiplier
                 )
                 wings_sweep_dmg = sum(
                     [
-                        self.calculate_dmg_with_hp(
-                            self.hp, self.WINGS_SWEEP_THE_RUINS_MULTIPLIER
-                        )
-                        for _ in range(self.WINGS_SWEEP_THE_RUINS_INSTANCES)
+                        self.calculate_dmg_with_hp(self.hp, self.wings_ruins_multiplier)
+                        for _ in range(self.wings_ruins_instances)
                     ]
                 )
 
@@ -206,17 +213,17 @@ class Castorice(Character):
                 if i == 0:
                     breath_dmg = self.calculate_dmg_with_hp(
                         self.hp,
-                        self.BREATH_SCORCHES_THE_SHADOW_MULTIPLIER.get("1st", 1),
+                        self.breath_shadow_multiplier.get("1st", 1),
                     )
                 elif i == 1:
                     breath_dmg = self.calculate_dmg_with_hp(
                         self.hp,
-                        self.BREATH_SCORCHES_THE_SHADOW_MULTIPLIER.get("2nd", 1),
+                        self.breath_shadow_multiplier.get("2nd", 1),
                     )
                 elif i >= 2:
                     breath_dmg = self.calculate_dmg_with_hp(
                         self.hp,
-                        self.BREATH_SCORCHES_THE_SHADOW_MULTIPLIER.get("3rd", 1),
+                        self.breath_shadow_multiplier.get("3rd", 1),
                     )
                 else:
                     breath_dmg = 0
@@ -293,9 +300,9 @@ class Castorice(Character):
                 if newbud >= max_newbud:
                     newbud = 0
                     total_dmg += ult_dmg * (1 + def_ignore)
-                    
+
                     ult_counter += 1
-                    
+
                     if has_lc and ult_counter >= 3:
                         ult_counter = 0
                         action_forward_counter += 1

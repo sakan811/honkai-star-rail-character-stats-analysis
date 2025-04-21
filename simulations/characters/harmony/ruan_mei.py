@@ -15,6 +15,21 @@ class RuanMei(Character):
         super().__init__()
         self.ruan_mei_ult_energy: int = 130
 
+        # Initialize instance variables with class constants
+        # These can be modified in methods unlike the uppercase constants
+        self.res_pen_from_ult = self.RES_PEN_FROM_ULT
+        self.talent_break_dmg_multiplier = self.TALENT_BREAK_DMG_MULTIPLIER
+        self.dmg_increased_from_skill = self.DMG_INCREASED_FROM_SKILL
+
+        # Initialize instance variables with class constants
+        self.res_pen_from_ult = self.RES_PEN_FROM_ULT
+        self.talent_break_dmg_multiplier = self.TALENT_BREAK_DMG_MULTIPLIER
+        self.dmg_increased_from_skill = self.DMG_INCREASED_FROM_SKILL
+        # Initialize instance variables with class constants
+        self.res_pen_from_ult = self.RES_PEN_FROM_ULT
+        self.talent_break_dmg_multiplier = self.TALENT_BREAK_DMG_MULTIPLIER
+        self.dmg_increased_from_skill = self.DMG_INCREASED_FROM_SKILL
+
     def calculate_final_dmg(
         self,
         has_e1: Optional[bool] = None,
@@ -34,16 +49,16 @@ class RuanMei(Character):
         else:
             atk_increase = 0.0
         if has_e3:
-            self.RES_PEN_FROM_ULT = 0.27
-            self.TALENT_BREAK_DMG_MULTIPLIER = 1.32
+            self.res_pen_from_ult = 0.27
+            self.talent_break_dmg_multiplier = 1.32
         if has_e4:
             e4_increased_break_effect = 1
         else:
             e4_increased_break_effect = 0
         if has_e5:
-            self.DMG_INCREASED_FROM_SKILL = 0.352
+            self.dmg_increased_from_skill = 0.352
         if has_e6:
-            self.TALENT_BREAK_DMG_MULTIPLIER = 1.32 + 2
+            self.talent_break_dmg_multiplier = 1.32 + 2
             ult_duration_increase = (
                 self.calculate_dmg_increased_from_increased_ult_duration()
             )
@@ -70,14 +85,13 @@ class RuanMei(Character):
         atk = self.atk * (1 + atk_increase)
         base_dmg = self.calculate_dmg(atk, self.skill_multiplier)
         base_break_dmg = self.calculate_break_dmg(e4_increased_break_effect)
-
-        skill_buff = 1 + self.DMG_INCREASED_FROM_SKILL
+        skill_buff = 1 + self.dmg_increased_from_skill
         break_effect_buff = 1 + self.calculate_dmg_increase_by_break_effect(
             self.BREAK_EFFECT_INCREASED_FROM_SKILL
             + e4_increased_break_effect
             + lc_increased_break_effect
         )
-        res_pen = 1 + self.RES_PEN_FROM_ULT
+        res_pen = 1 + self.res_pen_from_ult
 
         dmg = (
             base_dmg
@@ -92,7 +106,7 @@ class RuanMei(Character):
             * ult_duration_increase_buff
         )
 
-        talent_break_dmg = base_break_dmg * self.TALENT_BREAK_DMG_MULTIPLIER
+        talent_break_dmg = base_break_dmg * self.talent_break_dmg_multiplier
         ult_break_dmg = base_break_dmg * self.ULT_BREAK_DMG_MULTIPLIER
 
         final_talent_break_dmg = (
