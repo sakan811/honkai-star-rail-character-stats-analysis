@@ -1,4 +1,5 @@
 from os import path
+from typing import Dict, Optional
 import matplotlib.pyplot as plt
 import seaborn as sns
 import pandas as pd
@@ -71,7 +72,9 @@ def calculate_pulls_per_eidolon():
     }
 
 
-def calculate_dmg_per_pull(avg_dmg, pulls_per_eidolon):
+def calculate_dmg_per_pull(
+    avg_dmg: Dict[str, float], pulls_per_eidolon: Dict[str, int]
+) -> Dict[str, float]:
     """Calculate damage per pull for each eidolon level."""
     return {
         eidolon: (dmg_percent / pulls_per_eidolon[eidolon])
@@ -79,13 +82,15 @@ def calculate_dmg_per_pull(avg_dmg, pulls_per_eidolon):
     }
 
 
-def calculate_marginal_value(avg_dmg, pulls_per_eidolon):
+def calculate_marginal_value(
+    avg_dmg: Dict[str, float], pulls_per_eidolon: Dict[str, int]
+) -> Dict[str, float]:
     """
     Calculate the marginal value (additional damage per additional pull)
     for each eidolon transition.
     """
     eidolons = list(avg_dmg.keys())
-    result = {}
+    result: Dict[str, float] = {}
 
     # First, ensure we have the standard Eidolon transitions (E0-E1, E1-E2, etc.)
     standard_eidolons = [e for e in eidolons if e.startswith("E")]
@@ -115,18 +120,18 @@ def calculate_marginal_value(avg_dmg, pulls_per_eidolon):
 
 
 def _create_barplot(
-    data,
-    x_key,
-    y_key,
-    title,
-    xlabel,
-    ylabel,
-    palette,
-    label_format,
-    y_offset,
-    filename,
-    title_suffix="",
-    character_name=None,
+    data: pd.DataFrame,
+    x_key: str,
+    y_key: str,
+    title: str,
+    xlabel: str,
+    ylabel: str,
+    palette: str,
+    label_format: str,
+    y_offset: float,
+    filename: str,
+    title_suffix: str = "",
+    character_name: Optional[str] = None,
 ):
     """
     Create a standardized bar plot with consistent styling and save to file.
@@ -145,7 +150,7 @@ def _create_barplot(
         title_suffix: Optional suffix to append to the title
         character_name: Optional name of the character being analyzed
     """
-    plt.figure(figsize=(12, 6.3))
+    plt.figure(figsize=(12, 6.3))  # type: ignore
     ax = plt.gca()
 
     sns.barplot(
@@ -165,13 +170,13 @@ def _create_barplot(
         ]
     )
 
-    ax.set_title(wrapped_title, pad=20)
-    ax.set_xlabel(xlabel, labelpad=10)
-    ax.set_ylabel(ylabel)
+    ax.set_title(wrapped_title, pad=20)  # type: ignore
+    ax.set_xlabel(xlabel, labelpad=10)  # type: ignore
+    ax.set_ylabel(ylabel)  # type: ignore
 
     # Add value labels to bars
-    for i, v in enumerate(data[y_key]):
-        ax.text(i, v + y_offset, label_format.format(v), ha="center")
+    for i, v in enumerate(data[y_key]):  # type: ignore
+        ax.text(i, v + y_offset, label_format.format(v), ha="center")  # type: ignore
     plt.tight_layout()
 
     output_dir = (
@@ -182,12 +187,17 @@ def _create_barplot(
     output_dir.mkdir(parents=True, exist_ok=True)
     output_path = output_dir / filename
 
-    plt.savefig(output_path, dpi=300)
+    plt.savefig(output_path, dpi=300)  # type: ignore
     print(f"Plot saved as '{output_path}'")
     plt.close()
 
 
-def plot_eidolon_value(avg_dmg, dmg_per_pull, marginal_value, character_name=None):
+def plot_eidolon_value(
+    avg_dmg: Dict[str, float],
+    dmg_per_pull: Dict[str, float],
+    marginal_value: Dict[str, float],
+    character_name: Optional[str] = None,
+):
     """Create visualization for eidolon value analysis.
 
     Args:
