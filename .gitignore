@@ -10,3 +10,4 @@ wheels/
 .venv
 /.vscode
 /post-template.txt
+/.github/instructions/rule.instructions.md
