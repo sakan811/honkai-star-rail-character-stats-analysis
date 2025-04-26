@@ -6,6 +6,10 @@ import pandas as pd
 from pathlib import Path
 import textwrap
 
+# Module-level constants for pulls per copy
+PULLS_PER_COPY = 77  # Average pulls per character copy (50/50 system)
+LC_PULLS = 69  # Average pulls for signature Light Cone (75/25 system)
+
 
 def convert_simulation_data_to_avg_dmg(
     simulation_data: dict[str, float],
@@ -49,26 +53,21 @@ def calculate_pulls_per_eidolon():
     Calculate the expected number of pulls needed for each eidolon level.
 
     With 50% chance to get the rate-up character and hard pity at 90 pulls,
-    the average pulls per copy is approximately 108 pulls (taking into account
+    the average pulls per copy is approximately 77 pulls (taking into account
     the 50/50 chance and guarantee system).
 
     Returns:
         Dictionary mapping eidolon levels to cumulative pull counts
     """
-    # Approximately 77 pulls per copy on average with the 50/50 system
-    pulls_per_copy = 77
-    # Approximately 69 pulls per copy on average with the 75/25 system
-    lc_pulls = 69
-
     return {
-        "E0": pulls_per_copy,  # First copy (base character)
-        "E1": pulls_per_copy * 2,  # Second copy
-        "E2": pulls_per_copy * 3,  # Third copy
-        "E3": pulls_per_copy * 4,  # Fourth copy
-        "E4": pulls_per_copy * 5,  # Fifth copy
-        "E5": pulls_per_copy * 6,  # Sixth copy
-        "E6": pulls_per_copy * 7,  # Seventh copy
-        "LC": lc_pulls + pulls_per_copy,  # Signature Light Cone
+        "E0": PULLS_PER_COPY,  # First copy (base character)
+        "E1": PULLS_PER_COPY * 2,  # Second copy
+        "E2": PULLS_PER_COPY * 3,  # Third copy
+        "E3": PULLS_PER_COPY * 4,  # Fourth copy
+        "E4": PULLS_PER_COPY * 5,  # Fifth copy
+        "E5": PULLS_PER_COPY * 6,  # Sixth copy
+        "E6": PULLS_PER_COPY * 7,  # Seventh copy
+        "LC": LC_PULLS + PULLS_PER_COPY,  # Signature Light Cone
     }
 
 

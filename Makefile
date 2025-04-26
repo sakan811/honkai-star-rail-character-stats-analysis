@@ -7,4 +7,7 @@ lint:
 format:
 	ruff format .
 
-ruff: lint format
+mypy:
+	mypy . --strict --ignore-missing-imports
+
+qa: lint format mypy
