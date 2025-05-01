@@ -48,7 +48,7 @@ def convert_simulation_data_to_avg_dmg(
     return avg_dmg
 
 
-def calculate_pulls_per_eidolon():
+def calculate_pulls_per_eidolon() -> dict[str, int]:
     """
     Calculate the expected number of pulls needed for each eidolon level.
 
@@ -131,7 +131,7 @@ def _create_barplot(
     filename: str,
     title_suffix: str = "",
     character_name: Optional[str] = None,
-):
+) -> None:
     """
     Create a standardized bar plot with consistent styling and save to file.
 
@@ -149,7 +149,7 @@ def _create_barplot(
         title_suffix: Optional suffix to append to the title
         character_name: Optional name of the character being analyzed
     """
-    plt.figure(figsize=(12, 6.3))  # type: ignore
+    plt.figure(figsize=(12, 6.3))
     ax = plt.gca()
 
     sns.barplot(
@@ -169,13 +169,13 @@ def _create_barplot(
         ]
     )
 
-    ax.set_title(wrapped_title, pad=20)  # type: ignore
-    ax.set_xlabel(xlabel, labelpad=10)  # type: ignore
-    ax.set_ylabel(ylabel)  # type: ignore
+    ax.set_title(wrapped_title, pad=20)
+    ax.set_xlabel(xlabel, labelpad=10)
+    ax.set_ylabel(ylabel)
 
     # Add value labels to bars
-    for i, v in enumerate(data[y_key]):  # type: ignore
-        ax.text(i, v + y_offset, label_format.format(v), ha="center")  # type: ignore
+    for i, v in enumerate(data[y_key]):
+        ax.text(i, v + y_offset, label_format.format(v), ha="center")
     plt.tight_layout()
 
     output_dir = (
@@ -186,7 +186,7 @@ def _create_barplot(
     output_dir.mkdir(parents=True, exist_ok=True)
     output_path = output_dir / filename
 
-    plt.savefig(output_path, dpi=300)  # type: ignore
+    plt.savefig(output_path, dpi=300)
     print(f"Plot saved as '{output_path}'")
     plt.close()
 
@@ -196,7 +196,7 @@ def plot_eidolon_value(
     dmg_per_pull: Dict[str, float],
     marginal_value: Dict[str, float],
     character_name: Optional[str] = None,
-):
+) -> None:
     """Create visualization for eidolon value analysis.
 
     Args:
