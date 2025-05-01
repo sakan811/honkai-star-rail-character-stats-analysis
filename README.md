@@ -1,6 +1,6 @@
-# Honkai: Star Rail Eidolon Value Analysis
+# Honkai: Star Rail Eidolon and Signature Lightcone Value Analysis
 
-This project analyzes the value proposition of different Eidolon levels for characters in Honkai: Star Rail, helping players make informed decisions about whether to pull for additional copies of characters.
+Analyze the value proposition of different Eidolon levels and signature lightcone for characters in Honkai: Star Rail, helping players make informed decisions about whether to pull for additional copies of characters or signature lightcone.
 
 ## Overview
 
