@@ -25,12 +25,28 @@ This tool generates three different visualizations to help analyze Eidolon value
 
 For detailed explanations of each plot with examples, see [VISUALS.md](docs/VISUALS.md).
 
+## Disclaimer
+
+This simulation might not be 100% accurate and is intended for educational purposes only.
+
 ## Usage
 
-1. Run the analysis:
+1. Clone the repository:
 
     ```bash
-    make run
+    git clone
     ```
 
-2. Generated plots will be saved to the `output/` directory
+2. Install the required dependencies:
+
+    ```bash
+    uv sync
+    ```
+
+3. Run the simulation:
+
+    ```bash
+    python main.py
+    ```
+
+4. Generated plots will be saved to the `output/` directory

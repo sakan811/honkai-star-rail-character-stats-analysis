@@ -1,4 +1,5 @@
 from simulations.characters.base_character import Character
+from simulations.characters.erudition.anaxa import Anaxa
 from simulations.characters.harmony.ruan_mei import RuanMei
 from simulations.characters.remembrance.castorice import Castorice
 from simulations.simulation import run_simulations
@@ -25,7 +26,7 @@ if not logger.hasHandlers():
 
 def main():
     # Initialize characters
-    character_list: list[Character] = [RuanMei(), Castorice()]
+    character_list: list[Character] = [RuanMei(), Castorice(), Anaxa()]
 
     for character in character_list:
         logger.info(f"Running simulations for {character.get_name()}...")
