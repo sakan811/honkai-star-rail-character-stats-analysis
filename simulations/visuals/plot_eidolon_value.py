@@ -6,6 +6,10 @@ import pandas as pd
 from pathlib import Path
 import textwrap
 
+# Module-level constants for pulls per copy
+PULLS_PER_COPY = 77  # Average pulls per character copy (50/50 system)
+LC_PULLS = 69  # Average pulls for signature Light Cone (75/25 system)
+
 
 def convert_simulation_data_to_avg_dmg(
     simulation_data: dict[str, float],
@@ -44,31 +48,26 @@ def convert_simulation_data_to_avg_dmg(
     return avg_dmg
 
 
-def calculate_pulls_per_eidolon():
+def calculate_pulls_per_eidolon() -> dict[str, int]:
     """
     Calculate the expected number of pulls needed for each eidolon level.
 
     With 50% chance to get the rate-up character and hard pity at 90 pulls,
-    the average pulls per copy is approximately 108 pulls (taking into account
+    the average pulls per copy is approximately 77 pulls (taking into account
     the 50/50 chance and guarantee system).
 
     Returns:
         Dictionary mapping eidolon levels to cumulative pull counts
     """
-    # Approximately 77 pulls per copy on average with the 50/50 system
-    pulls_per_copy = 77
-    # Approximately 69 pulls per copy on average with the 75/25 system
-    lc_pulls = 69
-
     return {
-        "E0": pulls_per_copy,  # First copy (base character)
-        "E1": pulls_per_copy * 2,  # Second copy
-        "E2": pulls_per_copy * 3,  # Third copy
-        "E3": pulls_per_copy * 4,  # Fourth copy
-        "E4": pulls_per_copy * 5,  # Fifth copy
-        "E5": pulls_per_copy * 6,  # Sixth copy
-        "E6": pulls_per_copy * 7,  # Seventh copy
-        "LC": lc_pulls + pulls_per_copy,  # Signature Light Cone
+        "E0": PULLS_PER_COPY,  # First copy (base character)
+        "E1": PULLS_PER_COPY * 2,  # Second copy
+        "E2": PULLS_PER_COPY * 3,  # Third copy
+        "E3": PULLS_PER_COPY * 4,  # Fourth copy
+        "E4": PULLS_PER_COPY * 5,  # Fifth copy
+        "E5": PULLS_PER_COPY * 6,  # Sixth copy
+        "E6": PULLS_PER_COPY * 7,  # Seventh copy
+        "LC": LC_PULLS + PULLS_PER_COPY,  # Signature Light Cone
     }
 
 
@@ -132,7 +131,7 @@ def _create_barplot(
     filename: str,
     title_suffix: str = "",
     character_name: Optional[str] = None,
-):
+) -> None:
     """
     Create a standardized bar plot with consistent styling and save to file.
 
@@ -150,7 +149,7 @@ def _create_barplot(
         title_suffix: Optional suffix to append to the title
         character_name: Optional name of the character being analyzed
     """
-    plt.figure(figsize=(12, 6.3))  # type: ignore
+    plt.figure(figsize=(12, 6.3))
     ax = plt.gca()
 
     sns.barplot(
@@ -170,13 +169,13 @@ def _create_barplot(
         ]
     )
 
-    ax.set_title(wrapped_title, pad=20)  # type: ignore
-    ax.set_xlabel(xlabel, labelpad=10)  # type: ignore
-    ax.set_ylabel(ylabel)  # type: ignore
+    ax.set_title(wrapped_title, pad=20)
+    ax.set_xlabel(xlabel, labelpad=10)
+    ax.set_ylabel(ylabel)
 
     # Add value labels to bars
-    for i, v in enumerate(data[y_key]):  # type: ignore
-        ax.text(i, v + y_offset, label_format.format(v), ha="center")  # type: ignore
+    for i, v in enumerate(data[y_key]):
+        ax.text(i, v + y_offset, label_format.format(v), ha="center")
     plt.tight_layout()
 
     output_dir = (
@@ -187,7 +186,7 @@ def _create_barplot(
     output_dir.mkdir(parents=True, exist_ok=True)
     output_path = output_dir / filename
 
-    plt.savefig(output_path, dpi=300)  # type: ignore
+    plt.savefig(output_path, dpi=300)
     print(f"Plot saved as '{output_path}'")
     plt.close()
 
@@ -197,7 +196,7 @@ def plot_eidolon_value(
     dmg_per_pull: Dict[str, float],
     marginal_value: Dict[str, float],
     character_name: Optional[str] = None,
-):
+) -> None:
     """Create visualization for eidolon value analysis.
 
     Args:

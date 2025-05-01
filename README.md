@@ -1,14 +1,14 @@
-# Honkai: Star Rail Eidolon Value Analysis
+# Honkai: Star Rail Eidolon and Signature Lightcone Value Analysis
 
-This project analyzes the value proposition of different Eidolon levels for characters in Honkai: Star Rail, helping players make informed decisions about whether to pull for additional copies of characters.
+Analyze the value proposition of different Eidolon levels and signature lightcone for characters in Honkai: Star Rail, helping players make informed decisions about whether to pull for additional copies of characters or signature lightcone.
 
 ## Overview
 
-Eidolons in Honkai: Star Rail can significantly boost a character's combat performance, but they require substantial investment in terms of Star Rail Special Passes or Jade. This tool helps quantify the value of each Eidolon level by analyzing:
+Eidolons and signature lightcone in Honkai: Star Rail can significantly boost a character's combat performance, but they require substantial investment in terms of Star Rail Special Passes or Jade. This tool helps quantify the value of each Eidolon level and signature lightcone by analyzing:
 
-1. Raw damage increase per Eidolon
+1. Raw damage increase per Eidolon and signature lightcone
 2. Damage efficiency per pull
-3. Marginal value of each Eidolon upgrade
+3. Marginal value of each Eidolon and signature lightcone upgrade
 
 Data is based on:
 
@@ -25,12 +25,30 @@ This tool generates three different visualizations to help analyze Eidolon value
 
 For detailed explanations of each plot with examples, see [VISUALS.md](docs/VISUALS.md).
 
+## Disclaimer
+
+This simulation might not be 100% accurate and is intended for educational purposes only.
+
+Signature Light Cones are evaluated at their base (non-superimposed) level.
+
 ## Usage
 
-1. Run the analysis:
+1. Clone the repository:
 
     ```bash
-    make run
+    git clone
     ```
 
-2. Generated plots will be saved to the `output/` directory
+2. Install the required dependencies:
+
+    ```bash
+    uv sync
+    ```
+
+3. Run the simulation:
+
+    ```bash
+    python main.py
+    ```
+
+4. Generated plots will be saved to the `output/` directory
