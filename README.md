@@ -4,11 +4,11 @@ Analyze the value proposition of different Eidolon levels and signature lightcon
 
 ## Overview
 
-Eidolons in Honkai: Star Rail can significantly boost a character's combat performance, but they require substantial investment in terms of Star Rail Special Passes or Jade. This tool helps quantify the value of each Eidolon level by analyzing:
+Eidolons and signature lightcone in Honkai: Star Rail can significantly boost a character's combat performance, but they require substantial investment in terms of Star Rail Special Passes or Jade. This tool helps quantify the value of each Eidolon level and signature lightcone by analyzing:
 
-1. Raw damage increase per Eidolon
+1. Raw damage increase per Eidolon and signature lightcone
 2. Damage efficiency per pull
-3. Marginal value of each Eidolon upgrade
+3. Marginal value of each Eidolon and signature lightcone upgrade
 
 Data is based on:
 
@@ -28,6 +28,8 @@ For detailed explanations of each plot with examples, see [VISUALS.md](docs/VISU
 ## Disclaimer
 
 This simulation might not be 100% accurate and is intended for educational purposes only.
+
+Signature Light Cones are evaluated at their base (non-superimposed) level.
 
 ## Usage
 
