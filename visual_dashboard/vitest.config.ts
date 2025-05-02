@@ -19,7 +19,6 @@ export default async () => {
           classNameStrategy: 'non-scoped',
         },
       },
-      mockExtensions: ['.css', '.scss', '.less', '.sass'],
       setupFiles: ['./tests/setup.ts'],
       exclude: ['**/node_modules/**', '**/.next/**'],
     },
