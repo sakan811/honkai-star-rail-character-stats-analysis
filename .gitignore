@@ -12,3 +12,5 @@ wheels/
 /post-template.txt
 /.github/instructions/rule.instructions.md
 /.mypy_cache
+/hsr_simulations/.ruff_cache
+/hsr_simulations/.pytest_cache
