@@ -1,5 +1,7 @@
 # Module-level constants for pulls per copy
-from typing import Dict
+import csv
+import os
+from typing import Dict, Optional
 
 
 PULLS_PER_COPY = 77  # Average pulls per character copy (50/50 system)
@@ -111,3 +113,27 @@ def calculate_marginal_value(
         result["E0-LC"] = marginal_value
 
     return result
+
+
+def export_metric_to_csv(
+    metric_data: dict, character_name: str, metric_name: str, out_dir: Optional[str] = None
+):
+    """
+    Export a metric dictionary to a CSV file for a given character.
+    Args:
+        metric_data: dict of {eidolon: value}
+        character_name: str
+        metric_name: str (e.g., 'avg_dmg', 'dmg_per_pull', 'marginal_value')
+        out_dir: Optional base output directory (default: output/CharacterName)
+    """
+    if out_dir is None:
+        out_dir = os.path.join(os.path.dirname(__file__), "output", character_name)
+    else:
+        out_dir = os.path.join(out_dir, character_name)
+    os.makedirs(out_dir, exist_ok=True)
+    out_path = os.path.join(out_dir, f"{character_name}_{metric_name}.csv")
+    with open(out_path, mode="w", newline="") as f:
+        writer = csv.writer(f)
+        writer.writerow(["Character", "Eidolon", metric_name])
+        for eidolon, value in metric_data.items():
+            writer.writerow([character_name, eidolon, value])
