@@ -60,12 +60,6 @@ In addition to Eidolon levels, the analysis also includes the character's signat
 
 The E0-LC transition in the Marginal Value chart specifically shows the value of pulling for a signature Light Cone compared to investing those same pulls into character Eidolons.
 
-## Interpreting the Results
-
-When analyzing these plots together, consider:
-
-1. **Budget constraints**: If you have limited pulls, focus on characters where the early Eidolons provide high marginal value
-2. **Power spikes**: Some characters have significant power increases at specific Eidolons (often E1, E2, or E6)
-3. **Diminishing returns**: If marginal value drops significantly after a certain Eidolon, it may not be worth pulling further
+## Disclaimer
 
 Remember that these analyses are based on damage modeling and your actual gameplay experience might vary depending on team composition, gear, and playstyle.
