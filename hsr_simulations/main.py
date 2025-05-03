@@ -2,10 +2,10 @@ from simulations.data_transformer import (
     calculate_dmg_per_pull,
     calculate_marginal_value,
     calculate_pulls_per_eidolon,
+    combine_metric_csvs,
     convert_simulation_data_to_avg_dmg,
     export_metric_to_csv,
 )
-from simulations.visuals.plot_eidolon_value import plot_eidolon_value
 from simulations.characters.base_character import Character
 from simulations.characters.erudition.anaxa import Anaxa
 from simulations.characters.harmony.ruan_mei import RuanMei
@@ -33,12 +33,16 @@ def main() -> None:
         marginal_value = calculate_marginal_value(avg_dmg, pulls_per_eidolon)
 
         export_metric_to_csv(avg_dmg, character.get_name(), "avg_dmg", "data_output")
-        export_metric_to_csv(dmg_per_pull, character.get_name(), "dmg_per_pull", "data_output")
-        export_metric_to_csv(marginal_value, character.get_name(), "marginal_value", "data_output")
+        export_metric_to_csv(
+            dmg_per_pull, character.get_name(), "dmg_per_pull", "data_output"
+        )
+        export_metric_to_csv(
+            marginal_value, character.get_name(), "marginal_value", "data_output"
+        )
 
-        # plot_eidolon_value(
-        #     avg_dmg, dmg_per_pull, marginal_value, character_name=character.get_name()
-        # )
+        combine_metric_csvs("avg_dmg")
+        combine_metric_csvs("dmg_per_pull")
+        combine_metric_csvs("marginal_value")
 
 
 if __name__ == "__main__":

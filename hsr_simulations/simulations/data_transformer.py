@@ -1,4 +1,3 @@
-# Module-level constants for pulls per copy
 import csv
 import os
 from typing import Dict, Optional
@@ -116,7 +115,10 @@ def calculate_marginal_value(
 
 
 def export_metric_to_csv(
-    metric_data: dict, character_name: str, metric_name: str, out_dir: Optional[str] = None
+    metric_data: dict,
+    character_name: str,
+    metric_name: str,
+    out_dir: Optional[str] = None,
 ):
     """
     Export a metric dictionary to a CSV file for a given character.
@@ -137,3 +139,46 @@ def export_metric_to_csv(
         writer.writerow(["Character", "Eidolon", metric_name])
         for eidolon, value in metric_data.items():
             writer.writerow([character_name, eidolon, value])
+
+
+def combine_metric_csvs(
+    metric_name: str, data_dir: Optional[str] = None, out_path: Optional[str] = None
+):
+    """
+    Combine metric CSVs for all characters into a single CSV file.
+    Args:
+        metric_name: The metric to combine (e.g., 'avg_dmg', 'dmg_per_pull', 'marginal_value')
+        data_dir: Directory containing per-character metric CSVs (default: data_output/)
+        out_path: Output CSV file path (default: data_output/all_{metric_name}.csv)
+    """
+    import glob
+
+    if data_dir is None:
+        data_dir = os.path.join(os.path.dirname(__file__), "..", "data_output")
+        data_dir = os.path.abspath(data_dir)
+
+    if out_path is None:
+        out_path = os.path.join(data_dir, f"all_{metric_name}.csv")
+
+    # Find all matching CSVs in subfolders
+    pattern = os.path.join(data_dir, "*", f"*_{metric_name}.csv")
+    csv_files = glob.glob(pattern)
+
+    combined_rows = []
+    header = None
+    for csv_file in csv_files:
+        with open(csv_file, newline="") as f:
+            reader = csv.reader(f)
+            file_header = next(reader)
+            if header is None:
+                header = file_header
+            for row in reader:
+                combined_rows.append(row)
+
+    if header is None:
+        raise ValueError(f"No CSV files found for metric: {metric_name}")
+
+    with open(out_path, mode="w", newline="") as f:
+        writer = csv.writer(f)
+        writer.writerow(header)
+        writer.writerows(combined_rows)
