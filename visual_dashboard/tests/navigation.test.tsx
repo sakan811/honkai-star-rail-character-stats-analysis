@@ -2,7 +2,7 @@ import { render, screen } from '@testing-library/react'
 import { describe, expect, it, vi } from 'vitest'
 import Home from '../src/app/page'
 import DashboardPage from '../src/app/dashboard/page'
-import AnaxaPage from '../src/app/anaxa/page'
+import AnaxaPage from '../src/app/dashboard/anaxa/page'
 
 // Mock next/link
 vi.mock('next/link', () => ({
