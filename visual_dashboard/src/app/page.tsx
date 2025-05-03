@@ -16,7 +16,7 @@ export default function Home() {
           </button>
         </Link>
       </div>
-      <h1 className="text-2xl font-bold mb-6 text-center mt-8">Eidolon & Signature Light Cone Value Analysis</h1>
+      <h2 className="text-2xl font-bold mb-6 text-center mt-8">Eidolon & Signature Light Cone Value Analysis</h2>
       <div className="mb-6">
         <h2 className="text-xl font-semibold mb-2">Key Plots</h2>
         <ul className="list-disc pl-6 space-y-2">

@@ -30,7 +30,7 @@ describe('Navigation flow', () => {
   it('ensures correct navigation from dashboard to character page', () => {
     render(<DashboardPage />)
     const anaxaLink = screen.getByText('Anaxa')
-    expect(anaxaLink.getAttribute('href')).toBe('/anaxa')
+    expect(anaxaLink.getAttribute('href')).toBe('/dashboard/anaxa')
   })
   
   it('ensures correct navigation from character page back to dashboard', () => {
