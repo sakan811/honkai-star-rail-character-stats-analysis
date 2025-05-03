@@ -1,17 +1,17 @@
 "use client";
-
+import Link from "next/link";
 
 export default function DashboardPage() {
   return (
     <main className="max-w-2xl mx-auto p-6">
       <div className="mb-4">
-        <a
+        <Link
           href="/"
           className="inline-block bg-gray-600 hover:bg-gray-700 text-white font-semibold rounded-lg px-4 py-2 transition-colors duration-200 text-sm shadow"
         >
           Back to Home
-        </a>
-      </div>      
+        </Link>
+      </div>
       <div className="mt-8">
         <h2 className="text-xl font-semibold mb-4">Character Dashboards</h2>
         <div className="flex justify-center gap-4">
@@ -38,4 +38,3 @@ export default function DashboardPage() {
     </main>
   );
 }
-

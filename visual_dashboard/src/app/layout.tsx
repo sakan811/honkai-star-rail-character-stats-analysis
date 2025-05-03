@@ -14,7 +14,8 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "Honkai: Star Rail Eidolon and Signature Lightcone Value Analysis",
-  description: "Analyze the value proposition of different Eidolon levels and signature lightcone for characters in Honkai: Star Rail",
+  description:
+    "Analyze the value proposition of different Eidolon levels and signature lightcone for characters in Honkai: Star Rail",
 };
 
 export default function RootLayout({
