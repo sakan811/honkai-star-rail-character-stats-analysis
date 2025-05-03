@@ -10,6 +10,8 @@ Analyze the value proposition of different Eidolon levels and signature lightcon
 
 ## Character Dashboard Website
 
+<https://hsr-eidolon-value-analysis.vercel.app/>
+
 ## Overview
 
 Eidolons and signature lightcone in Honkai: Star Rail can significantly boost a character's combat performance, but they require substantial investment in terms of Star Rail Special Passes or Jade. This tool helps quantify the value of each Eidolon level and signature lightcone by analyzing:
@@ -38,4 +40,3 @@ For detailed explanations of each plot with examples, see [VISUALS.md](docs/VISU
 This simulation might not be 100% accurate and is intended for educational purposes only.
 
 Signature Light Cones are evaluated at their base (non-superimposed) level.
-
