@@ -1,30 +1,23 @@
+from simulations.data_transformer import (
+    calculate_dmg_per_pull,
+    calculate_marginal_value,
+    calculate_pulls_per_eidolon,
+    combine_metric_csvs,
+    convert_simulation_data_to_avg_dmg,
+    export_metric_to_csv,
+)
 from simulations.characters.base_character import Character
 from simulations.characters.erudition.anaxa import Anaxa
 from simulations.characters.harmony.ruan_mei import RuanMei
 from simulations.characters.remembrance.castorice import Castorice
+from simulations.logger_config import get_default_logger
 from simulations.simulation import run_simulations
-from simulations.visuals.plot_eidolon_value import (
-    convert_simulation_data_to_avg_dmg,
-    calculate_pulls_per_eidolon,
-    calculate_dmg_per_pull,
-    calculate_marginal_value,
-    plot_eidolon_value,
-)
-import logging
-
-# Set up default logger
-logger = logging.getLogger("hsr_eidolon_value_analysis")
-logger.setLevel(logging.INFO)
-if not logger.hasHandlers():
-    handler = logging.StreamHandler()
-    formatter = logging.Formatter(
-        "%(asctime)s - %(levelname)s - %(module)s:%(lineno)d -  %(message)s"
-    )
-    handler.setFormatter(formatter)
-    logger.addHandler(handler)
 
 
-def main():
+logger = get_default_logger()
+
+
+def main() -> None:
     # Initialize characters
     character_list: list[Character] = [RuanMei(), Castorice(), Anaxa()]
 
@@ -39,9 +32,17 @@ def main():
         dmg_per_pull = calculate_dmg_per_pull(avg_dmg, pulls_per_eidolon)
         marginal_value = calculate_marginal_value(avg_dmg, pulls_per_eidolon)
 
-        plot_eidolon_value(
-            avg_dmg, dmg_per_pull, marginal_value, character_name=character.get_name()
+        export_metric_to_csv(avg_dmg, character.get_name(), "avg_dmg", "data_output")
+        export_metric_to_csv(
+            dmg_per_pull, character.get_name(), "dmg_per_pull", "data_output"
         )
+        export_metric_to_csv(
+            marginal_value, character.get_name(), "marginal_value", "data_output"
+        )
+
+        combine_metric_csvs("avg_dmg")
+        combine_metric_csvs("dmg_per_pull")
+        combine_metric_csvs("marginal_value")
 
 
 if __name__ == "__main__":

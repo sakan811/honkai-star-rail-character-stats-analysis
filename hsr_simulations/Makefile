@@ -11,3 +11,6 @@ mypy:
 	mypy . --strict --ignore-missing-imports
 
 qa: lint format mypy
+
+test:
+	python -m pytest tests

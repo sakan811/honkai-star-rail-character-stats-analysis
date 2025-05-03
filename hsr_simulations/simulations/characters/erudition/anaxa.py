@@ -45,11 +45,9 @@ class Anaxa(Character):
             self.qualitative_disclosure_mult = 0.324
 
         if has_e6:
-            e6_mult = 1.3
-            enchanced_a4_bufff_mult = self.calculate_dmg_increased_from_e6()
+            e6_buff_mult = self.calculate_dmg_increased_from_e6()
         else:
-            e6_mult = 0.0
-            enchanced_a4_bufff_mult = 0.0
+            e6_buff_mult = 0.0
 
         if has_lc:
             lc_mult = self.calculate_dmg_increased_from_lc()
@@ -76,8 +74,7 @@ class Anaxa(Character):
             * (1 + e1_mult)
             * (1 + e2_mult)
             * (1 + e4_mult)
-            * (1 + e6_mult)
-            * (1 + enchanced_a4_bufff_mult)
+            * (1 + e6_buff_mult)
             * (1 + lc_mult)
         )
 
@@ -203,6 +200,7 @@ class Anaxa(Character):
         BASE_BASIC_ATK_DMG = 500
         E6_CRIT_DMG_BONUS = 1.4  # 140%
         E6_ALLY_DMG_BONUS = 0.5  # 50%
+        ANAXA_DMG_MULT = 1.3
 
         def calculate_dmg(erudition_char_count: int, has_e6: bool) -> float:
             skill_points = BASE_SKILL_POINTS
@@ -216,16 +214,18 @@ class Anaxa(Character):
                 # E6: Both effects are always active, regardless of team comp
                 crit_dmg += E6_CRIT_DMG_BONUS * 2
                 crit_rate = 1.0  # Double crit rate for comparison
-                skill_dmg *= 1 + E6_ALLY_DMG_BONUS
-                basic_atk_dmg *= 1 + E6_ALLY_DMG_BONUS
+                skill_dmg *= (1 + E6_ALLY_DMG_BONUS) * (1 + ANAXA_DMG_MULT)
+                basic_atk_dmg *= (1 + E6_ALLY_DMG_BONUS) * (1 + ANAXA_DMG_MULT)
             else:
                 # Pre-E6: Only one effect based on erudition_char_count
                 if erudition_char_count == 1:
                     crit_dmg += E6_CRIT_DMG_BONUS * 2
                     crit_rate = 1.0
+                    skill_dmg *= 1 + ANAXA_DMG_MULT
+                    basic_atk_dmg *= 1 + ANAXA_DMG_MULT
                 elif erudition_char_count >= 2:
-                    skill_dmg *= 1 + E6_ALLY_DMG_BONUS
-                    basic_atk_dmg *= 1 + E6_ALLY_DMG_BONUS
+                    skill_dmg *= (1 + E6_ALLY_DMG_BONUS) * (1 + ANAXA_DMG_MULT)
+                    basic_atk_dmg *= (1 + E6_ALLY_DMG_BONUS) * (1 + ANAXA_DMG_MULT)
 
             # Calculate average damage per hit (crit weighted)
             avg_skill_dmg = skill_dmg * (1 + crit_rate * crit_dmg)
