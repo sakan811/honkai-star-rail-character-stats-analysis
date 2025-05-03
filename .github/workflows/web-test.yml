@@ -1,0 +1,41 @@
+name: Web Test
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+
+permissions:
+  contents: read
+  checks: write
+
+jobs:
+  test:
+    strategy:
+      matrix:
+        node-version:
+          - 22
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+          cache-dependency-path: './visual_dashboard/package-lock.json'
+
+      - name: Install dependencies
+        working-directory: ./visual_dashboard
+        run: npm install
+
+      - name: Run tests
+        working-directory: ./visual_dashboard
+        run: npm test
