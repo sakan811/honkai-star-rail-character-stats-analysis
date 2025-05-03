@@ -25,17 +25,15 @@ Data is based on:
 - <https://www.prydwen.gg/>
 - <https://starrailstation.com/en>
 
-## Generated Plots
+## Plots
 
-This tool generates three different visualizations to help analyze Eidolon value:
+There are 3 different visualizations to help analyze Eidolon and Signature Lightcone value:
 
 1. **Average Damage by Eidolon**: Raw damage increase per Eidolon level
 2. **Damage per Pull Efficiency**: Overall value proposition of pulls invested
 3. **Marginal Value of Each Eidolon**: Return on investment for each Eidolon upgrade
 
-For detailed explanations of each plot with examples, see [VISUALS.md](docs/VISUALS.md).
-
-## Disclaimer
+## Disclaimers
 
 This simulation might not be 100% accurate and is intended for educational purposes only.
 
