@@ -1,3 +1,16 @@
+import { SITE_DESCRIPTION, SITE_TITLE } from "@/app/layout";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: SITE_TITLE,
+  description: SITE_DESCRIPTION,
+  openGraph: {
+    title: SITE_TITLE,
+    description: SITE_DESCRIPTION,
+  },
+};
+
+
 export default function CastoricePage() {
   return (
     <div className="flex flex-col items-center p-6 w-full h-full min-h-screen">

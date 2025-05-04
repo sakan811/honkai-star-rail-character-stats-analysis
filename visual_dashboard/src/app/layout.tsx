@@ -12,10 +12,17 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+export const SITE_TITLE = "Honkai: Star Rail Eidolon and Signature Lightcone Value Analysis";
+export const SITE_DESCRIPTION =
+  "Analyze the value proposition of different Eidolon levels and signature lightcone for characters in Honkai: Star Rail";
+
 export const metadata: Metadata = {
-  title: "Honkai: Star Rail Eidolon and Signature Lightcone Value Analysis",
-  description:
-    "Analyze the value proposition of different Eidolon levels and signature lightcone for characters in Honkai: Star Rail",
+  title: SITE_TITLE,
+  description: SITE_DESCRIPTION,
+  openGraph: {
+    title: SITE_TITLE,
+    description: SITE_DESCRIPTION,
+  },
 };
 
 export default function RootLayout({

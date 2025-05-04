@@ -1,3 +1,15 @@
+import { SITE_TITLE, SITE_DESCRIPTION } from "@/app/layout";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: SITE_TITLE,
+  description: SITE_DESCRIPTION,
+  openGraph: {
+    title: SITE_TITLE,
+    description: SITE_DESCRIPTION,
+  },
+};
+
 export default function AnaxaPage() {
   return (
     <div className="flex flex-col items-center p-6 w-full h-full min-h-screen">

@@ -1,4 +1,16 @@
+import { Metadata } from "next";
 import Link from "next/link";
+import { SITE_TITLE, SITE_DESCRIPTION } from "./layout";
+
+
+export const metadata: Metadata = {
+  title: SITE_TITLE,
+  description: SITE_DESCRIPTION,
+  openGraph: {
+    title: SITE_TITLE,
+    description: SITE_DESCRIPTION,
+  },
+};
 
 export default function Home() {
   return (
