@@ -1,5 +1,15 @@
-"use client";
+import { Metadata } from "next";
 import Link from "next/link";
+import { SITE_DESCRIPTION, SITE_TITLE } from "../constants";
+
+export const metadata: Metadata = {
+  title: SITE_TITLE,
+  description: SITE_DESCRIPTION,
+  openGraph: {
+    title: SITE_TITLE,
+    description: SITE_DESCRIPTION,
+  },
+};
 
 export default function DashboardPage() {
   return (
