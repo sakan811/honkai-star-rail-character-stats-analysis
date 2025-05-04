@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import { SITE_TITLE, SITE_DESCRIPTION } from "./constants";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -11,11 +12,6 @@ const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
 });
-
-export const SITE_TITLE =
-  "Honkai: Star Rail Eidolon and Signature Lightcone Value Analysis";
-export const SITE_DESCRIPTION =
-  "Analyze the value proposition of different Eidolon levels and signature lightcone for characters in Honkai: Star Rail";
 
 export const metadata: Metadata = {
   title: SITE_TITLE,

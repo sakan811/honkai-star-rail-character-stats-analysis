@@ -1,6 +1,6 @@
 import { Metadata } from "next";
 import Link from "next/link";
-import { SITE_DESCRIPTION, SITE_TITLE } from "../layout";
+import { SITE_DESCRIPTION, SITE_TITLE } from "../constants";
 
 export const metadata: Metadata = {
   title: SITE_TITLE,

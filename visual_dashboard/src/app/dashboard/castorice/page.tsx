@@ -1,4 +1,4 @@
-import { SITE_DESCRIPTION, SITE_TITLE } from "@/app/layout";
+import { SITE_DESCRIPTION, SITE_TITLE } from "@/app/constants";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
