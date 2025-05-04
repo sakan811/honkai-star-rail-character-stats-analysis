@@ -10,7 +10,6 @@ export const metadata: Metadata = {
   },
 };
 
-
 export default function CastoricePage() {
   return (
     <div className="flex flex-col items-center p-6 w-full h-full min-h-screen">
