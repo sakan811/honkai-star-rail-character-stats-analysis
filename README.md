@@ -10,7 +10,7 @@ Analyze the value proposition of different Eidolon levels and signature lightcon
 
 ## Character Dashboard Website
 
-<https://hsr-eidolon-value-analysis.vercel.app/>
+<https://honkai-star-rail-eidolon-analysis.vercel.app/>
 
 ## Overview
 
