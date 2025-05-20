@@ -61,15 +61,18 @@ export default function HyacinePage() {
   const formatHealingPercent = (value: number) => `${(value * 100).toFixed(0)}%`;
 
   return (
-    <div className="flex flex-col items-center p-6 w-full h-full min-h-screen">
+    <div className="flex flex-col items-center p-6 w-full h-full min-h-screen bg-gradient-to-b from-cyan-300 to-amber-200">
       <a
-        href="/dashboard"
-        className="self-start mb-4 bg-gray-200 hover:bg-gray-300 text-gray-800 font-medium rounded px-4 py-2 transition-colors duration-200"
+        href="/"
+        className="self-start mb-4 bg-green-400 hover:bg-green-600 text-white font-medium rounded px-4 py-2 transition-colors duration-200"
       >
         ← Back
       </a>
       
-      <h1 className="text-3xl font-bold mb-6">Hyacine Healing Bonus Analysis</h1>
+      <h1 className="text-3xl font-bold mb-6 text-white"
+        style={{ textShadow: '-1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000' }}>
+          Hyacine A6 Trace Healing Bonus Analysis
+      </h1>
       
       {loading ? (
         <div className="flex items-center justify-center h-64">
@@ -122,7 +125,7 @@ export default function HyacinePage() {
                 type="monotone"
                 dataKey="increased_outgoing_healing"
                 name="Increased Healing"
-                stroke="#8884d8"
+                stroke="#3edf5d"
                 strokeWidth={2}
                 dot={{ r: 0 }}
                 activeDot={{ r: 6 }}

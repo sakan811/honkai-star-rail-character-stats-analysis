@@ -1,6 +1,6 @@
 import { render, screen } from "@testing-library/react";
 import { beforeEach, describe, expect, it } from "vitest";
-import AnaxaPage from "../src/app/dashboard/anaxa/page";
+import AnaxaPage from "../src/app/anaxa/page";
 
 describe("Anaxa page", () => {
   beforeEach(() => {
