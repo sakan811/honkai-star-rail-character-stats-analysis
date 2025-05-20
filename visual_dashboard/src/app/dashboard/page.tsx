@@ -43,6 +43,12 @@ export default function DashboardPage() {
           >
             Ruan Mei
           </a>
+          <a
+            href="/dashboard/hyacine"
+            className="inline-block bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg px-6 py-3 transition-colors duration-200 text-lg shadow"
+          >
+            Hyacine
+          </a>
         </div>
       </div>
     </main>
