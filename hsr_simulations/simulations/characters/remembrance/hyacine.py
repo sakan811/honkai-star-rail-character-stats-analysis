@@ -23,3 +23,6 @@ class Hyacine(Character):
                 data_dict["speed"].append(speed)
                 data_dict["increased_outgoing_healing"].append(0.0)
         return data_dict
+        
+    def output_data(self) -> dict[str, list[float]]:
+        return self.calculate_increased_outgoing_healing_by_spd()
