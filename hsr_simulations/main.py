@@ -1,5 +1,5 @@
-from hsr_simulations.simulations.characters.remembrance.hyacine import Hyacine
-from hsr_simulations.simulations.data_transformer import output_df
+from simulations.characters.remembrance.hyacine import Hyacine
+from simulations.data_transformer import output_df
 from simulations.characters.base_character import Character
 from simulations.logger_config import get_default_logger
 import os
@@ -13,7 +13,7 @@ def main() -> None:
     character_list: list[Character] = [Hyacine()]
     
     # Create the base directory if it doesn't exist
-    base_dir = "../visual_dashboard/public"
+    base_dir = "visual_dashboard/public"
     os.makedirs(base_dir, exist_ok=True)
     
     for character in character_list:
