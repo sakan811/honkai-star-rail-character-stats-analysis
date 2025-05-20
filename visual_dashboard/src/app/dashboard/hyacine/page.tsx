@@ -43,8 +43,8 @@ export default function HyacinePage() {
             setData(results.data);
             setLoading(false);
           },
-          error: (error) => {
-            setError(`CSV parsing error: ${error}`);
+          error: (error: Error, file?: any) => {
+            setError(`CSV parsing error: ${error.message || String(error)}`);
             setLoading(false);
           }
         });
