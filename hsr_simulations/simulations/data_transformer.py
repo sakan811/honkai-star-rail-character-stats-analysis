@@ -1,5 +1,5 @@
 import pandas as pd
-from hsr_simulations.simulations.characters.base_character import Character
+from simulations.characters.base_character import Character
 
 
 def output_df(character: Character) -> pd.DataFrame:

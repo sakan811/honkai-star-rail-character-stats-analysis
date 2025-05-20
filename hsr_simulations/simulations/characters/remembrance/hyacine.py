@@ -1,4 +1,5 @@
-from hsr_simulations.simulations.characters.base_character import Character
+from ctypes import Union
+from simulations.characters.base_character import Character
 
 
 class Hyacine(Character):
@@ -8,8 +9,9 @@ class Hyacine(Character):
     def __init__(self) -> None:
         self.speed = 110
 
-    def calculate_increased_outgoing_healing_by_spd(self) -> dict[str, list[float]]:
-        data_dict: dict[str, list[float]] = {
+    def calculate_increased_outgoing_healing_by_spd(self) -> dict[str, list[str | float]]:
+        data_dict: dict[str, list[str | float]] = {
+            "character": [],
             "speed": [],
             "increased_outgoing_healing": [],
         }
@@ -17,12 +19,14 @@ class Hyacine(Character):
             if speed > self.CONDITIONED_SPEED:
                 exceed_speed = speed - self.CONDITIONED_SPEED
                 increased_healing = exceed_speed * 0.01
+                data_dict["character"].append(self.__class__.__name__)
                 data_dict["speed"].append(speed)
                 data_dict["increased_outgoing_healing"].append(increased_healing)
             else:
+                data_dict["character"].append(self.__class__.__name__)
                 data_dict["speed"].append(speed)
                 data_dict["increased_outgoing_healing"].append(0.0)
         return data_dict
         
-    def output_data(self) -> dict[str, list[float]]:
+    def output_data(self) -> dict[str, list[str | float]]:
         return self.calculate_increased_outgoing_healing_by_spd()
