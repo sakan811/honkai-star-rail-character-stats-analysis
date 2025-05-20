@@ -91,21 +91,27 @@ export default function HyacinePage() {
           <ResponsiveContainer width="100%" height={500}>
             <LineChart
               data={data}
-              margin={{ top: 20, right: 30, left: 20, bottom: 40 }}
+              margin={{ top: 20, right: 30, left: 50, bottom: 60 }}
             >
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis 
                 dataKey="speed" 
                 type="number"
                 domain={['dataMin', 'dataMax']}
-                tickCount={10}
+                tickCount={7}
               >
-                <Label value="Speed" offset={-10} position="insideBottom" />
+                <Label value="Speed" offset={-20} position="insideBottom" dy={30} />
               </XAxis>
               <YAxis 
                 tickFormatter={formatHealingPercent}
               >
-                <Label value="Increased Outgoing Healing" angle={-90} position="insideLeft" style={{ textAnchor: 'middle' }} />
+                <Label 
+                  value="Increased Outgoing Healing" 
+                  angle={-90} 
+                  position="insideLeft" 
+                  style={{ textAnchor: 'middle' }} 
+                  dx={-35}
+                />
               </YAxis>
               <Tooltip 
                 formatter={(value: number) => [`${(value * 100).toFixed(2)}%`, 'Increased Healing']}
@@ -118,7 +124,8 @@ export default function HyacinePage() {
                 name="Increased Healing"
                 stroke="#8884d8"
                 strokeWidth={2}
-                activeDot={{ r: 8 }}
+                dot={{ r: 0 }}
+                activeDot={{ r: 6 }}
               />
             </LineChart>
           </ResponsiveContainer>
