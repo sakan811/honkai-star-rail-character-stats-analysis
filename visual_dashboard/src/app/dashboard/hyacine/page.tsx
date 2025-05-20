@@ -1,0 +1,138 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
+  Label,
+} from "recharts";
+import Papa from "papaparse";
+
+type HyacineData = {
+  character: string;
+  speed: number;
+  increased_outgoing_healing: number;
+};
+
+export default function HyacinePage() {
+  const [data, setData] = useState<HyacineData[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch("/hyacine/hyacine_data.csv");
+        if (!response.ok) {
+          throw new Error(`Failed to fetch data: ${response.status}`);
+        }
+        
+        const csvText = await response.text();
+        
+        Papa.parse<HyacineData>(csvText, {
+          header: true,
+          dynamicTyping: true,
+          skipEmptyLines: true,
+          complete: (results) => {
+            setData(results.data);
+            setLoading(false);
+          },
+          error: (error) => {
+            setError(`CSV parsing error: ${error}`);
+            setLoading(false);
+          }
+        });
+      } catch (err) {
+        setError(`Error: ${err instanceof Error ? err.message : String(err)}`);
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  // Format the healing percentage for display
+  const formatHealingPercent = (value: number) => `${(value * 100).toFixed(0)}%`;
+
+  return (
+    <div className="flex flex-col items-center p-6 w-full h-full min-h-screen">
+      <a
+        href="/dashboard"
+        className="self-start mb-4 bg-gray-200 hover:bg-gray-300 text-gray-800 font-medium rounded px-4 py-2 transition-colors duration-200"
+      >
+        ← Back
+      </a>
+      
+      <h1 className="text-3xl font-bold mb-6">Hyacine Healing Bonus Analysis</h1>
+      
+      {loading ? (
+        <div className="flex items-center justify-center h-64">
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+        </div>
+      ) : error ? (
+        <div className="text-red-500 p-4 border border-red-300 rounded bg-red-50">
+          {error}
+        </div>
+      ) : (
+        <div className="w-full max-w-5xl bg-white rounded-lg shadow-lg p-6">
+          <div className="mb-6">
+            <p className="text-gray-700">
+              This chart shows how Hyacine's outgoing healing increases as her Speed stat exceeds 200.
+              For every point of Speed above 200, healing is increased by 1%.
+            </p>
+          </div>
+          
+          <ResponsiveContainer width="100%" height={500}>
+            <LineChart
+              data={data}
+              margin={{ top: 20, right: 30, left: 20, bottom: 40 }}
+            >
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis 
+                dataKey="speed" 
+                type="number"
+                domain={['dataMin', 'dataMax']}
+                tickCount={10}
+              >
+                <Label value="Speed" offset={-10} position="insideBottom" />
+              </XAxis>
+              <YAxis 
+                tickFormatter={formatHealingPercent}
+              >
+                <Label value="Increased Outgoing Healing" angle={-90} position="insideLeft" style={{ textAnchor: 'middle' }} />
+              </YAxis>
+              <Tooltip 
+                formatter={(value: number) => [`${(value * 100).toFixed(2)}%`, 'Increased Healing']}
+                labelFormatter={(label) => `Speed: ${label}`}
+              />
+              <Legend />
+              <Line
+                type="monotone"
+                dataKey="increased_outgoing_healing"
+                name="Increased Healing"
+                stroke="#8884d8"
+                strokeWidth={2}
+                activeDot={{ r: 8 }}
+              />
+            </LineChart>
+          </ResponsiveContainer>
+          
+          <div className="mt-6">
+            <h2 className="text-xl font-semibold mb-2">Key Observations</h2>
+            <ul className="list-disc pl-5 space-y-1">
+              <li>No healing bonus is applied until Speed exceeds 200</li>
+              <li>At maximum speed (400), healing bonus reaches 200%</li>
+              <li>The relationship is linear: each Speed point above 200 adds 1% healing</li>
+            </ul>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
