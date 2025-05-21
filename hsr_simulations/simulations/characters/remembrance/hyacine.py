@@ -7,14 +7,14 @@ class Hyacine(Character):
     MAX_SPEED = 400
     MINOR_TRACES_SPEED = 14
     SIGNATURE_LIGHTCONE_SPEED_MULT = 0.18
-    RELICS_SPEED_MULT = 0.12
+    RELICS_SPEED_MULT = 0.06
     PLANETARY_SPEED_MULT = 0.06
     FEET_RELICS_SPEED_MULT = 0.25032
 
     def __init__(self) -> None:
         self.speed = self.BASE_SPEED
         self.speed_after_minor_traces = self.speed + self.MINOR_TRACES_SPEED
-        self.speed_after_relics_and_planetary_sets = self.speed_after_minor_traces * (1 + self.RELICS_SPEED_MULT) * (1 + self.PLANETARY_SPEED_MULT) * (1 + self.FEET_RELICS_SPEED_MULT)
+        self.speed_after_relics_and_planetary_sets = self.speed_after_minor_traces * (1 + self.RELICS_SPEED_MULT) * (1 + self.RELICS_SPEED_MULT) * (1 + self.PLANETARY_SPEED_MULT) * (1 + self.FEET_RELICS_SPEED_MULT)
         self.speed_after_signature_lightcone = self.speed_after_relics_and_planetary_sets * (1 + self.SIGNATURE_LIGHTCONE_SPEED_MULT)
 
     def calculate_increased_outgoing_healing_by_spd(self) -> dict[str, list[str | float]]:
