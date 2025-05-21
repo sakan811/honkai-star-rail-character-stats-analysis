@@ -32,9 +32,7 @@ describe("Root Layout", () => {
 describe("Metadata", () => {
   it("exports correct metadata object", async () => {
     const { metadata } = await import("../src/app/layout");
-    expect(metadata.title).toBe(
-      "Honkai: Star Rail Character Stats Analysis",
-    );
+    expect(metadata.title).toBe("Honkai: Star Rail Character Stats Analysis");
     expect(metadata.description).toBe(
       "Analyze Honkai: Star Rail's characters stats based on different scenarios or their abilities.",
     );
