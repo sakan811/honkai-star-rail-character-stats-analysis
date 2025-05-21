@@ -60,17 +60,29 @@ export default function HyacinePage() {
   // Format the healing percentage for display
   const formatHealingPercent = (value: number) => `${(value * 100).toFixed(0)}%`;
 
+  // Custom tooltip component with slate-700 styling for the speed label
+  const CustomTooltip = ({ active, payload, label }: any) => {
+    if (active && payload && payload.length) {
+      return (
+        <div className="bg-white p-2 border border-slate-200 shadow-md rounded">
+          <p className="text-slate-700 font-medium">{`Speed: ${label}`}</p>
+          <p className="text-emerald-600">{`Increased Healing: ${(payload[0].value * 100).toFixed(2)}%`}</p>
+        </div>
+      );
+    }
+    return null;
+  };
+
   return (
     <div className="flex flex-col items-center p-6 w-full h-full min-h-screen bg-gradient-to-b from-cyan-500 to-amber-200">
       <a
         href="/"
-        className="self-start mb-4 bg-green-400 hover:bg-green-600 text-white font-medium rounded px-4 py-2 transition-colors duration-200"
+        className="self-start mb-4 bg-green-400 hover:bg-green-600 text-slate-50 font-medium rounded px-4 py-2 transition-colors duration-200"
       >
         ← Back
       </a>
       
-      <h1 className="text-3xl font-bold mb-6 text-white"
-        style={{ textShadow: '-1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000' }}>
+      <h1 className="text-3xl font-bold mb-6 text-slate-50">
           Hyacine A6 Trace Healing Bonus Analysis
       </h1>
       
@@ -85,7 +97,7 @@ export default function HyacinePage() {
       ) : (
         <div className="w-full max-w-5xl bg-white rounded-lg shadow-lg p-6">
           <div className="mb-6">
-            <p className="text-gray-700">
+            <p className="text-slate-700">
               This chart shows how Hyacine's outgoing healing increases as her Speed stat exceeds 200.
               For every point of Speed above 200, healing is increased by 1%.
             </p>
@@ -116,10 +128,7 @@ export default function HyacinePage() {
                   dx={-35}
                 />
               </YAxis>
-              <Tooltip 
-                formatter={(value: number) => [`${(value * 100).toFixed(2)}%`, 'Increased Healing']}
-                labelFormatter={(label) => `Speed: ${label}`}
-              />
+              <Tooltip content={<CustomTooltip />} />
               <Legend />
               <Line
                 type="monotone"
@@ -134,8 +143,8 @@ export default function HyacinePage() {
           </ResponsiveContainer>
           
           <div className="mt-6">
-            <h2 className="text-xl font-semibold mb-2">Key Observations</h2>
-            <ul className="list-disc pl-5 space-y-1">
+            <h2 className="text-xl font-semibold mb-2 text-slate-700">Key Observations</h2>
+            <ul className="list-disc pl-5 space-y-1 text-slate-700">
               <li>No healing bonus is applied until Speed exceeds 200</li>
               <li>At maximum speed (400), healing bonus reaches 200%</li>
               <li>The relationship is linear: each Speed point above 200 adds 1% healing</li>
