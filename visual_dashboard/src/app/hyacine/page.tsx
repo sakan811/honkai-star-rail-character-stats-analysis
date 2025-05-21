@@ -61,7 +61,7 @@ export default function HyacinePage() {
   const formatHealingPercent = (value: number) => `${(value * 100).toFixed(0)}%`;
 
   return (
-    <div className="flex flex-col items-center p-6 w-full h-full min-h-screen bg-gradient-to-b from-cyan-300 to-amber-200">
+    <div className="flex flex-col items-center p-6 w-full h-full min-h-screen bg-gradient-to-b from-cyan-500 to-amber-200">
       <a
         href="/"
         className="self-start mb-4 bg-green-400 hover:bg-green-600 text-white font-medium rounded px-4 py-2 transition-colors duration-200"
