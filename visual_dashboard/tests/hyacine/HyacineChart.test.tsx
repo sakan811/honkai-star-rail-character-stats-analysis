@@ -37,45 +37,50 @@ global.fetch = vi.fn();
 
 // Mock Papa Parse
 vi.mock("papaparse", () => {
+  const mockParse = vi.fn((_, options) => {
+    const mockData = [
+      {
+        character: "Hyacine",
+        speed: 150,
+        increased_outgoing_healing: 0,
+        base_speed: 100,
+        speed_after_minor_traces: 120,
+        speed_after_signature_lightcone: 220,
+        speed_after_relics_and_planetary_sets: 180,
+      },
+      {
+        character: "Hyacine",
+        speed: 200,
+        increased_outgoing_healing: 0,
+        base_speed: 100,
+        speed_after_minor_traces: 120,
+        speed_after_signature_lightcone: 220,
+        speed_after_relics_and_planetary_sets: 180,
+      },
+      {
+        character: "Hyacine",
+        speed: 250,
+        increased_outgoing_healing: 0.5,
+        base_speed: 100,
+        speed_after_minor_traces: 120,
+        speed_after_signature_lightcone: 220,
+        speed_after_relics_and_planetary_sets: 180,
+      },
+    ];
+
+    if (options.complete) {
+      options.complete({
+        data: mockData,
+        meta: { fields: Object.keys(mockData[0]) },
+      });
+    }
+
+    return mockData;
+  });
+
   return {
     default: {
-      parse: vi.fn((_, options) => {
-        const mockData = [
-          {
-            character: "Hyacine",
-            speed: 150,
-            increased_outgoing_healing: 0,
-            base_speed: 100,
-            speed_after_minor_traces: 120,
-            speed_after_signature_lightcone: 220,
-            speed_after_relics_and_planetary_sets: 180,
-          },
-          {
-            character: "Hyacine",
-            speed: 200,
-            increased_outgoing_healing: 0,
-            base_speed: 100,
-            speed_after_minor_traces: 120,
-            speed_after_signature_lightcone: 220,
-            speed_after_relics_and_planetary_sets: 180,
-          },
-          {
-            character: "Hyacine",
-            speed: 250,
-            increased_outgoing_healing: 0.5,
-            base_speed: 100,
-            speed_after_minor_traces: 120,
-            speed_after_signature_lightcone: 220,
-            speed_after_relics_and_planetary_sets: 180,
-          },
-        ];
-        
-        if (options.complete) {
-          options.complete({ data: mockData, meta: { fields: Object.keys(mockData[0]) } });
-        }
-        
-        return mockData;
-      }),
+      parse: mockParse,
     },
   };
 });
@@ -95,17 +100,17 @@ describe("HyacineChart Component", () => {
 
   it("renders the chart after data is loaded", async () => {
     render(<HyacineChart />);
-    
+
     // Wait for the loading state to disappear
     await waitFor(() => {
       expect(screen.queryByTestId("loading-spinner")).not.toBeTruthy();
     });
-    
+
     // Check chart components are rendered
     expect(screen.getByTestId("responsive-container")).toBeTruthy();
     expect(screen.getByTestId("line-chart")).toBeTruthy();
     expect(screen.getByTestId("chart-line")).toBeTruthy();
-    
+
     // Check reference lines
     expect(screen.getByTestId("reference-line-200")).toBeTruthy(); // Healing threshold
     expect(screen.getByTestId("reference-line-100")).toBeTruthy(); // Base speed
@@ -116,16 +121,16 @@ describe("HyacineChart Component", () => {
 
   it("displays speed analysis information after data is loaded", async () => {
     render(<HyacineChart />);
-    
+
     await waitFor(() => {
       expect(screen.queryByTestId("loading-spinner")).not.toBeTruthy();
     });
-    
+
     // Check the header sections
     expect(screen.getByText("Overview")).toBeTruthy();
     expect(screen.getByText("Speed Analysis")).toBeTruthy();
     expect(screen.getByText("Speed Progression")).toBeTruthy();
-    
+
     // Check section headers
     expect(screen.getByText("Minor Traces")).toBeTruthy();
     expect(screen.getByText("Signature Light Cone")).toBeTruthy();
@@ -135,32 +140,36 @@ describe("HyacineChart Component", () => {
   it("handles fetch errors gracefully", async () => {
     // Setup fetch to reject
     (global.fetch as any).mockRejectedValue(new Error("Network error"));
-    
+
     render(<HyacineChart />);
-    
+
     await waitFor(() => {
       expect(screen.queryByTestId("loading-spinner")).not.toBeTruthy();
     });
-    
+
     // Error message should be displayed
     expect(screen.getByText(/Failed to fetch CSV/i)).toBeTruthy();
   });
 
   it("handles CSV parsing errors gracefully", async () => {
-    // Setup Papa Parse to throw an error
-    vi.mocked(window.Papa.parse).mockImplementationOnce((_, options) => {
+    // Reset previous mocks
+    vi.clearAllMocks();
+
+    // Create a mock Papa.parse that triggers an error
+    const mockPapaparse = await import("papaparse");
+    mockPapaparse.default.parse = vi.fn((_, options) => {
       if (options.error) {
         options.error({ message: "Invalid CSV format" });
       }
-      return {} as any;
+      return {};
     });
-    
+
     render(<HyacineChart />);
-    
+
     await waitFor(() => {
       expect(screen.queryByTestId("loading-spinner")).not.toBeTruthy();
     });
-    
+
     // Error message should be displayed
     expect(screen.getByText(/Failed to parse CSV/i)).toBeTruthy();
   });

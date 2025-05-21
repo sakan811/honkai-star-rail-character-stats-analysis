@@ -9,7 +9,7 @@ describe("Constants", () => {
 
   it("exports the correct site description", () => {
     expect(SITE_DESCRIPTION).toBe(
-      "Analyze Honkai: Star Rail's characters stats based on different scenarios or their abilities."
+      "Analyze Honkai: Star Rail's characters stats based on different scenarios or their abilities.",
     );
   });
 });
