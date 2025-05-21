@@ -19,7 +19,8 @@ export default function Home() {
           Honkai: Star Rail Character Stats Analysis
         </h1>
         <p className="text-2xl mb-10 text-center text-slate-50">
-          Analyze Honkai: Star Rail's characters stats based on different scenarios.
+          Analyze Honkai: Star Rail characters stats based on different
+          scenarios.
         </p>
         <div className="flex justify-center gap-4">
           <Link href="/hyacine">

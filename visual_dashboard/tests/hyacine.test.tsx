@@ -14,13 +14,16 @@ class ResizeObserverMock {
 beforeEach(() => {
   // Mock ResizeObserver
   global.ResizeObserver = ResizeObserverMock;
-  
+
   // Mock fetch
   global.fetch = vi.fn(() =>
     Promise.resolve({
       ok: true,
-      text: () => Promise.resolve("character,speed,increased_outgoing_healing\nHyacine,220,0.2"),
-    })
+      text: () =>
+        Promise.resolve(
+          "character,speed,increased_outgoing_healing\nHyacine,220,0.2",
+        ),
+    }),
   ) as any;
 });
 
@@ -50,7 +53,9 @@ vi.mock("recharts", () => {
     Line: () => <div data-testid="chart-line">Line Mock</div>,
     XAxis: () => <div data-testid="x-axis">XAxis Mock</div>,
     YAxis: () => <div data-testid="y-axis">YAxis Mock</div>,
-    CartesianGrid: () => <div data-testid="cartesian-grid">CartesianGrid Mock</div>,
+    CartesianGrid: () => (
+      <div data-testid="cartesian-grid">CartesianGrid Mock</div>
+    ),
     Tooltip: () => <div data-testid="tooltip">Tooltip Mock</div>,
     Legend: () => <div data-testid="legend">Legend Mock</div>,
     Label: () => <div data-testid="label">Label Mock</div>,
@@ -64,14 +69,28 @@ vi.mock("papaparse", () => {
       parse: vi.fn((csvText, options) => {
         options.complete({
           data: [
-            { character: "Hyacine", speed: 220, increased_outgoing_healing: 0.2 },
-            { character: "Hyacine", speed: 300, increased_outgoing_healing: 1.0 },
-            { character: "Hyacine", speed: 400, increased_outgoing_healing: 2.0 }
+            {
+              character: "Hyacine",
+              speed: 220,
+              increased_outgoing_healing: 0.2,
+            },
+            {
+              character: "Hyacine",
+              speed: 300,
+              increased_outgoing_healing: 1.0,
+            },
+            {
+              character: "Hyacine",
+              speed: 400,
+              increased_outgoing_healing: 2.0,
+            },
           ],
-          meta: { fields: ["character", "speed", "increased_outgoing_healing"] }
+          meta: {
+            fields: ["character", "speed", "increased_outgoing_healing"],
+          },
         });
-      })
-    }
+      }),
+    },
   };
 });
 
@@ -100,13 +119,15 @@ describe("Navigation flow", () => {
 
   it("displays chart content after data loads", async () => {
     render(<HyacinePage />);
-    
+
     // Wait for chart elements to be rendered
     await waitFor(() => {
       // Should find description text
-      const description = screen.getByText(/This chart shows how Hyacine's outgoing healing increases/);
+      const description = screen.getByText(
+        /This chart shows how Hyacine's outgoing healing increases/,
+      );
       expect(description).toBeTruthy();
-      
+
       // Check for mocked chart components
       expect(screen.getByTestId("responsive-container")).toBeTruthy();
     });
@@ -114,19 +135,21 @@ describe("Navigation flow", () => {
 
   it("displays key observations section", async () => {
     render(<HyacinePage />);
-    
+
     await waitFor(() => {
       // Look for the heading text within all elements
       const keyObservationsHeading = screen.getByText(/Key Observations/);
       expect(keyObservationsHeading).toBeTruthy();
-      
+
       // Check for the list items
       const listItems = screen.getAllByRole("listitem");
       expect(listItems.length).toBe(3);
-      
+
       // Check content of the first item
       const firstItem = listItems[0];
-      expect(firstItem.textContent).toContain("No healing bonus is applied until Speed exceeds 200");
+      expect(firstItem.textContent).toContain(
+        "No healing bonus is applied until Speed exceeds 200",
+      );
     });
   });
 });
