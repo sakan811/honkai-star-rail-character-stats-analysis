@@ -10,4 +10,4 @@ Analyze Honkai: Star Rail's characters stats based on different scenarios or the
 
 ## Character Dashboard Website
 
-<https://honkai-star-rail-eidolon-analysis.vercel.app/>
+<https://honkai-star-rail-character-stats-analysis.vercel.app/>
