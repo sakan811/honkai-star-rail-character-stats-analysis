@@ -13,6 +13,13 @@ import {
 } from "recharts";
 import Papa from 'papaparse';
 
+// Define the error type for Papa.parse
+type ParseError = {
+  message: string;
+  code?: string;
+  type?: string;
+};
+
 type HyacineData = {
   character: string;
   speed: number;
@@ -23,11 +30,8 @@ type HyacineData = {
   speed_after_relics_and_planetary_sets: number;
 };
 
-interface CustomTooltipProps {
-  active?: boolean;
-  payload?: Array<{ value: number; name: string; dataKey?: string }>;
-  label?: string;
-}
+// We'll use Recharts' own types instead of our custom interface
+import { TooltipProps } from "recharts";
 
 const HyacineChart = () => {
   const [data, setData] = useState<HyacineData[]>([]);
@@ -63,7 +67,7 @@ const HyacineChart = () => {
             }
             setLoading(false);
           },
-          error: (error) => {
+          error: (error: ParseError) => {
             setError(`Failed to parse CSV: ${error.message}`);
             setLoading(false);
           }
@@ -147,11 +151,11 @@ const HyacineChart = () => {
             />
           </YAxis>
           <Tooltip content={({ active, payload, label }) => 
-            active && payload && payload.length ? (
+            active && payload && payload.length && payload[0]?.value !== undefined ? (
               <div className="bg-white p-3 border border-slate-200 shadow-md rounded">
                 <p className="text-slate-700 font-medium">{`Speed: ${label}`}</p>
                 <p className="text-emerald-600">
-                  {`Increased Healing: ${(payload[0].value * 100).toFixed(2)}%`}
+                  {`Increased Healing: ${(Number(payload[0].value) * 100).toFixed(2)}%`}
                 </p>
                 {Number(label) === 200 && (
                   <p className="text-red-600 font-medium">Healing Bonus Threshold</p>
