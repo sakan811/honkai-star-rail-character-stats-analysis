@@ -33,10 +33,10 @@ describe("Metadata", () => {
   it("exports correct metadata object", async () => {
     const { metadata } = await import("../src/app/layout");
     expect(metadata.title).toBe(
-      "Honkai: Star Rail Eidolon and Signature Lightcone Value Analysis",
+      "Honkai: Star Rail Character Stats Analysis",
     );
     expect(metadata.description).toBe(
-      "Analyze the value proposition of different Eidolon levels and signature lightcone for characters in Honkai: Star Rail",
+      "Analyze Honkai: Star Rail's characters stats based on different scenarios or their abilities.",
     );
   });
 });
