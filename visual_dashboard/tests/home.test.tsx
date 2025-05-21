@@ -19,17 +19,17 @@ describe("Home page", () => {
     render(<Home />);
     const heading = screen.getByRole("heading", { level: 1 });
     expect(heading.textContent).toContain(
-      "Honkai: Star Rail Eidolon and Signature Lightcone Value Analysis",
+      "Honkai: Star Rail Character Stats Analysis",
     );
   });
-  it("displays the dashboard button", () => {
+  it("displays the Hyacine button", () => {
     render(<Home />);
-    const button = screen.getByRole("button", { name: /dashboard/i });
+    const button = screen.getByRole("button", { name: /hyacine/i });
     expect(button).toBeDefined();
   });
-  it("has a link to the dashboard page", () => {
+  it("has a link to the Hyacine page", () => {
     render(<Home />);
     const link = screen.getByRole("link");
-    expect(link.getAttribute("href")).toBe("/dashboard");
+    expect(link.getAttribute("href")).toBe("/hyacine");
   });
 });

@@ -13,6 +13,7 @@ import {
   Label,
 } from "recharts";
 import Papa from "papaparse";
+import Link from "next/link";
 
 type HyacineData = {
   character: string;
@@ -75,12 +76,12 @@ export default function HyacinePage() {
 
   return (
     <div className="flex flex-col items-center p-6 w-full h-full min-h-screen bg-gradient-to-b from-cyan-500 to-amber-200">
-      <a
+      <Link
         href="/"
         className="self-start mb-4 bg-green-400 hover:bg-green-600 text-slate-50 font-medium rounded px-4 py-2 transition-colors duration-200"
       >
         ← Back
-      </a>
+      </Link>
       
       <h1 className="text-3xl font-bold mb-6 text-slate-50">
           Hyacine A6 Trace Healing Bonus Analysis
@@ -88,7 +89,10 @@ export default function HyacinePage() {
       
       {loading ? (
         <div className="flex items-center justify-center h-64">
-          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"
+                role="status"
+                aria-label="loading"
+          ></div>
         </div>
       ) : error ? (
         <div className="text-red-500 p-4 border border-red-300 rounded bg-red-50">

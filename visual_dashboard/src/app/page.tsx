@@ -16,7 +16,7 @@ export default function Home() {
     <div className="min-h-screen bg-gradient-to-b from-cyan-500 to-amber-200">
       <main className="max-w-4xl mx-auto py-12 px-4 sm:px-8 font-sans">
         <h1 className="text-3xl sm:text-4xl font-bold mb-6 text-center w-full text-slate-50">
-          Honkai: Star Rail Character Analysis
+          Honkai: Star Rail Character Stats Analysis
         </h1>
         <p className="text-2xl mb-10 text-center text-slate-50">
           Analyze Honkai: Star Rail's characters stats based on different scenarios.
