@@ -96,11 +96,14 @@ const HyacineChart = () => {
   // Calculate speed increases and healing bonuses
   const speedIncreases = {
     fromTraces: speedValues.withTraces - speedValues.base,
-    fromLightcone: speedValues.withLightcone - speedValues.withTraces,
-    fromRelics: speedValues.fullBuild - speedValues.withLightcone
+    fromLightcone: speedValues.withLightcone - speedValues.fullBuild,
+    fromRelics: speedValues.fullBuild - speedValues.withTraces
   };
 
-  const totalSpeedGain = speedValues.fullBuild - speedValues.base;
+  const traceSpeedGain = (speedValues.withTraces - speedValues.base) / speedValues.base;
+  const relicsSpeedGain = (speedValues.fullBuild - speedValues.withTraces) / speedValues.withTraces;
+  const lightconeSpeedGain = (speedValues.withLightcone - speedValues.fullBuild) / speedValues.withLightcone;
+  const totalSpeedGain = speedIncreases.fromTraces + speedIncreases.fromLightcone + speedIncreases.fromRelics;
   const healingBonusAtFullBuild = Math.max(0, speedValues.fullBuild - 200);
 
   return (
@@ -116,10 +119,11 @@ const HyacineChart = () => {
         </p>
       </div>
 
-      <ResponsiveContainer width="100%" height={500}>
+      {/* Increased height and adjusted margins to fix overlap */}
+      <ResponsiveContainer width="100%" height={600}>
         <LineChart
           data={data}
-          margin={{ top: 30, right: 30, left: 20, bottom: 70 }}
+          margin={{ top: 30, right: 30, left: 60, bottom: 100 }}
         >
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis
@@ -130,13 +134,16 @@ const HyacineChart = () => {
           >
             <Label value="Speed" offset={-20} position="insideBottom" dy={30} />
           </XAxis>
-          <YAxis tickFormatter={(value) => `${(value * 100).toFixed(0)}%`}>
+          <YAxis 
+            tickFormatter={(value) => `${(value * 100).toFixed(0)}%`}
+            width={60}
+          >
             <Label
               value="Increased Outgoing Healing"
               angle={-90}
               position="insideLeft"
               style={{ textAnchor: "middle" }}
-              dx={-35}
+              dx={-45}
             />
           </YAxis>
           <Tooltip content={({ active, payload, label }) => 
@@ -162,7 +169,6 @@ const HyacineChart = () => {
               </div>
             ) : null
           } />
-          <Legend />
           
           <Line
             type="monotone"
@@ -174,70 +180,25 @@ const HyacineChart = () => {
             activeDot={{ r: 6 }}
           />
           
-          {/* Reference lines with adjusted label positions */}
-          <ReferenceLine
-            x={200}
-            stroke="red"
-            strokeDasharray="3 3"
-            label={{ 
-              value: "Threshold (200)", 
-              position: "top", 
-              fill: "red", 
-              fontSize: 10,
-              dy: -10
-            }}
-          />
+          <ReferenceLine x={200} stroke="red" strokeDasharray="3 3" />
+          <ReferenceLine x={speedValues.base} stroke="blue" strokeDasharray="3 3" />
+          <ReferenceLine x={speedValues.withTraces} stroke="purple" strokeDasharray="3 3" />
+          <ReferenceLine x={speedValues.withLightcone} stroke="orange" strokeDasharray="3 3" />
+          <ReferenceLine x={speedValues.fullBuild} stroke="darkred" strokeDasharray="3 3" />
           
-          <ReferenceLine
-            x={speedValues.base}
-            stroke="blue"
-            strokeDasharray="3 3"
-            label={{ 
-              value: `Base (${speedValues.base})`, 
-              position: "top", 
-              fill: "blue", 
-              fontSize: 10,
-              dy: -10
-            }}
-          />
-          
-          <ReferenceLine
-            x={speedValues.withTraces}
-            stroke="purple"
-            strokeDasharray="3 3"
-            label={{ 
-              value: `Minor Traces (${speedValues.withTraces})`, 
-              position: "top", 
-              fill: "purple", 
-              fontSize: 10,
-              dy: -10
-            }}
-          />
-          
-          <ReferenceLine
-            x={speedValues.withLightcone}
-            stroke="orange"
-            strokeDasharray="3 3"
-            label={{ 
-              value: `S1 Lightcone (${speedValues.withLightcone.toFixed(0)})`, 
-              position: "top", 
-              fill: "orange", 
-              fontSize: 10,
-              dy: -10
-            }}
-          />
-          
-          <ReferenceLine
-            x={speedValues.fullBuild}
-            stroke="darkred"
-            strokeDasharray="3 3"
-            label={{ 
-              value: `Relics & Sets (${speedValues.fullBuild.toFixed(0)})`, 
-              position: "bottom", 
-              fill: "darkred", 
-              fontSize: 10,
-              dy: 10
-            }}
+          {/* Added more vertical space using bottom margin and moved Legend position */}
+          <Legend 
+            verticalAlign="bottom"
+            height={80}
+            wrapperStyle={{ paddingTop: 20, bottom: 0 }}
+            payload={[
+              { value: `Healing Threshold (200)`, type: 'line', color: 'red' },
+              { value: `Base Speed (${speedValues.base})`, type: 'line', color: 'blue' },
+              { value: `After Minor Traces (${speedValues.withTraces})`, type: 'line', color: 'purple' },
+              { value: `After S1 Lightcone (${speedValues.withLightcone.toFixed(0)})`, type: 'line', color: 'orange' },
+              { value: `After Relics and Planetary Sets (${speedValues.fullBuild.toFixed(0)})`, type: 'line', color: 'darkred' },
+              { value: 'Increased Healing', type: 'line', color: '#3edf5d' }
+            ]}
           />
         </LineChart>
       </ResponsiveContainer>
@@ -248,40 +209,46 @@ const HyacineChart = () => {
           
           <div className="space-y-4">
             <div>
-              <h3 className="font-medium text-slate-700">Base Speed</h3>
-              <p className="text-slate-600">
-                Starting at {speedValues.base} speed, Hyacine needs {Math.max(0, 200 - speedValues.base)} more 
-                speed to begin receiving healing bonuses.
+              <h3 className="font-medium text-slate-700">Speed Progression</h3>
+              <p className="text-slate-600 mb-2">
+                Starting with a base speed of {speedValues.base}, Hyacine's unique A6 trace mechanic requires careful investment 
+                to surpass the 200 speed threshold. Each component of her build contributes differently to reaching optimal healing output:
               </p>
             </div>
 
-            <div>
-              <h3 className="font-medium text-slate-700">Speed Sources</h3>
-              <ul className="list-disc pl-5 space-y-2 text-slate-600">
-                <li>
-                  Traces: +{speedIncreases.fromTraces} speed 
-                  ({((speedIncreases.fromTraces / totalSpeedGain) * 100).toFixed(1)}% of total gain)
-                </li>
-                <li>
-                  Signature Light Cone: +{speedIncreases.fromLightcone.toFixed(1)} speed 
-                  ({((speedIncreases.fromLightcone / totalSpeedGain) * 100).toFixed(1)}% of total gain)
-                </li>
-                <li>
-                  Relics & Sets: +{speedIncreases.fromRelics.toFixed(1)} speed 
-                  ({((speedIncreases.fromRelics / totalSpeedGain) * 100).toFixed(1)}% of total gain)
-                </li>
-              </ul>
+            <div className="grid md:grid-cols-2 gap-4">
+              <div className="bg-white rounded-lg p-4 shadow-sm border border-slate-200">
+                <h4 className="text-purple-600 font-medium mb-2">Minor Traces</h4>
+                <p className="text-slate-600">
+                  Minor traces contribute {speedIncreases.fromTraces} speed points
+                  ({(traceSpeedGain * 100).toFixed(1)}% speed increased).
+                  This initial investment brings her to {speedValues.withTraces} speed,
+                  {` leaving ${(200 - speedValues.withTraces).toFixed(0)} speed until healing bonus activation.`}
+                </p>
+              </div>
+
+              <div className="bg-white rounded-lg p-4 shadow-sm border border-slate-200">
+                <h4 className="text-amber-600 font-medium mb-2">Signature Light Cone</h4>
+                <p className="text-slate-600">
+                  Her signature Light Cone (S1) provides {speedIncreases.fromLightcone.toFixed(1)} additional speed
+                  ({(lightconeSpeedGain * 100).toFixed(1)}% speed increased),
+                  reaching {speedValues.withLightcone.toFixed(1)} total speed.
+                  {` This guarantees a ${(speedValues.withLightcone - 200).toFixed(1)}% healing bonus.`}
+                </p>
+              </div>
+
+              <div className="bg-white rounded-lg p-4 shadow-sm border border-slate-200 md:col-span-2">
+                <h4 className="text-rose-600 font-medium mb-2">Relics & Planetary Sets</h4>
+                <p className="text-slate-600">
+                  Optimized relics and planetary sets add {speedIncreases.fromRelics.toFixed(1)} speed
+                  ({(relicsSpeedGain * 100).toFixed(1)}% speed increased),
+                  resulting in {speedValues.fullBuild.toFixed(1)} speed.
+                  This includes 2-piece and 4-piece bonus of Warrior Goddess of Sun and Thunder with 25.02% speed bonus from Feet, 
+                  and 2-piece bonus of Giant Tree of Rapt Brooding set.
+                </p>
+              </div>
             </div>
           </div>
-        </div>
-
-        <div className="bg-emerald-50 rounded-lg p-4">
-          <h3 className="font-medium text-emerald-800">Healing Bonus Analysis</h3>
-          <p className="text-emerald-700">
-            At full build (speed: {speedValues.fullBuild}), Hyacine gains a 
-            {healingBonusAtFullBuild > 0 ? ` ${healingBonusAtFullBuild}% healing bonus` : "n insufficient speed for healing bonus"}. 
-            This is {((healingBonusAtFullBuild / 200) * 100).toFixed(1)}% of her maximum potential (200% at 400 speed).
-          </p>
         </div>
       </div>
     </div>
