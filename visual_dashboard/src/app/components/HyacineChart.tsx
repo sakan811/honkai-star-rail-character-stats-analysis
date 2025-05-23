@@ -179,13 +179,13 @@ const HyacineChart = () => {
                         "After Minor Traces",
                         "purple",
                       ],
-                      [speedValues.withLightcone]: [
-                        "After Signature Lightcone (S1)",
-                        "amber",
-                      ],
                       [speedValues.fullBuild]: [
                         "After Relics and Planetary Sets",
                         "rose",
+                      ],
+                      [speedValues.withLightcone]: [
+                        "After Signature Lightcone (S1)",
+                        "amber",
                       ],
                     }).map(
                       ([speed, [text, color]]) =>
@@ -256,14 +256,14 @@ const HyacineChart = () => {
                 color: "purple",
               },
               {
-                value: `After S1 Lightcone (${speedValues.withLightcone.toFixed(0)})`,
-                type: "line",
-                color: "orange",
-              },
-              {
                 value: `After Relics and Planetary Sets (${speedValues.fullBuild.toFixed(0)})`,
                 type: "line",
                 color: "darkred",
+              },
+              {
+                value: `After S1 Lightcone (${speedValues.withLightcone.toFixed(0)})`,
+                type: "line",
+                color: "orange",
               },
               { value: "Increased Healing", type: "line", color: "#3edf5d" },
             ]}
@@ -307,12 +307,12 @@ const HyacineChart = () => {
                   Relics & Planetary Sets
                 </h4>
                 <p className="text-slate-600">
-                  Optimized relics and planetary sets add{" "}
+                  Relics and planetary sets add additional{" "}
                   {speedIncreases.fromRelics.toFixed(1)} speed (
                   {(relicsSpeedGain * 100).toFixed(1)}% speed increased),
                   resulting in {speedValues.fullBuild.toFixed(1)} speed. This
                   includes 2-piece and 4-piece bonus of Warrior Goddess of Sun
-                  and Thunder with 25.02% speed bonus from Feet, and 2-piece
+                  and Thunder with 25.02 speed bonus from Feet, and 2-piece
                   bonus of Giant Tree of Rapt Brooding set.
                 </p>
               </div>
@@ -326,7 +326,7 @@ const HyacineChart = () => {
                   {speedIncreases.fromLightcone.toFixed(1)} additional speed (
                   {(lightconeSpeedGain * 100).toFixed(1)}% speed increased),
                   reaching {speedValues.withLightcone.toFixed(1)} total speed.
-                  {` This guarantees a ${(speedValues.withLightcone - 200).toFixed(1)}% healing bonus.`}
+                  Hyacine still requires additional {(200 - speedValues.withLightcone).toFixed(1)} speed to activate the healing bonus.
                 </p>
               </div>
             </div>
