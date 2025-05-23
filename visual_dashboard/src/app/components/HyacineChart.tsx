@@ -326,7 +326,9 @@ const HyacineChart = () => {
                   {speedIncreases.fromLightcone.toFixed(1)} additional speed (
                   {(lightconeSpeedGain * 100).toFixed(1)}% speed increased),
                   reaching {speedValues.withLightcone.toFixed(1)} total speed.
-                  Hyacine still requires additional {(200 - speedValues.withLightcone).toFixed(1)} speed to activate the healing bonus.
+                  Hyacine still requires additional{" "}
+                  {(200 - speedValues.withLightcone).toFixed(1)} speed to
+                  activate the healing bonus.
                 </p>
               </div>
             </div>
