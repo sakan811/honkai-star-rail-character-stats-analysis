@@ -10,6 +10,8 @@ import {
   ResponsiveContainer,
   Label,
   TooltipProps,
+  AreaChart,
+  Area,
 } from "recharts";
 import Papa from "papaparse";
 
@@ -83,158 +85,251 @@ const CastoriceChart = () => {
     );
   }
 
+  // Calculate efficiency metrics
+  const enhancedData = data.map(item => {
+    const totalActions = item.skill_count_before_getting_ult + item.heal_count_before_getting_ult;
+    const energyPerAction = 34000 / totalActions;
+    
+    return {
+      ...item,
+      total_actions: totalActions,
+      energy_per_action: energyPerAction,
+    };
+  });
+
+  const lowHpRange = enhancedData.filter(
+    item => item.combined_allies_hp >= 15000 && item.combined_allies_hp <= 19000,
+  );
+  const lowHpRangeAverageAction = lowHpRange.reduce(
+    (sum, item) => sum + item.total_actions,
+    0,
+  ) / lowHpRange.length || 0;
+  const lowHpRangeActions = lowHpRange.map(item => item.total_actions);
+
+  const optimalHpRange = enhancedData.filter(
+    item => item.combined_allies_hp >= 20000 && item.combined_allies_hp <= 26000,
+  );
+  const optimalHpRangeAverageAction = optimalHpRange.reduce(
+    (sum, item) => sum + item.total_actions,
+    0,
+  ) / optimalHpRange.length || 0;
+  const optimalHpRangeActions = optimalHpRange.map(item => item.total_actions);
+
+  const highHpRange = enhancedData.filter(
+    item => item.combined_allies_hp >= 27000 && item.combined_allies_hp <= 33000,
+  );
+  const highHpRangeAverageAction = highHpRange.reduce(
+    (sum, item) => sum + item.total_actions,
+    0,
+  ) / highHpRange.length || 0;
+  const highHpRangeActions = highHpRange.map(item => item.total_actions);
+
+  const optimalHpChange = Math.abs((optimalHpRangeAverageAction - lowHpRangeAverageAction) / lowHpRangeAverageAction);
+  const highHpChange = Math.abs((highHpRangeAverageAction - lowHpRangeAverageAction) / lowHpRangeAverageAction);
+
   return (
     <div className="w-full bg-white rounded-lg shadow-lg p-4 md:p-6">
       <div className="mb-4 md:mb-6">
         <h2 className="text-lg font-semibold text-slate-800 mb-2">Overview</h2>
         <p className="text-sm md:text-base text-slate-700">
-          This analysis explores Castorice&apos;s Newbud energy generation system. Her skill consumes 30% of the combined allies&apos; HP to generate Newbud energy, which is required to cast her ultimate (34,000 Newbud energy needed). The chart shows how different team HP levels affect the number of skills and healing actions needed before she can cast her ultimate.
+          Castorice uses a unique Newbud energy system instead of traditional energy. Her SP-neutral skill drains 30% current HP from all allies to generate equivalent Newbud energy, requiring 34,000 total to summon Netherwing. This analysis shows the relationship between team HP investment and action efficiency, crucial for optimizing her ultimate frequency and team sustainability.
         </p>
       </div>
 
-      {/* Disclaimer Section */}
-      <div className="mb-6 bg-yellow-50 border border-yellow-200 rounded-lg p-4">
-        <h3 className="text-lg font-semibold text-yellow-800 mb-2">⚠️ Analysis Assumptions</h3>
-        <ul className="text-sm text-yellow-700 space-y-1">
-          <li>• Gallagher rotationally heals an ally with his Skill for <strong>1,600 HP</strong> after each Castorice&apos;s Skill action</li>
-          <li>• Combined allies HP are from <strong>3 team members equally</strong>, plus Castorice HP</li>
-          <li>• Castorice HP is always <strong>9,000 HP</strong></li>
-        </ul>
+      {/* Analysis Assumptions */}
+      <div className="mb-6 bg-blue-50 border border-blue-200 rounded-lg p-4">
+        <h3 className="text-lg font-semibold text-blue-800 mb-2">⚡ Analysis Parameters</h3>
+        <div className="text-sm text-blue-700 space-y-2">
+          <p>• Ultimate threshold: <strong>34,000 Newbud energy</strong></p>
+          <p>• Gallagher rotationally heals each ally for <strong>1,600 HP</strong> after each Castorice skill action</p>
+          <p>• <strong>Team Composition:</strong></p>
+          <p className="ml-4">Combined Team HP = Castorice (9,000 base HP) + 3 equal-HP allies</p>
+        </div>
       </div>
 
-      {/* Chart with increased height */}
-      <ResponsiveContainer width="100%" height={600}>
-        <LineChart
-          data={data}
-          margin={{ top: 30, right: 30, left: 60, bottom: 100 }}
-        >
-          <CartesianGrid strokeDasharray="3 3" />
-          <XAxis
-            dataKey="combined_allies_hp"
-            type="number"
-            domain={["dataMin", "dataMax"]}
-            tickCount={7}
-            tickFormatter={(value) => `${(value / 1000).toFixed(0)}k`}
+      {/* Primary Chart - Actions Needed */}
+      <div className="mb-8">
+        <h3 className="text-lg font-semibold text-slate-700 mb-4">Actions Required Before Ultimate</h3>
+        <ResponsiveContainer width="100%" height={400}>
+          <LineChart
+            data={enhancedData}
+            margin={{ top: 20, right: 30, left: 20, bottom: 60 }}
           >
-            <Label value="Combined Allies HP" offset={-20} position="insideBottom" dy={30} />
-          </XAxis>
-          <YAxis width={60}>
-            <Label
-              value="Action Count"
-              angle={-90}
-              position="insideLeft"
-              style={{ textAnchor: "middle" }}
-              dx={-45}
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis
+              dataKey="combined_allies_hp"
+              type="number"
+              domain={["dataMin", "dataMax"]}
+              tickFormatter={(value) => `${(value / 1000).toFixed(0)}k`}
+            >
+              <Label value="Combined Team HP" offset={-20} position="insideBottom" dy={30} />
+            </XAxis>
+            <YAxis>
+              <Label
+                value="Action Count"
+                angle={-90}
+                position="insideLeft"
+                style={{ textAnchor: "middle" }}
+              />
+            </YAxis>
+            <Tooltip
+              content={(props: TooltipProps<number, string>) => {
+                const { active, payload, label } = props;
+
+                if (active && payload && payload.length) {
+                  const skillCount = payload.find(p => p.dataKey === 'skill_count_before_getting_ult')?.value;
+                  const healCount = payload.find(p => p.dataKey === 'heal_count_before_getting_ult')?.value;
+                  const totalActions = payload.find(p => p.dataKey === 'total_actions')?.value;
+                  
+                  return (
+                    <div className="bg-white p-3 border border-slate-200 shadow-md rounded">
+                      <p className="text-slate-700 font-medium">{`Team HP: ${Number(label).toLocaleString()}`}</p>
+                      <p className="text-blue-600">{`Skills: ${skillCount}`}</p>
+                      <p className="text-emerald-600">{`Heals: ${healCount}`}</p>
+                      <p className="text-purple-600 font-medium">{`Total Actions: ${totalActions}`}</p>
+                      <p className="text-slate-500 text-sm mt-1">
+                        {`Efficiency: ${(34000 / Number(totalActions)).toFixed(0)} energy/action`}
+                      </p>
+                    </div>
+                  );
+                }
+
+                return null;
+              }}
             />
-          </YAxis>
-          <Tooltip
-            content={(props: TooltipProps<number, string>) => {
-              const { active, payload, label } = props;
 
-              if (active && payload && payload.length) {
-                const skillCount = payload.find(p => p.dataKey === 'skill_count_before_getting_ult')?.value;
-                const healCount = payload.find(p => p.dataKey === 'heal_count_before_getting_ult')?.value;
-                
-                return (
-                  <div className="bg-white p-3 border border-slate-200 shadow-md rounded">
-                    <p className="text-slate-700 font-medium">{`Combined Allies HP: ${Number(label).toLocaleString()}`}</p>
-                    <p className="text-blue-600">
-                      {`Skills Before Ult: ${skillCount}`}
-                    </p>
-                    <p className="text-emerald-600">
-                      {`Heals Before Ult: ${healCount}`}
-                    </p>
-                    <p className="text-slate-600 text-sm mt-1">
-                      {`Total Actions: ${Number(skillCount) + Number(healCount)}`}
-                    </p>
-                  </div>
-                );
-              }
+            <Line
+              type="monotone"
+              dataKey="skill_count_before_getting_ult"
+              name="Skills Needed"
+              stroke="#3b82f6"
+              strokeWidth={2}
+              dot={{ r: 4 }}
+            />
 
-              return null;
-            }}
-          />
+            <Line
+              type="monotone"
+              dataKey="heal_count_before_getting_ult"
+              name="Heals Needed"
+              stroke="#10b981"
+              strokeWidth={2}
+              dot={{ r: 4 }}
+            />
 
-          <Line
-            type="monotone"
-            dataKey="skill_count_before_getting_ult"
-            name="Skills Before Ult"
-            stroke="#3b82f6"
-            strokeWidth={2}
-            dot={{ r: 4 }}
-            activeDot={{ r: 6 }}
-          />
+            <Line
+              type="monotone"
+              dataKey="total_actions"
+              name="Total Actions"
+              stroke="#8b5cf6"
+              strokeWidth={3}
+              dot={{ r: 4 }}
+            />
 
-          <Line
-            type="monotone"
-            dataKey="heal_count_before_getting_ult"
-            name="Heals Before Ult"
-            stroke="#10b981"
-            strokeWidth={2}
-            dot={{ r: 4 }}
-            activeDot={{ r: 6 }}
-          />
+            <Legend />
+          </LineChart>
+        </ResponsiveContainer>
+      </div>
 
-          <Legend
-            verticalAlign="bottom"
-            height={80}
-            wrapperStyle={{ paddingTop: 20, bottom: 0 }}
-          />
-        </LineChart>
-      </ResponsiveContainer>
+      {/* Efficiency Analysis Chart */}
+      <div className="mb-8">
+        <h3 className="text-lg font-semibold text-slate-700 mb-4">Energy Generation Efficiency</h3>
+        <ResponsiveContainer width="100%" height={350}>
+          <AreaChart
+            data={enhancedData}
+            margin={{ top: 20, right: 30, left: 20, bottom: 60 }}
+          >
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis
+              dataKey="combined_allies_hp"
+              type="number"
+              domain={["dataMin", "dataMax"]}
+              tickFormatter={(value) => `${(value / 1000).toFixed(0)}k`}
+            >
+              <Label value="Combined Team HP" offset={-20} position="insideBottom" dy={30} />
+            </XAxis>
+            <YAxis tickFormatter={(value) => `${value.toFixed(0)}`}>
+              <Label
+                value="Energy per Action"
+                angle={-90}
+                position="insideLeft"
+                style={{ textAnchor: "middle" }}
+              />
+            </YAxis>
+            <Tooltip
+              content={(props: TooltipProps<number, string>) => {
+                const { active, payload, label } = props;
 
-      {/* Analysis Section */}
+                if (active && payload && payload.length) {
+                  const efficiency = payload[0].value;
+                  
+                  return (
+                    <div className="bg-white p-3 border border-slate-200 shadow-md rounded">
+                      <p className="text-slate-700 font-medium">{`Team HP: ${Number(label).toLocaleString()}`}</p>
+                      <p className="text-amber-600 font-medium">
+                        {`Efficiency: ${Number(efficiency).toFixed(0)} energy/action`}
+                      </p>
+                      <p className="text-slate-500 text-sm">Higher is more efficient</p>
+                    </div>
+                  );
+                }
+
+                return null;
+              }}
+            />
+
+            <Area
+              type="monotone"
+              dataKey="energy_per_action"
+              stroke="#f59e0b"
+              fill="#fef3c7"
+              strokeWidth={2}
+            />
+          </AreaChart>
+        </ResponsiveContainer>
+      </div>
+
+      {/* Strategic Analysis Section */}
       <div className="mt-8 space-y-6">
         <div className="bg-slate-50 rounded-lg p-4">
           <h2 className="text-lg md:text-xl font-semibold mb-3 text-slate-700">
-            Newbud Energy Analysis
+            Team Building Analysis
           </h2>
 
           <div className="space-y-4">
-            <div>
-              <h3 className="font-medium text-slate-700">Energy Generation Strategy</h3>
-              <p className="text-slate-600 mb-2">
-                Castorice&apos;s ultimate requires 34,000 Newbud energy. Her skill consumes 30% of combined allies&apos; HP to generate energy, making team HP management crucial for optimal energy generation:
-              </p>
-            </div>
-
-            <div className="grid md:grid-cols-2 gap-4">
-              <div className="bg-white rounded-lg p-4 shadow-sm border border-slate-200">
-                <h4 className="text-blue-600 font-medium mb-2">
-                  Low HP Teams (8k-12k)
+            <div className="grid md:grid-cols-3 gap-4">
+              <div className="bg-white rounded-lg p-4 shadow-sm border border-red-200">
+                <h4 className="text-red-600 font-medium mb-2">
+                  Low Investment (15k-19k HP)
                 </h4>
-                <p className="text-slate-600">
-                  With lower combined HP, Castorice needs 14-17 skill uses before her ultimate. Each skill consumes less HP but generates less energy, requiring more actions overall. Gallagher&apos;s healing becomes more critical to sustain the rotation.
+                <p className="text-slate-600 text-sm">
+                  <strong>{Math.max(...lowHpRangeActions)}-{Math.min(...lowHpRangeActions)} total actions needed (avg {lowHpRangeAverageAction.toFixed(1)}).</strong> 
+                  {" "}Less efficient but more accessible. 
+                  Focus on HP% substats and strong healers for sustainability.
                 </p>
               </div>
 
-              <div className="bg-white rounded-lg p-4 shadow-sm border border-slate-200">
+              <div className="bg-white rounded-lg p-4 shadow-sm border border-emerald-200">
                 <h4 className="text-emerald-600 font-medium mb-2">
-                  Medium HP Teams (16k-24k)
+                  Optimal Range (20k-26k HP)
                 </h4>
-                <p className="text-slate-600">
-                  The sweet spot for balanced energy generation, requiring 8-12 skills before ultimate. This range provides efficient energy generation while maintaining sustainable HP levels for consistent rotations.
+                <p className="text-slate-600 text-sm">
+                  <strong>{Math.max(...optimalHpRangeActions)}-{Math.min(...optimalHpRangeActions)} total actions needed (avg {optimalHpRangeAverageAction.toFixed(1)}).</strong> 
+                  {" "}Best balance of efficiency and investment. 
+                  Recommended target for most players.
+                  {" "}{(optimalHpChange * 100).toFixed(1)}% less actions requires than low investment.
                 </p>
               </div>
 
-              <div className="bg-white rounded-lg p-4 shadow-sm border border-slate-200 md:col-span-2">
+              <div className="bg-white rounded-lg p-4 shadow-sm border border-purple-200">
                 <h4 className="text-purple-600 font-medium mb-2">
-                  High HP Teams (28k-32k)
+                  High Investment (27k-33k HP)
                 </h4>
-                <p className="text-slate-600">
-                  High HP teams allow for the most efficient energy generation, requiring only 5-6 skills before ultimate. However, this requires significant HP investment and may sacrifice other stats. The reduced healing frequency can be both an advantage (fewer actions needed) and a risk (less HP recovery).
+                <p className="text-slate-600 text-sm">
+                  <strong>{Math.max(...highHpRangeActions)}-{Math.min(...highHpRangeActions)} total actions needed (avg {highHpRangeAverageAction.toFixed(1)}).</strong> 
+                  {" "}Maximum efficiency but requires significant HP investment across all team members.
+                  {" "}{(highHpChange * 100).toFixed(1)}% less actions requires than optimal investment.
                 </p>
               </div>
-            </div>
-
-            <div className="bg-blue-50 rounded-lg p-4 border border-blue-200">
-              <h4 className="text-blue-700 font-medium mb-2">Key Insights</h4>
-              <ul className="text-slate-600 space-y-1">
-                <li>• Higher team HP dramatically reduces actions needed for ultimate</li>
-                <li>• Skill count and heal count follow similar patterns, indicating balanced consumption and recovery</li>
-                <li>• Teams with 20k+ combined HP show significant efficiency gains</li>
-                <li>• Gallagher&apos;s 1,600 HP heal helps maintain sustainability across all HP ranges</li>
-              </ul>
             </div>
           </div>
         </div>
