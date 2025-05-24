@@ -2,15 +2,15 @@ import { SITE_DESCRIPTION, SITE_TITLE } from "@/app/constants";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: `${SITE_TITLE} - Hyacine Analysis`,
+  title: `${SITE_TITLE} - Castorice Analysis`,
   description: SITE_DESCRIPTION,
   openGraph: {
-    title: `${SITE_TITLE} - Hyacine Analysis`,
+    title: `${SITE_TITLE} - Castorice Analysis`,
     description: SITE_DESCRIPTION,
   },
 };
 
-export default function HyacineLayout({
+export default function CastoriceLayout({
   children,
 }: {
   children: React.ReactNode;

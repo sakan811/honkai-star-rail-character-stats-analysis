@@ -22,10 +22,15 @@ export default function Home() {
           Analyze Honkai: Star Rail characters stats based on different
           scenarios.
         </p>
-        <div className="flex justify-center gap-4">
+        <div className="flex justify-center gap-4 flex-wrap">
           <Link href="/hyacine">
             <button className="bg-green-400 hover:bg-green-600 text-slate-50 font-semibold rounded-lg px-8 py-3 text-lg shadow transition-colors duration-200">
               Hyacine
+            </button>
+          </Link>
+          <Link href="/castorice">
+            <button className="bg-purple-400 hover:bg-purple-600 text-slate-50 font-semibold rounded-lg px-8 py-3 text-lg shadow transition-colors duration-200">
+              Castorice
             </button>
           </Link>
         </div>

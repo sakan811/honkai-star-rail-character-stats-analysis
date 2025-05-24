@@ -1,31 +1,25 @@
-import { SITE_DESCRIPTION, SITE_TITLE } from "@/app/constants";
-import { Metadata } from "next";
+"use client";
 
-export const metadata: Metadata = {
-  title: SITE_TITLE,
-  description: SITE_DESCRIPTION,
-  openGraph: {
-    title: SITE_TITLE,
-    description: SITE_DESCRIPTION,
-  },
-};
+import Link from "next/link";
+import CastoriceChart from "../components/CastoriceChart";
 
 export default function CastoricePage() {
   return (
-    <div className="flex flex-col items-center p-6 w-full h-full min-h-screen">
-      <a
-        href="/dashboard"
-        className="self-start mb-4 bg-gray-200 hover:bg-gray-300 text-gray-800 font-medium rounded px-4 py-2 transition-colors duration-200"
+    <div className="flex flex-col items-center p-4 md:p-6 w-full h-full min-h-screen bg-gradient-to-b from-cyan-500 to-amber-200">
+      <Link
+        href="/"
+        className="self-start mb-4 bg-purple-400 hover:bg-purple-600 text-slate-50 font-medium rounded px-4 py-2 transition-colors duration-200"
       >
         ← Back
-      </a>
-      <iframe
-        className="w-[140vh] h-[80vh] border-0"
-        src="https://lookerstudio.google.com/embed/reporting/fefde0c5-1e9b-4e79-a3ba-ba036ee2b827/page/9R4IF"
-        allowFullScreen
-        sandbox="allow-storage-access-by-user-activation allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox"
-        title="Anaxa Looker Studio Dashboard"
-      />
+      </Link>
+
+      <h1 className="text-2xl md:text-3xl font-bold mb-4 md:mb-6 text-slate-50 text-center">
+        Castorice Newbud Energy Analysis
+      </h1>
+
+      <div className="w-full max-w-5xl">
+        <CastoriceChart />
+      </div>
     </div>
   );
 }
