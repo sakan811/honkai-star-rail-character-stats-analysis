@@ -73,7 +73,7 @@ const chartConfigs = [
         heal_count_before_getting_ult: 15,
       },
     ],
-    expectedSections: ["Overview", "Team Building Analysis"],
+    expectedSections: ["Overview", "Team HP Analysis"],
   },
 ];
 

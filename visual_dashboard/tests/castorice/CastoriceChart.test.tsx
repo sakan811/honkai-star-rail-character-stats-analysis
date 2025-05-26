@@ -110,10 +110,10 @@ describe("CastoriceChart Component - Character Specific", () => {
     await waitForLoad();
 
     // Test Castorice-specific team building strategy
-    expect(screen.getByText("Team Building Analysis")).toBeTruthy();
-    expect(screen.getByText("Low Investment (15k-19k HP)")).toBeTruthy();
-    expect(screen.getByText("Optimal Range (20k-26k HP)")).toBeTruthy();
-    expect(screen.getByText("High Investment (27k-33k HP)")).toBeTruthy();
+    expect(screen.getByText("Team HP Analysis")).toBeTruthy();
+    expect(screen.getByText("Low HP Team (15k-19k HP)")).toBeTruthy();
+    expect(screen.getByText("Optimal HP Team (20k-26k HP)")).toBeTruthy();
+    expect(screen.getByText("High HP Team (27k-33k HP)")).toBeTruthy();
   });
 
   it("mentions unique Newbud energy system in overview", async () => {

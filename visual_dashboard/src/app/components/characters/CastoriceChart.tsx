@@ -339,14 +339,14 @@ const CastoriceChart = () => {
       <div className="mt-8 space-y-6">
         <div className="bg-slate-50 rounded-lg p-4">
           <h2 className="text-lg md:text-xl font-semibold mb-3 text-slate-700">
-            Team Building Analysis
+            Team HP Analysis
           </h2>
 
           <div className="space-y-4">
             <div className="grid md:grid-cols-3 gap-4">
               <div className="bg-white rounded-lg p-4 shadow-sm border border-red-200">
                 <h4 className="text-red-600 font-medium mb-2">
-                  Low Investment (15k-19k HP)
+                  Low HP Team (15k-19k HP)
                 </h4>
                 <p className="text-slate-600 text-sm">
                   <strong>
@@ -354,14 +354,12 @@ const CastoriceChart = () => {
                     {Math.min(...lowHpRangeActions)} total actions needed (avg{" "}
                     {lowHpRangeAverageAction.toFixed(1)}).
                   </strong>{" "}
-                  Less efficient but more accessible. Focus on HP% substats and
-                  strong healers for sustainability.
                 </p>
               </div>
 
               <div className="bg-white rounded-lg p-4 shadow-sm border border-emerald-200">
                 <h4 className="text-emerald-600 font-medium mb-2">
-                  Optimal Range (20k-26k HP)
+                  Optimal HP Team (20k-26k HP)
                 </h4>
                 <p className="text-slate-600 text-sm">
                   <strong>
@@ -369,15 +367,14 @@ const CastoriceChart = () => {
                     {Math.min(...optimalHpRangeActions)} total actions needed
                     (avg {optimalHpRangeAverageAction.toFixed(1)}).
                   </strong>{" "}
-                  Best balance of efficiency and investment. Recommended target
-                  for most players. {(optimalHpChange * 100).toFixed(1)}% less
-                  actions requires than low investment.
+                  {(optimalHpChange * 100).toFixed(1)}% less actions requires
+                  than low HP Team.
                 </p>
               </div>
 
               <div className="bg-white rounded-lg p-4 shadow-sm border border-purple-200">
                 <h4 className="text-purple-600 font-medium mb-2">
-                  High Investment (27k-33k HP)
+                  High HP Team (27k-33k HP)
                 </h4>
                 <p className="text-slate-600 text-sm">
                   <strong>
@@ -385,9 +382,8 @@ const CastoriceChart = () => {
                     {Math.min(...highHpRangeActions)} total actions needed (avg{" "}
                     {highHpRangeAverageAction.toFixed(1)}).
                   </strong>{" "}
-                  Maximum efficiency but requires significant HP investment
-                  across all team members. {(highHpChange * 100).toFixed(1)}%
-                  less actions requires than optimal investment.
+                  {(highHpChange * 100).toFixed(1)}% less actions requires than
+                  optimal HP Team.
                 </p>
               </div>
             </div>

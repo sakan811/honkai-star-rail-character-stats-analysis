@@ -37,7 +37,7 @@ describe("Home page", () => {
     const links = screen.getAllByRole("link");
     const linkHrefs = links.map((link) => link.getAttribute("href"));
 
-    expect(linkHrefs).toContain("/hyacine");
-    expect(linkHrefs).toContain("/castorice");
+    expect(linkHrefs).toContain("/characters/hyacine");
+    expect(linkHrefs).toContain("/characters/castorice");
   });
 });
