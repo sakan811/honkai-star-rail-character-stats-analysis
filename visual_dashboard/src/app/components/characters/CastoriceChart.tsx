@@ -86,10 +86,11 @@ const CastoriceChart = () => {
   }
 
   // Calculate efficiency metrics
-  const enhancedData = data.map(item => {
-    const totalActions = item.skill_count_before_getting_ult + item.heal_count_before_getting_ult;
+  const enhancedData = data.map((item) => {
+    const totalActions =
+      item.skill_count_before_getting_ult + item.heal_count_before_getting_ult;
     const energyPerAction = 34000 / totalActions;
-    
+
     return {
       ...item,
       total_actions: totalActions,
@@ -98,58 +99,84 @@ const CastoriceChart = () => {
   });
 
   const lowHpRange = enhancedData.filter(
-    item => item.combined_allies_hp >= 15000 && item.combined_allies_hp <= 19000,
+    (item) =>
+      item.combined_allies_hp >= 15000 && item.combined_allies_hp <= 19000,
   );
-  const lowHpRangeAverageAction = lowHpRange.reduce(
-    (sum, item) => sum + item.total_actions,
-    0,
-  ) / lowHpRange.length || 0;
-  const lowHpRangeActions = lowHpRange.map(item => item.total_actions);
+  const lowHpRangeAverageAction =
+    lowHpRange.reduce((sum, item) => sum + item.total_actions, 0) /
+      lowHpRange.length || 0;
+  const lowHpRangeActions = lowHpRange.map((item) => item.total_actions);
 
   const optimalHpRange = enhancedData.filter(
-    item => item.combined_allies_hp >= 20000 && item.combined_allies_hp <= 26000,
+    (item) =>
+      item.combined_allies_hp >= 20000 && item.combined_allies_hp <= 26000,
   );
-  const optimalHpRangeAverageAction = optimalHpRange.reduce(
-    (sum, item) => sum + item.total_actions,
-    0,
-  ) / optimalHpRange.length || 0;
-  const optimalHpRangeActions = optimalHpRange.map(item => item.total_actions);
+  const optimalHpRangeAverageAction =
+    optimalHpRange.reduce((sum, item) => sum + item.total_actions, 0) /
+      optimalHpRange.length || 0;
+  const optimalHpRangeActions = optimalHpRange.map(
+    (item) => item.total_actions,
+  );
 
   const highHpRange = enhancedData.filter(
-    item => item.combined_allies_hp >= 27000 && item.combined_allies_hp <= 33000,
+    (item) =>
+      item.combined_allies_hp >= 27000 && item.combined_allies_hp <= 33000,
   );
-  const highHpRangeAverageAction = highHpRange.reduce(
-    (sum, item) => sum + item.total_actions,
-    0,
-  ) / highHpRange.length || 0;
-  const highHpRangeActions = highHpRange.map(item => item.total_actions);
+  const highHpRangeAverageAction =
+    highHpRange.reduce((sum, item) => sum + item.total_actions, 0) /
+      highHpRange.length || 0;
+  const highHpRangeActions = highHpRange.map((item) => item.total_actions);
 
-  const optimalHpChange = Math.abs((optimalHpRangeAverageAction - lowHpRangeAverageAction) / lowHpRangeAverageAction);
-  const highHpChange = Math.abs((highHpRangeAverageAction - lowHpRangeAverageAction) / lowHpRangeAverageAction);
+  const optimalHpChange = Math.abs(
+    (optimalHpRangeAverageAction - lowHpRangeAverageAction) /
+      lowHpRangeAverageAction,
+  );
+  const highHpChange = Math.abs(
+    (highHpRangeAverageAction - lowHpRangeAverageAction) /
+      lowHpRangeAverageAction,
+  );
 
   return (
     <div className="w-full bg-white rounded-lg shadow-lg p-4 md:p-6">
       <div className="mb-4 md:mb-6">
         <h2 className="text-lg font-semibold text-slate-800 mb-2">Overview</h2>
         <p className="text-sm md:text-base text-slate-700">
-          Castorice uses a unique Newbud energy system instead of traditional energy. Her SP-neutral skill drains 30% current HP from all allies to generate equivalent Newbud energy, requiring 34,000 total to summon Netherwing. This analysis shows the relationship between team HP investment and action efficiency, crucial for optimizing her ultimate frequency and team sustainability.
+          Castorice uses a unique Newbud energy system instead of traditional
+          energy. Her SP-neutral skill drains 30% current HP from all allies to
+          generate equivalent Newbud energy, requiring 34,000 total to summon
+          Netherwing. This analysis shows the relationship between team HP
+          investment and action efficiency, crucial for optimizing her ultimate
+          frequency and team sustainability.
         </p>
       </div>
 
       {/* Analysis Assumptions */}
       <div className="mb-6 bg-blue-50 border border-blue-200 rounded-lg p-4">
-        <h3 className="text-lg font-semibold text-blue-800 mb-2">⚡ Analysis Parameters</h3>
+        <h3 className="text-lg font-semibold text-blue-800 mb-2">
+          ⚡ Analysis Parameters
+        </h3>
         <div className="text-sm text-blue-700 space-y-2">
-          <p>• Ultimate threshold: <strong>34,000 Newbud energy</strong></p>
-          <p>• Gallagher rotationally heals each ally for <strong>1,600 HP</strong> after each Castorice skill action</p>
-          <p>• <strong>Team Composition:</strong></p>
-          <p className="ml-4">Combined Team HP = Castorice (9,000 base HP) + 3 equal-HP allies</p>
+          <p>
+            • Ultimate threshold: <strong>34,000 Newbud energy</strong>
+          </p>
+          <p>
+            • Gallagher rotationally heals each ally for{" "}
+            <strong>1,600 HP</strong> after each Castorice skill action
+          </p>
+          <p>
+            • <strong>Team Composition:</strong>
+          </p>
+          <p className="ml-4">
+            Combined Team HP = Castorice (9,000 base HP) + 3 equal-HP allies
+          </p>
         </div>
       </div>
 
       {/* Primary Chart - Actions Needed */}
       <div className="mb-8">
-        <h3 className="text-lg font-semibold text-slate-700 mb-4">Actions Required Before Ultimate</h3>
+        <h3 className="text-lg font-semibold text-slate-700 mb-4">
+          Actions Required Before Ultimate
+        </h3>
         <ResponsiveContainer width="100%" height={400}>
           <LineChart
             data={enhancedData}
@@ -162,7 +189,12 @@ const CastoriceChart = () => {
               domain={["dataMin", "dataMax"]}
               tickFormatter={(value) => `${(value / 1000).toFixed(0)}k`}
             >
-              <Label value="Combined Team HP" offset={-20} position="insideBottom" dy={30} />
+              <Label
+                value="Combined Team HP"
+                offset={-20}
+                position="insideBottom"
+                dy={30}
+              />
             </XAxis>
             <YAxis>
               <Label
@@ -177,10 +209,16 @@ const CastoriceChart = () => {
                 const { active, payload, label } = props;
 
                 if (active && payload && payload.length) {
-                  const skillCount = payload.find(p => p.dataKey === 'skill_count_before_getting_ult')?.value;
-                  const healCount = payload.find(p => p.dataKey === 'heal_count_before_getting_ult')?.value;
-                  const totalActions = payload.find(p => p.dataKey === 'total_actions')?.value;
-                  
+                  const skillCount = payload.find(
+                    (p) => p.dataKey === "skill_count_before_getting_ult",
+                  )?.value;
+                  const healCount = payload.find(
+                    (p) => p.dataKey === "heal_count_before_getting_ult",
+                  )?.value;
+                  const totalActions = payload.find(
+                    (p) => p.dataKey === "total_actions",
+                  )?.value;
+
                   return (
                     <div className="bg-white p-3 border border-slate-200 shadow-md rounded">
                       <p className="text-slate-700 font-medium">{`Team HP: ${Number(label).toLocaleString()}`}</p>
@@ -232,7 +270,9 @@ const CastoriceChart = () => {
 
       {/* Efficiency Analysis Chart */}
       <div className="mb-8">
-        <h3 className="text-lg font-semibold text-slate-700 mb-4">Energy Generation Efficiency</h3>
+        <h3 className="text-lg font-semibold text-slate-700 mb-4">
+          Energy Generation Efficiency
+        </h3>
         <ResponsiveContainer width="100%" height={350}>
           <AreaChart
             data={enhancedData}
@@ -245,7 +285,12 @@ const CastoriceChart = () => {
               domain={["dataMin", "dataMax"]}
               tickFormatter={(value) => `${(value / 1000).toFixed(0)}k`}
             >
-              <Label value="Combined Team HP" offset={-20} position="insideBottom" dy={30} />
+              <Label
+                value="Combined Team HP"
+                offset={-20}
+                position="insideBottom"
+                dy={30}
+              />
             </XAxis>
             <YAxis tickFormatter={(value) => `${value.toFixed(0)}`}>
               <Label
@@ -261,14 +306,16 @@ const CastoriceChart = () => {
 
                 if (active && payload && payload.length) {
                   const efficiency = payload[0].value;
-                  
+
                   return (
                     <div className="bg-white p-3 border border-slate-200 shadow-md rounded">
                       <p className="text-slate-700 font-medium">{`Team HP: ${Number(label).toLocaleString()}`}</p>
                       <p className="text-amber-600 font-medium">
                         {`Efficiency: ${Number(efficiency).toFixed(0)} energy/action`}
                       </p>
-                      <p className="text-slate-500 text-sm">Higher is more efficient</p>
+                      <p className="text-slate-500 text-sm">
+                        Higher is more efficient
+                      </p>
                     </div>
                   );
                 }
@@ -302,9 +349,13 @@ const CastoriceChart = () => {
                   Low Investment (15k-19k HP)
                 </h4>
                 <p className="text-slate-600 text-sm">
-                  <strong>{Math.max(...lowHpRangeActions)}-{Math.min(...lowHpRangeActions)} total actions needed (avg {lowHpRangeAverageAction.toFixed(1)}).</strong> 
-                  {" "}Less efficient but more accessible. 
-                  Focus on HP% substats and strong healers for sustainability.
+                  <strong>
+                    {Math.max(...lowHpRangeActions)}-
+                    {Math.min(...lowHpRangeActions)} total actions needed (avg{" "}
+                    {lowHpRangeAverageAction.toFixed(1)}).
+                  </strong>{" "}
+                  Less efficient but more accessible. Focus on HP% substats and
+                  strong healers for sustainability.
                 </p>
               </div>
 
@@ -313,10 +364,14 @@ const CastoriceChart = () => {
                   Optimal Range (20k-26k HP)
                 </h4>
                 <p className="text-slate-600 text-sm">
-                  <strong>{Math.max(...optimalHpRangeActions)}-{Math.min(...optimalHpRangeActions)} total actions needed (avg {optimalHpRangeAverageAction.toFixed(1)}).</strong> 
-                  {" "}Best balance of efficiency and investment. 
-                  Recommended target for most players.
-                  {" "}{(optimalHpChange * 100).toFixed(1)}% less actions requires than low investment.
+                  <strong>
+                    {Math.max(...optimalHpRangeActions)}-
+                    {Math.min(...optimalHpRangeActions)} total actions needed
+                    (avg {optimalHpRangeAverageAction.toFixed(1)}).
+                  </strong>{" "}
+                  Best balance of efficiency and investment. Recommended target
+                  for most players. {(optimalHpChange * 100).toFixed(1)}% less
+                  actions requires than low investment.
                 </p>
               </div>
 
@@ -325,9 +380,14 @@ const CastoriceChart = () => {
                   High Investment (27k-33k HP)
                 </h4>
                 <p className="text-slate-600 text-sm">
-                  <strong>{Math.max(...highHpRangeActions)}-{Math.min(...highHpRangeActions)} total actions needed (avg {highHpRangeAverageAction.toFixed(1)}).</strong> 
-                  {" "}Maximum efficiency but requires significant HP investment across all team members.
-                  {" "}{(highHpChange * 100).toFixed(1)}% less actions requires than optimal investment.
+                  <strong>
+                    {Math.max(...highHpRangeActions)}-
+                    {Math.min(...highHpRangeActions)} total actions needed (avg{" "}
+                    {highHpRangeAverageAction.toFixed(1)}).
+                  </strong>{" "}
+                  Maximum efficiency but requires significant HP investment
+                  across all team members. {(highHpChange * 100).toFixed(1)}%
+                  less actions requires than optimal investment.
                 </p>
               </div>
             </div>

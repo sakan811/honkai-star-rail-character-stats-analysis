@@ -29,9 +29,7 @@ export default function ChartPageLayout({
         {title}
       </h1>
 
-      <div className="w-full max-w-5xl">
-        {children}
-      </div>
+      <div className="w-full max-w-5xl">{children}</div>
     </div>
   );
 }
