@@ -12,7 +12,10 @@ interface UseChartDataOptions<T> {
   onDataProcessed?: (data: T[]) => void;
 }
 
-export function useChartData<T>({ csvPath, onDataProcessed }: UseChartDataOptions<T>) {
+export function useChartData<T>({
+  csvPath,
+  onDataProcessed,
+}: UseChartDataOptions<T>) {
   const [data, setData] = useState<T[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
