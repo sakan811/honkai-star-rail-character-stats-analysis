@@ -46,7 +46,7 @@ vi.mock("papaparse", () => ({
 const chartConfigs = [
   {
     name: "Hyacine",
-    componentPath: "../../src/app/components/characters/HyacineChart",
+    componentPath: "../src/app/components/characters/HyacineChart",
     csvPath: "/hyacine/hyacine_data.csv",
     mockData: [
       {
@@ -63,7 +63,7 @@ const chartConfigs = [
   },
   {
     name: "Castorice",
-    componentPath: "../../src/app/components/characters/CastoriceChart",
+    componentPath: "../src/app/components/characters/CastoriceChart",
     csvPath: "/castorice/castorice_data.csv",
     mockData: [
       {
@@ -128,7 +128,7 @@ chartConfigs.forEach(({ name, componentPath, mockData, expectedSections }) => {
         expect(screen.queryByTestId("loading-spinner")).not.toBeTruthy();
       });
 
-      expect(screen.getByTestId("responsive-container")).toBeTruthy();
+      expect(screen.getAllByTestId("responsive-container")[0]).toBeTruthy();
     });
 
     it("handles fetch errors gracefully", async () => {
