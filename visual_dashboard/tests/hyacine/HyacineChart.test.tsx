@@ -1,7 +1,7 @@
 // HyacineChart.test.tsx
 import { render, screen, waitFor } from "@testing-library/react";
 import { describe, expect, it, vi, beforeEach } from "vitest";
-import HyacineChart from "../../src/app/components/HyacineChart";
+import HyacineChart from "../../src/app/components/characters/HyacineChart";
 
 // Mock the recharts components
 vi.mock("recharts", () => {

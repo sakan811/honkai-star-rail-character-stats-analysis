@@ -1,7 +1,7 @@
 // hyacine-page.test.tsx
 import { render, screen } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import HyacinePage from "../../src/app/hyacine/page";
+import HyacinePage from "../../src/app/characters/hyacine/page";
 
 // Mock next/link
 vi.mock("next/link", () => ({

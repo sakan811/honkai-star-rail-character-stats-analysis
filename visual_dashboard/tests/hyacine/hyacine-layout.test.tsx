@@ -1,6 +1,6 @@
 // hyacine-layout.test.tsx
 import { describe, expect, it } from "vitest";
-import HyacineLayout from "../../src/app/hyacine/layout";
+import HyacineLayout from "../../src/app/characters/hyacine/layout";
 
 describe("Hyacine Layout", () => {
   it("passes children through correctly", () => {
