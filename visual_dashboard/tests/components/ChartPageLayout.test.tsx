@@ -70,9 +70,8 @@ describe("ChartPageLayout Component", () => {
   it("has responsive design classes", () => {
     render(<ChartPageLayout {...defaultProps} />);
 
-    const container =
-      screen.getByRole("main") ||
-      screen.getByText("Test Chart Title").closest("div");
+    // Look for the main container div instead of main element
+    const container = screen.getByText("Test Chart Title").closest("div");
     expect(container?.className).toContain("min-h-screen");
 
     const heading = screen.getByRole("heading", { level: 1 });
