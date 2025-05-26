@@ -219,7 +219,7 @@ describe("ErrorDisplay component", () => {
     render(<ErrorDisplay error="" />);
 
     // Should still render the container even with empty message
-    const errorContainer = screen.getByText("").closest("div");
+    const errorContainer = screen.getAllByAltText("")[0].closest("div");
     expect(errorContainer?.className).toContain("text-red-500");
   });
 });
