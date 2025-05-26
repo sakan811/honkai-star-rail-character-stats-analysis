@@ -22,14 +22,22 @@ describe("Home page", () => {
       "Honkai: Star Rail Character Stats Analysis",
     );
   });
-  it("displays the Hyacine button", () => {
+
+  it("displays character buttons", () => {
     render(<Home />);
-    const button = screen.getByRole("button", { name: /hyacine/i });
-    expect(button).toBeDefined();
+    const hyacineButton = screen.getByRole("button", { name: /hyacine/i });
+    const castoriceButton = screen.getByRole("button", { name: /castorice/i });
+
+    expect(hyacineButton).toBeDefined();
+    expect(castoriceButton).toBeDefined();
   });
-  it("has a link to the Hyacine page", () => {
+
+  it("has links to character pages", () => {
     render(<Home />);
-    const link = screen.getByRole("link");
-    expect(link.getAttribute("href")).toBe("/hyacine");
+    const links = screen.getAllByRole("link");
+    const linkHrefs = links.map((link) => link.getAttribute("href"));
+
+    expect(linkHrefs).toContain("/hyacine");
+    expect(linkHrefs).toContain("/castorice");
   });
 });

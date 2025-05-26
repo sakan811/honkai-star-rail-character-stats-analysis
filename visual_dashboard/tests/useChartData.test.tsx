@@ -218,8 +218,10 @@ describe("ErrorDisplay component", () => {
   it("handles empty error messages", () => {
     render(<ErrorDisplay error="" />);
 
-    // Should still render the container even with empty message
-    const errorContainer = screen.getAllByAltText("")[0].closest("div");
+    // Look for the container with error styles
+    const errorContainer = document.querySelector(".text-red-500");
     expect(errorContainer?.className).toContain("text-red-500");
+    expect(errorContainer?.className).toContain("border-red-300");
+    expect(errorContainer?.className).toContain("bg-red-50");
   });
 });
