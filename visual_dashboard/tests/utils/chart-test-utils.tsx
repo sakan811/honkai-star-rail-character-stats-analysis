@@ -3,7 +3,7 @@ import { expect, vi } from "vitest";
 
 export const setupChartTest = async (Component: React.ComponentType) => {
   render(<Component />);
-  
+
   await waitFor(() => {
     expect(screen.queryByTestId("loading-spinner")).not.toBeTruthy();
   });
