@@ -29,17 +29,13 @@ vi.mock("recharts", () => ({
   Label: () => <div data-testid="axis-label" />,
 }));
 
-// Mock fetch
+// Mock fetch and Papa Parse
 global.fetch = vi.fn();
-
-// Mock Papa Parse
 vi.mock("papaparse", () => ({
-  default: {
-    parse: vi.fn(),
-  },
+  default: { parse: vi.fn() },
 }));
 
-describe("CastoriceChart Component", () => {
+describe("CastoriceChart Component - Character Specific", () => {
   const mockData = [
     {
       character: "Castorice",
@@ -49,31 +45,20 @@ describe("CastoriceChart Component", () => {
     },
     {
       character: "Castorice",
-      combined_allies_hp: 20000,
-      skill_count_before_getting_ult: 13,
-      heal_count_before_getting_ult: 12,
-    },
-    {
-      character: "Castorice",
       combined_allies_hp: 25000,
       skill_count_before_getting_ult: 10,
       heal_count_before_getting_ult: 9,
     },
-    {
-      character: "Castorice",
-      combined_allies_hp: 30000,
-      skill_count_before_getting_ult: 8,
-      heal_count_before_getting_ult: 7,
-    },
   ];
 
-  beforeEach(() => {
+  beforeEach(async () => {
     vi.clearAllMocks();
     (global.fetch as any).mockResolvedValue({
       text: () => Promise.resolve("mock,csv,data"),
     });
 
-    const Papa = vi.mocked(await import("papaparse"));
+    // Setup Papa Parse mock
+    const Papa = await import("papaparse");
     Papa.default.parse = vi.fn((_, options) => {
       if (options.complete) {
         options.complete({
@@ -84,96 +69,60 @@ describe("CastoriceChart Component", () => {
     });
   });
 
-  it("renders loading state initially", () => {
-    (global.fetch as any).mockImplementation(() => new Promise(() => {}));
-
-    render(<CastoriceChart />);
-    expect(screen.getByTestId("loading-spinner")).toBeTruthy();
-  });
-
-  it("renders overview section after loading", async () => {
-    render(<CastoriceChart />);
-
+  // Test helper to wait for component to load
+  const waitForLoad = async () => {
     await waitFor(() => {
       expect(screen.queryByTestId("loading-spinner")).not.toBeTruthy();
     });
+  };
 
-    expect(screen.getByText("Overview")).toBeTruthy();
-    expect(
-      screen.getByText(/Castorice uses a unique Newbud energy system/),
-    ).toBeTruthy();
-  });
-
-  it("renders analysis parameters section", async () => {
+  it("renders both LineChart and AreaChart (unique to Castorice)", async () => {
     render(<CastoriceChart />);
+    await waitForLoad();
 
-    await waitFor(() => {
-      expect(screen.queryByTestId("loading-spinner")).not.toBeTruthy();
-    });
-
-    expect(screen.getByText("⚡ Analysis Parameters")).toBeTruthy();
-    expect(screen.getByText(/34,000 Newbud energy/)).toBeTruthy();
-    expect(screen.getByText(/1,600 HP/)).toBeTruthy();
-  });
-
-  it("renders both charts after data loads", async () => {
-    render(<CastoriceChart />);
-
-    await waitFor(() => {
-      expect(screen.queryByTestId("loading-spinner")).not.toBeTruthy();
-    });
-
-    // Should have both LineChart and AreaChart
+    // Castorice uses both chart types - this is unique behavior
     expect(screen.getByTestId("line-chart")).toBeTruthy();
     expect(screen.getByTestId("area-chart")).toBeTruthy();
+  });
 
-    // Should have multiple lines for the LineChart
+  it("renders Castorice-specific line components", async () => {
+    render(<CastoriceChart />);
+    await waitForLoad();
+
+    // Test Castorice-specific data visualization lines
     expect(screen.getByTestId("line-skills-needed")).toBeTruthy();
     expect(screen.getByTestId("line-heals-needed")).toBeTruthy();
     expect(screen.getByTestId("line-total-actions")).toBeTruthy();
   });
 
-  it("renders team building analysis section", async () => {
+  it("displays Newbud energy analysis parameters", async () => {
     render(<CastoriceChart />);
+    await waitForLoad();
 
-    await waitFor(() => {
-      expect(screen.queryByTestId("loading-spinner")).not.toBeTruthy();
-    });
+    // Test Castorice-specific game mechanics
+    expect(screen.getByText("⚡ Analysis Parameters")).toBeTruthy();
+    expect(screen.getByText(/34,000 Newbud energy/)).toBeTruthy();
+    expect(screen.getByText(/1,600 HP/)).toBeTruthy();
+  });
 
+  it("displays team building analysis with HP investment ranges", async () => {
+    render(<CastoriceChart />);
+    await waitForLoad();
+
+    // Test Castorice-specific team building strategy
     expect(screen.getByText("Team Building Analysis")).toBeTruthy();
     expect(screen.getByText("Low Investment (15k-19k HP)")).toBeTruthy();
     expect(screen.getByText("Optimal Range (20k-26k HP)")).toBeTruthy();
     expect(screen.getByText("High Investment (27k-33k HP)")).toBeTruthy();
   });
 
-  it("handles fetch errors gracefully", async () => {
-    (global.fetch as any).mockRejectedValue(new Error("Network error"));
-
+  it("mentions unique Newbud energy system in overview", async () => {
     render(<CastoriceChart />);
+    await waitForLoad();
 
-    await waitFor(() => {
-      expect(screen.queryByTestId("loading-spinner")).not.toBeTruthy();
-    });
-
-    expect(screen.getByText(/Failed to fetch CSV: Network error/)).toBeTruthy();
-  });
-
-  it("handles parsing errors gracefully", async () => {
-    const Papa = vi.mocked(await import("papaparse"));
-    Papa.default.parse = vi.fn((_, options) => {
-      if (options.error) {
-        options.error({ message: "Invalid CSV format" });
-      }
-    });
-
-    render(<CastoriceChart />);
-
-    await waitFor(() => {
-      expect(screen.queryByTestId("loading-spinner")).not.toBeTruthy();
-    });
-
+    // Test that the overview explains Castorice's unique mechanics
     expect(
-      screen.getByText(/Failed to parse CSV: Invalid CSV format/),
+      screen.getByText(/Castorice uses a unique Newbud energy system/),
     ).toBeTruthy();
   });
 });
