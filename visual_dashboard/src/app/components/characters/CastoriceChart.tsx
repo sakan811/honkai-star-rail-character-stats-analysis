@@ -85,6 +85,9 @@ const CastoriceChart = () => {
     );
   }
 
+  // Constants for calculations
+  const CASTORICE_BASE_HP = 9000;
+
   // Calculate efficiency metrics
   const enhancedData = data.map((item) => {
     const totalActions =
@@ -98,42 +101,63 @@ const CastoriceChart = () => {
     };
   });
 
+  // Helper function to calculate teammate HP ranges
+  const calculateTeammateHpStats = (hpRange: typeof enhancedData) => {
+    const totalActions = hpRange.map((item) => item.total_actions);
+    const averageActions =
+      hpRange.reduce((sum, item) => sum + item.total_actions, 0) /
+        hpRange.length || 0;
+    const minTeammateHp = Math.min(
+      ...hpRange.map(
+        (item) => (item.combined_allies_hp - CASTORICE_BASE_HP) / 3,
+      ),
+    );
+    const maxTeammateHp = Math.max(
+      ...hpRange.map(
+        (item) => (item.combined_allies_hp - CASTORICE_BASE_HP) / 3,
+      ),
+    );
+    const avgTeammateHp =
+      hpRange.reduce(
+        (sum, item) => sum + (item.combined_allies_hp - CASTORICE_BASE_HP) / 3,
+        0,
+      ) / hpRange.length;
+
+    return {
+      minActions: Math.min(...totalActions),
+      maxActions: Math.max(...totalActions),
+      averageActions,
+      minTeammateHp: Math.round(minTeammateHp),
+      maxTeammateHp: Math.round(maxTeammateHp),
+      avgTeammateHp: Math.round(avgTeammateHp),
+    };
+  };
+
   const lowHpRange = enhancedData.filter(
     (item) =>
       item.combined_allies_hp >= 15000 && item.combined_allies_hp <= 19000,
   );
-  const lowHpRangeAverageAction =
-    lowHpRange.reduce((sum, item) => sum + item.total_actions, 0) /
-      lowHpRange.length || 0;
-  const lowHpRangeActions = lowHpRange.map((item) => item.total_actions);
+  const lowHpStats = calculateTeammateHpStats(lowHpRange);
 
   const optimalHpRange = enhancedData.filter(
     (item) =>
       item.combined_allies_hp >= 20000 && item.combined_allies_hp <= 26000,
   );
-  const optimalHpRangeAverageAction =
-    optimalHpRange.reduce((sum, item) => sum + item.total_actions, 0) /
-      optimalHpRange.length || 0;
-  const optimalHpRangeActions = optimalHpRange.map(
-    (item) => item.total_actions,
-  );
+  const optimalHpStats = calculateTeammateHpStats(optimalHpRange);
 
   const highHpRange = enhancedData.filter(
     (item) =>
       item.combined_allies_hp >= 27000 && item.combined_allies_hp <= 33000,
   );
-  const highHpRangeAverageAction =
-    highHpRange.reduce((sum, item) => sum + item.total_actions, 0) /
-      highHpRange.length || 0;
-  const highHpRangeActions = highHpRange.map((item) => item.total_actions);
+  const highHpStats = calculateTeammateHpStats(highHpRange);
 
   const optimalHpChange = Math.abs(
-    (optimalHpRangeAverageAction - lowHpRangeAverageAction) /
-      lowHpRangeAverageAction,
+    (optimalHpStats.averageActions - lowHpStats.averageActions) /
+      lowHpStats.averageActions,
   );
   const highHpChange = Math.abs(
-    (highHpRangeAverageAction - lowHpRangeAverageAction) /
-      lowHpRangeAverageAction,
+    (highHpStats.averageActions - lowHpStats.averageActions) /
+      lowHpStats.averageActions,
   );
 
   return (
@@ -348,12 +372,17 @@ const CastoriceChart = () => {
                 <h4 className="text-red-600 font-medium mb-2">
                   Low HP Team (15k-19k HP)
                 </h4>
-                <p className="text-slate-600 text-sm">
+                <p className="text-slate-600 text-sm mb-2">
                   <strong>
-                    {Math.max(...lowHpRangeActions)}-
-                    {Math.min(...lowHpRangeActions)} total actions needed (avg{" "}
-                    {lowHpRangeAverageAction.toFixed(1)}).
-                  </strong>{" "}
+                    {lowHpStats.maxActions}-{lowHpStats.minActions} total
+                    actions needed (avg {lowHpStats.averageActions.toFixed(1)}).
+                  </strong>
+                </p>
+                <p className="text-slate-500 text-xs">
+                  Each Teammate HP (exclude Castorice):{" "}
+                  {lowHpStats.minTeammateHp.toLocaleString()}-
+                  {lowHpStats.maxTeammateHp.toLocaleString()} (avg{" "}
+                  {lowHpStats.avgTeammateHp.toLocaleString()})
                 </p>
               </div>
 
@@ -361,14 +390,20 @@ const CastoriceChart = () => {
                 <h4 className="text-emerald-600 font-medium mb-2">
                   Optimal HP Team (20k-26k HP)
                 </h4>
-                <p className="text-slate-600 text-sm">
+                <p className="text-slate-600 text-sm mb-2">
                   <strong>
-                    {Math.max(...optimalHpRangeActions)}-
-                    {Math.min(...optimalHpRangeActions)} total actions needed
-                    (avg {optimalHpRangeAverageAction.toFixed(1)}).
+                    {optimalHpStats.maxActions}-{optimalHpStats.minActions}{" "}
+                    total actions needed (avg{" "}
+                    {optimalHpStats.averageActions.toFixed(1)}).
                   </strong>{" "}
-                  {(optimalHpChange * 100).toFixed(1)}% less actions requires
+                  {(optimalHpChange * 100).toFixed(1)}% less actions required
                   than low HP Team.
+                </p>
+                <p className="text-slate-500 text-xs">
+                  Each Teammate HP (exclude Castorice):{" "}
+                  {optimalHpStats.minTeammateHp.toLocaleString()}-
+                  {optimalHpStats.maxTeammateHp.toLocaleString()} (avg{" "}
+                  {optimalHpStats.avgTeammateHp.toLocaleString()})
                 </p>
               </div>
 
@@ -376,14 +411,20 @@ const CastoriceChart = () => {
                 <h4 className="text-purple-600 font-medium mb-2">
                   High HP Team (27k-33k HP)
                 </h4>
-                <p className="text-slate-600 text-sm">
+                <p className="text-slate-600 text-sm mb-2">
                   <strong>
-                    {Math.max(...highHpRangeActions)}-
-                    {Math.min(...highHpRangeActions)} total actions needed (avg{" "}
-                    {highHpRangeAverageAction.toFixed(1)}).
+                    {highHpStats.maxActions}-{highHpStats.minActions} total
+                    actions needed (avg {highHpStats.averageActions.toFixed(1)}
+                    ).
                   </strong>{" "}
-                  {(highHpChange * 100).toFixed(1)}% less actions requires than
-                  optimal HP Team.
+                  {(highHpChange * 100).toFixed(1)}% less actions required than
+                  low HP Team.
+                </p>
+                <p className="text-slate-500 text-xs">
+                  Each Teammate HP (exclude Castorice):{" "}
+                  {highHpStats.minTeammateHp.toLocaleString()}-
+                  {highHpStats.maxTeammateHp.toLocaleString()} (avg{" "}
+                  {highHpStats.avgTeammateHp.toLocaleString()})
                 </p>
               </div>
             </div>
