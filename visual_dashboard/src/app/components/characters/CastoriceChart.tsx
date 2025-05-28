@@ -88,7 +88,7 @@ const CastoriceChart = () => {
   // Constants for calculations
   const CASTORICE_BASE_HP = 9000;
 
-  // Calculate efficiency metrics
+  // Calculate efficiency metrics and add formatted labels
   const enhancedData = data.map((item) => {
     const totalActions =
       item.skill_count_before_getting_ult + item.heal_count_before_getting_ult;
@@ -98,6 +98,8 @@ const CastoriceChart = () => {
       ...item,
       total_actions: totalActions,
       energy_per_action: energyPerAction,
+      // Add formatted label for categorical X-axis
+      hp_label: `${(item.combined_allies_hp / 1000).toFixed(0)}k`,
     };
   });
 
@@ -208,16 +210,17 @@ const CastoriceChart = () => {
           >
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis
-              dataKey="combined_allies_hp"
-              type="number"
-              domain={["dataMin", "dataMax"]}
-              tickFormatter={(value) => `${(value / 1000).toFixed(0)}k`}
+              dataKey="hp_label"
+              tick={{ fontSize: 12 }}
+              interval={0}
+              angle={-45}
+              textAnchor="end"
+              height={60}
             >
               <Label
                 value="Combined Team HP"
-                offset={-20}
+                offset={-5}
                 position="insideBottom"
-                dy={30}
               />
             </XAxis>
             <YAxis>
@@ -243,9 +246,15 @@ const CastoriceChart = () => {
                     (p) => p.dataKey === "total_actions",
                   )?.value;
 
+                  // Get the actual HP value from the data
+                  const dataPoint = enhancedData.find(
+                    (item) => item.hp_label === label,
+                  );
+                  const actualHp = dataPoint?.combined_allies_hp;
+
                   return (
                     <div className="bg-white p-3 border border-slate-200 shadow-md rounded">
-                      <p className="text-slate-700 font-medium">{`Team HP: ${Number(label).toLocaleString()}`}</p>
+                      <p className="text-slate-700 font-medium">{`Team HP: ${actualHp?.toLocaleString()}`}</p>
                       <p className="text-blue-600">{`Skills: ${skillCount}`}</p>
                       <p className="text-emerald-600">{`Heals: ${healCount}`}</p>
                       <p className="text-purple-600 font-medium">{`Total Actions: ${totalActions}`}</p>
@@ -304,16 +313,17 @@ const CastoriceChart = () => {
           >
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis
-              dataKey="combined_allies_hp"
-              type="number"
-              domain={["dataMin", "dataMax"]}
-              tickFormatter={(value) => `${(value / 1000).toFixed(0)}k`}
+              dataKey="hp_label"
+              tick={{ fontSize: 12 }}
+              interval={0}
+              angle={-45}
+              textAnchor="end"
+              height={60}
             >
               <Label
                 value="Combined Team HP"
-                offset={-20}
+                offset={-5}
                 position="insideBottom"
-                dy={30}
               />
             </XAxis>
             <YAxis tickFormatter={(value) => `${value.toFixed(0)}`}>
@@ -330,10 +340,16 @@ const CastoriceChart = () => {
 
                 if (active && payload && payload.length) {
                   const efficiency = payload[0].value;
+                  
+                  // Get the actual HP value from the data
+                  const dataPoint = enhancedData.find(
+                    (item) => item.hp_label === label,
+                  );
+                  const actualHp = dataPoint?.combined_allies_hp;
 
                   return (
                     <div className="bg-white p-3 border border-slate-200 shadow-md rounded">
-                      <p className="text-slate-700 font-medium">{`Team HP: ${Number(label).toLocaleString()}`}</p>
+                      <p className="text-slate-700 font-medium">{`Team HP: ${actualHp?.toLocaleString()}`}</p>
                       <p className="text-amber-600 font-medium">
                         {`Efficiency: ${Number(efficiency).toFixed(0)} energy/action`}
                       </p>
