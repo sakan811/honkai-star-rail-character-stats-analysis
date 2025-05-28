@@ -22,13 +22,13 @@ import {
   SpeedThresholdMetrics,
   HEALING_THRESHOLD,
   calculateSpeedMetrics,
-  formatLegendItem,
   formatNumber,
   remainingSpeedToThreshold,
 } from "./utils/hyacineUtils";
 
 const HyacineChart = () => {
-  const [speedMetrics, setSpeedMetrics] = useState<SpeedThresholdMetrics | null>(null);
+  const [speedMetrics, setSpeedMetrics] =
+    useState<SpeedThresholdMetrics | null>(null);
 
   const { data, loading, error } = useChartData<HyacineData>({
     csvPath: "/hyacine/hyacine_data.csv",
@@ -59,15 +59,15 @@ const HyacineChart = () => {
         <p className="text-sm md:text-base text-slate-700">
           This analysis explores Hyacine&apos;s unique A6 trace mechanic, which
           enhances her healing capabilities based on her Speed stat. When her
-          Speed exceeds {HEALING_THRESHOLD}, each additional point provides a 1% increase to
-          outgoing healing. The analysis tracks her Speed progression through
-          different build stages: base stats, minor traces, signature Light Cone
-          (S1), and finally with Relics and Planetary sets. This helps identify
-          optimal build paths and the potential healing bonus at each stage.
+          Speed exceeds {HEALING_THRESHOLD}, each additional point provides a 1%
+          increase to outgoing healing. The analysis tracks her Speed
+          progression through different build stages: base stats, minor traces,
+          signature Light Cone (S1), and finally with Relics and Planetary sets.
+          This helps identify optimal build paths and the potential healing
+          bonus at each stage.
         </p>
       </div>
 
-      {/* Increased height and adjusted margins to fix overlap */}
       <ResponsiveContainer width="100%" height={600}>
         <LineChart
           data={data}
@@ -112,10 +112,7 @@ const HyacineChart = () => {
                     )}
                     {Object.entries({
                       [baseSpeed]: ["Base Speed", "blue"],
-                      [withTracesSpeed]: [
-                        "After Minor Traces",
-                        "purple",
-                      ],
+                      [withTracesSpeed]: ["After Minor Traces", "purple"],
                       [withRelicsSpeed]: [
                         "After Relics and Planetary Sets",
                         "rose",
@@ -153,12 +150,12 @@ const HyacineChart = () => {
             activeDot={{ r: 6 }}
           />
 
-          <ReferenceLine x={HEALING_THRESHOLD} stroke="red" strokeDasharray="3 3" />
           <ReferenceLine
-            x={baseSpeed}
-            stroke="blue"
+            x={HEALING_THRESHOLD}
+            stroke="red"
             strokeDasharray="3 3"
           />
+          <ReferenceLine x={baseSpeed} stroke="blue" strokeDasharray="3 3" />
           <ReferenceLine
             x={withTracesSpeed}
             stroke="purple"
@@ -175,18 +172,17 @@ const HyacineChart = () => {
             strokeDasharray="3 3"
           />
 
-          {/* Added more vertical space using bottom margin and moved Legend position */}
           <Legend
             verticalAlign="bottom"
             height={80}
             wrapperStyle={{ paddingTop: 20, bottom: 0 }}
             payload={[
-              formatLegendItem(`Healing Threshold (${HEALING_THRESHOLD})`, "line", "red"),
-              formatLegendItem(`Base Speed (${baseSpeed})`, "line", "blue"),
-              formatLegendItem(`After Minor Traces (${withTracesSpeed})`, "line", "purple"),
-              formatLegendItem(`After Relics and Planetary Sets (${formatNumber(withRelicsSpeed)})`, "line", "darkred"),
-              formatLegendItem(`After S1 Lightcone (${formatNumber(withLightconeSpeed)})`, "line", "orange"),
-              formatLegendItem("Increased Healing", "line", "#3edf5d"),
+              { value: `Healing Threshold (${HEALING_THRESHOLD})`, type: "line", color: "red" },
+              { value: `Base Speed (${baseSpeed})`, type: "line", color: "blue" },
+              { value: `After Minor Traces (${withTracesSpeed})`, type: "line", color: "purple" },
+              { value: `After Relics and Planetary Sets (${formatNumber(withRelicsSpeed)})`, type: "line", color: "darkred" },
+              { value: `After S1 Lightcone (${formatNumber(withLightconeSpeed)})`, type: "line", color: "orange" },
+              { value: "Increased Healing", type: "line", color: "#3edf5d" },
             ]}
           />
         </LineChart>
@@ -202,10 +198,10 @@ const HyacineChart = () => {
             <div>
               <h3 className="font-medium text-slate-700">Speed Progression</h3>
               <p className="text-slate-600 mb-2">
-                Starting with a base speed of {baseSpeed}, Hyacine&apos;s
-                unique A6 trace mechanic requires careful investment to surpass
-                the {HEALING_THRESHOLD} speed threshold. Each component of her build contributes
-                differently to reaching optimal healing output:
+                Starting with a base speed of {baseSpeed}, Hyacine&apos;s unique
+                A6 trace mechanic requires careful investment to surpass the{" "}
+                {HEALING_THRESHOLD} speed threshold. Each component of her build
+                contributes differently to reaching optimal healing output:
               </p>
             </div>
 
@@ -217,8 +213,7 @@ const HyacineChart = () => {
                 <p className="text-slate-600">
                   Minor traces contribute {speedIncreases.fromTraces} speed
                   points ({(traceSpeedGain * 100).toFixed(1)}% speed increased).
-                  This initial investment brings her to {withTracesSpeed}{" "}
-                  speed,
+                  This initial investment brings her to {withTracesSpeed} speed,
                   {` leaving ${formatNumber(remainingSpeedToThreshold(withTracesSpeed))} speed until healing bonus activation.`}
                 </p>
               </div>
@@ -231,10 +226,10 @@ const HyacineChart = () => {
                   Relics and planetary sets add additional{" "}
                   {speedIncreases.fromRelics.toFixed(1)} speed (
                   {(relicsSpeedGain * 100).toFixed(1)}% speed increased),
-                  resulting in {withRelicsSpeed.toFixed(1)} speed. This
-                  includes 2-piece and 4-piece bonus of Warrior Goddess of Sun
-                  and Thunder with 25.02 speed bonus from Feet, and 2-piece
-                  bonus of Giant Tree of Rapt Brooding set.
+                  resulting in {withRelicsSpeed.toFixed(1)} speed. This includes
+                  2-piece and 4-piece bonus of Warrior Goddess of Sun and
+                  Thunder with 25.02 speed bonus from Feet, and 2-piece bonus of
+                  Giant Tree of Rapt Brooding set.
                 </p>
               </div>
 
@@ -246,10 +241,10 @@ const HyacineChart = () => {
                   Her signature Light Cone (S1) provides{" "}
                   {speedIncreases.fromLightcone.toFixed(1)} additional speed (
                   {(lightconeSpeedGain * 100).toFixed(1)}% speed increased),
-                  reaching {withLightconeSpeed.toFixed(1)} total speed.
-                  Hyacine still requires additional{" "}
-                  {(remainingSpeedToThreshold(withLightconeSpeed)).toFixed(1)} speed to
-                  activate the healing bonus.
+                  reaching {withLightconeSpeed.toFixed(1)} total speed. Hyacine
+                  still requires additional{" "}
+                  {remainingSpeedToThreshold(withLightconeSpeed).toFixed(1)}{" "}
+                  speed to activate the healing bonus.
                 </p>
               </div>
             </div>
