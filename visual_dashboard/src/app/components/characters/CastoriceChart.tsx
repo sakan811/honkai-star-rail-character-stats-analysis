@@ -30,7 +30,7 @@ import {
 const CastoriceChart = () => {
   const [enhancedData, setEnhancedData] = useState<EnhancedCastoriceData[]>([]);
 
-  const { data, loading, error } = useChartData<CastoriceData>({
+  const { loading, error } = useChartData<CastoriceData>({
     csvPath: "/castorice/castorice_data.csv",
     onDataProcessed: (processedData) => {
       setEnhancedData(enhanceData(processedData));
