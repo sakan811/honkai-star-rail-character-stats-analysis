@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import {
   LineChart,
   Line,
@@ -13,154 +13,40 @@ import {
   AreaChart,
   Area,
 } from "recharts";
-import Papa from "papaparse";
-
-// Define the error type for Papa.parse
-type ParseError = {
-  message: string;
-  code?: string;
-  type?: string;
-};
-
-type CastoriceData = {
-  character: string;
-  combined_allies_hp: number;
-  skill_count_before_getting_ult: number;
-  heal_count_before_getting_ult: number;
-};
+import {
+  useChartData,
+  LoadingSpinner,
+  ErrorDisplay,
+} from "../../hooks/useChartData";
+import {
+  CastoriceData,
+  EnhancedCastoriceData,
+  enhanceData,
+  getHpRangeStats,
+  CASTORICE_BASE_HP,
+  NEWBUD_THRESHOLD,
+} from "./utils/castoriceUtils";
 
 const CastoriceChart = () => {
-  const [data, setData] = useState<CastoriceData[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [enhancedData, setEnhancedData] = useState<EnhancedCastoriceData[]>([]);
 
-  useEffect(() => {
-    const fetchAndParseData = async () => {
-      try {
-        const response = await fetch("/castorice/castorice_data.csv");
-        const csvText = await response.text();
-
-        Papa.parse<CastoriceData>(csvText, {
-          header: true,
-          dynamicTyping: true,
-          skipEmptyLines: true,
-          complete: (results) => {
-            if (results.data.length > 0) {
-              setData(results.data);
-            }
-            setLoading(false);
-          },
-          error: (error: ParseError) => {
-            setError(`Failed to parse CSV: ${error.message}`);
-            setLoading(false);
-          },
-        });
-      } catch (err) {
-        setError(
-          `Failed to fetch CSV: ${err instanceof Error ? err.message : String(err)}`,
-        );
-        setLoading(false);
-      }
-    };
-
-    fetchAndParseData();
-  }, []);
-
-  if (loading) {
-    return (
-      <div
-        className="flex items-center justify-center h-64"
-        data-testid="loading-spinner"
-      >
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="text-red-500 p-4 border border-red-300 rounded bg-red-50">
-        {error}
-      </div>
-    );
-  }
-
-  // Constants for calculations
-  const CASTORICE_BASE_HP = 9000;
-
-  // Calculate efficiency metrics and add formatted labels
-  const enhancedData = data.map((item) => {
-    const totalActions =
-      item.skill_count_before_getting_ult + item.heal_count_before_getting_ult;
-    const energyPerAction = 34000 / totalActions;
-
-    return {
-      ...item,
-      total_actions: totalActions,
-      energy_per_action: energyPerAction,
-      // Add formatted label for categorical X-axis
-      hp_label: `${(item.combined_allies_hp / 1000).toFixed(0)}k`,
-    };
+  const { data, loading, error } = useChartData<CastoriceData>({
+    csvPath: "/castorice/castorice_data.csv",
+    onDataProcessed: (processedData) => {
+      setEnhancedData(enhanceData(processedData));
+    },
   });
 
-  // Helper function to calculate teammate HP ranges
-  const calculateTeammateHpStats = (hpRange: typeof enhancedData) => {
-    const totalActions = hpRange.map((item) => item.total_actions);
-    const averageActions =
-      hpRange.reduce((sum, item) => sum + item.total_actions, 0) /
-        hpRange.length || 0;
-    const minTeammateHp = Math.min(
-      ...hpRange.map(
-        (item) => (item.combined_allies_hp - CASTORICE_BASE_HP) / 3,
-      ),
-    );
-    const maxTeammateHp = Math.max(
-      ...hpRange.map(
-        (item) => (item.combined_allies_hp - CASTORICE_BASE_HP) / 3,
-      ),
-    );
-    const avgTeammateHp =
-      hpRange.reduce(
-        (sum, item) => sum + (item.combined_allies_hp - CASTORICE_BASE_HP) / 3,
-        0,
-      ) / hpRange.length;
+  if (loading) return <LoadingSpinner />;
+  if (error) return <ErrorDisplay error={error} />;
 
-    return {
-      minActions: Math.min(...totalActions),
-      maxActions: Math.max(...totalActions),
-      averageActions,
-      minTeammateHp: Math.round(minTeammateHp),
-      maxTeammateHp: Math.round(maxTeammateHp),
-      avgTeammateHp: Math.round(avgTeammateHp),
-    };
-  };
-
-  const lowHpRange = enhancedData.filter(
-    (item) =>
-      item.combined_allies_hp >= 15000 && item.combined_allies_hp <= 19000,
-  );
-  const lowHpStats = calculateTeammateHpStats(lowHpRange);
-
-  const optimalHpRange = enhancedData.filter(
-    (item) =>
-      item.combined_allies_hp >= 20000 && item.combined_allies_hp <= 26000,
-  );
-  const optimalHpStats = calculateTeammateHpStats(optimalHpRange);
-
-  const highHpRange = enhancedData.filter(
-    (item) =>
-      item.combined_allies_hp >= 27000 && item.combined_allies_hp <= 33000,
-  );
-  const highHpStats = calculateTeammateHpStats(highHpRange);
-
-  const optimalHpChange = Math.abs(
-    (optimalHpStats.averageActions - lowHpStats.averageActions) /
-      lowHpStats.averageActions,
-  );
-  const highHpChange = Math.abs(
-    (highHpStats.averageActions - lowHpStats.averageActions) /
-      lowHpStats.averageActions,
-  );
+  const {
+    lowHpStats,
+    optimalHpStats,
+    highHpStats,
+    optimalHpChange,
+    highHpChange,
+  } = getHpRangeStats(enhancedData);
 
   return (
     <div className="w-full bg-white rounded-lg shadow-lg p-4 md:p-6">
@@ -183,7 +69,8 @@ const CastoriceChart = () => {
         </h3>
         <div className="text-sm text-blue-700 space-y-2">
           <p>
-            • Ultimate threshold: <strong>34,000 Newbud energy</strong>
+            • Ultimate threshold:{" "}
+            <strong>{NEWBUD_THRESHOLD.toLocaleString()} Newbud energy</strong>
           </p>
           <p>
             • Gallagher rotationally heals each ally for{" "}
@@ -193,7 +80,8 @@ const CastoriceChart = () => {
             • <strong>Team Composition:</strong>
           </p>
           <p className="ml-4">
-            Combined Team HP = Castorice (9,000 base HP) + 3 equal-HP allies
+            Combined Team HP = Castorice ({CASTORICE_BASE_HP.toLocaleString()}{" "}
+            base HP) + 3 equal-HP allies
           </p>
         </div>
       </div>
@@ -259,7 +147,7 @@ const CastoriceChart = () => {
                       <p className="text-emerald-600">{`Heals: ${healCount}`}</p>
                       <p className="text-purple-600 font-medium">{`Total Actions: ${totalActions}`}</p>
                       <p className="text-slate-500 text-sm mt-1">
-                        {`Efficiency: ${(34000 / Number(totalActions)).toFixed(0)} energy/action`}
+                        {`Efficiency: ${(NEWBUD_THRESHOLD / Number(totalActions)).toFixed(0)} energy/action`}
                       </p>
                     </div>
                   );
@@ -340,7 +228,7 @@ const CastoriceChart = () => {
 
                 if (active && payload && payload.length) {
                   const efficiency = payload[0].value;
-                  
+
                   // Get the actual HP value from the data
                   const dataPoint = enhancedData.find(
                     (item) => item.hp_label === label,
