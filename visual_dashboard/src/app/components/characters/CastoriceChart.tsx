@@ -219,7 +219,7 @@ const CastoriceChart = () => {
             >
               <Label
                 value="Combined Team HP"
-                offset={-5}
+                offset={-50}
                 position="insideBottom"
               />
             </XAxis>
