@@ -19,7 +19,7 @@ export default async () => {
           classNameStrategy: "non-scoped",
         },
       },
-      setupFiles: ["./tests/setup.ts"],
+      setupFiles: ["./__tests__/setup.ts"],
       exclude: ["**/node_modules/**", "**/.next/**"],
     },
     resolve: {
