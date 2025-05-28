@@ -177,11 +177,31 @@ const HyacineChart = () => {
             height={80}
             wrapperStyle={{ paddingTop: 20, bottom: 0 }}
             payload={[
-              { value: `Healing Threshold (${HEALING_THRESHOLD})`, type: "line", color: "red" },
-              { value: `Base Speed (${baseSpeed})`, type: "line", color: "blue" },
-              { value: `After Minor Traces (${withTracesSpeed})`, type: "line", color: "purple" },
-              { value: `After Relics and Planetary Sets (${formatNumber(withRelicsSpeed)})`, type: "line", color: "darkred" },
-              { value: `After S1 Lightcone (${formatNumber(withLightconeSpeed)})`, type: "line", color: "orange" },
+              {
+                value: `Healing Threshold (${HEALING_THRESHOLD})`,
+                type: "line",
+                color: "red",
+              },
+              {
+                value: `Base Speed (${baseSpeed})`,
+                type: "line",
+                color: "blue",
+              },
+              {
+                value: `After Minor Traces (${withTracesSpeed})`,
+                type: "line",
+                color: "purple",
+              },
+              {
+                value: `After Relics and Planetary Sets (${formatNumber(withRelicsSpeed)})`,
+                type: "line",
+                color: "darkred",
+              },
+              {
+                value: `After S1 Lightcone (${formatNumber(withLightconeSpeed)})`,
+                type: "line",
+                color: "orange",
+              },
               { value: "Increased Healing", type: "line", color: "#3edf5d" },
             ]}
           />
