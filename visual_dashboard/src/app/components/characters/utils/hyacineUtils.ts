@@ -25,7 +25,9 @@ export type SpeedThresholdMetrics = {
 
 export const HEALING_THRESHOLD = 200;
 
-export function calculateSpeedMetrics(data: HyacineData[]): SpeedThresholdMetrics | null {
+export function calculateSpeedMetrics(
+  data: HyacineData[],
+): SpeedThresholdMetrics | null {
   if (data.length === 0) return null;
 
   const firstRow = data[0];
@@ -42,7 +44,8 @@ export function calculateSpeedMetrics(data: HyacineData[]): SpeedThresholdMetric
 
   const traceSpeedGain = (withTracesSpeed - baseSpeed) / baseSpeed;
   const relicsSpeedGain = (withRelicsSpeed - withTracesSpeed) / withTracesSpeed;
-  const lightconeSpeedGain = (withLightconeSpeed - withRelicsSpeed) / withLightconeSpeed;
+  const lightconeSpeedGain =
+    (withLightconeSpeed - withRelicsSpeed) / withLightconeSpeed;
 
   return {
     baseSpeed,
