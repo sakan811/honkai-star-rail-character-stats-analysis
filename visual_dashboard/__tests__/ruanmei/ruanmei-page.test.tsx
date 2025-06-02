@@ -73,7 +73,7 @@ describe("RuanMei Page", () => {
     // Check A6 mechanics section
     expect(screen.getByText("❄️ A6 Trace Mechanics")).toBeTruthy();
     expect(screen.getByText(/32.0% damage/)).toBeTruthy();
-    expect(screen.getByText(/120% Break Effect/)).toBeTruthy();
+    expect(screen.getAllByText(/120% Break Effect/)).toBeTruthy();
   });
 
   it("should have working back button", async () => {
