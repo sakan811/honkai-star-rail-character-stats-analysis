@@ -16,8 +16,10 @@ def main() -> None:
     # Get the workspace root directory (parent of the hsr_simulations directory)
     # This assumes the script is in hsr_simulations/main.py
     current_file = Path(__file__).resolve()
-    workspace_root = current_file.parent.parent  # Go up two levels from hsr_simulations/main.py
-    
+    workspace_root = (
+        current_file.parent.parent
+    )  # Go up two levels from hsr_simulations/main.py
+
     # Create the base directory path relative to workspace root
     base_dir = workspace_root / "visual_dashboard" / "public"
     base_dir.mkdir(parents=True, exist_ok=True)
