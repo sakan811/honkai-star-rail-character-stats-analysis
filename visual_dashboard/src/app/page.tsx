@@ -33,6 +33,11 @@ export default function Home() {
               Castorice
             </button>
           </Link>
+          <Link href="/characters/ruanmei">
+            <button className="bg-blue-400 hover:bg-blue-600 text-slate-50 font-semibold rounded-lg px-8 py-3 text-lg shadow transition-colors duration-200">
+              Ruan Mei
+            </button>
+          </Link>
         </div>
       </main>
     </div>

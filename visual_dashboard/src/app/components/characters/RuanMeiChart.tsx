@@ -58,24 +58,24 @@ const RuanMeiChart = () => {
       <div className="mb-4 md:mb-6">
         <h2 className="text-lg font-semibold text-slate-800 mb-2">Overview</h2>
         <p className="text-sm md:text-base text-slate-700">
-          Ruan Mei&apos;s A6 trace enhances her skill damage based on Break
+          Ruan Mei&apos;s A6 trace enhances her skill effect that provides all allies&apos; damage increases based on Break
           Effect investment. Her base skill provides a{" "}
           {formatDamageIncrease(baseDamage)} damage increase. Once Break Effect
           exceeds {thresholdPercentage}%, her A6 trace activates, granting an
           additional {formatDamageIncrease(damagePerTenPercent)} damage increase
           for every 10% Break Effect above the threshold, capping at{" "}
-          {formatDamageIncrease(maxAdditionalDamage)}
-          additional damage. This analysis explores optimal Break Effect
+          {formatDamageIncrease(maxAdditionalDamage)}{" "}
+          all allies&apos; damage increases. This analysis explores optimal Break Effect
           investment for maximizing her damage contribution.
         </p>
       </div>
 
       {/* Analysis Parameters */}
-      <div className="mb-6 bg-rose-50 border border-rose-200 rounded-lg p-4">
-        <h3 className="text-lg font-semibold text-rose-800 mb-2">
-          🌸 A6 Trace Mechanics
+      <div className="mb-6 bg-blue-50 border border-blue-200 rounded-lg p-4">
+        <h3 className="text-lg font-semibold text-blue-800 mb-2">
+          ❄️ A6 Trace Mechanics
         </h3>
-        <div className="text-sm text-rose-700 space-y-2">
+        <div className="text-sm text-blue-700 space-y-2">
           <p>
             • Base skill damage increase:{" "}
             <strong>{formatDamageIncrease(baseDamage)}</strong>
@@ -94,7 +94,7 @@ const RuanMeiChart = () => {
           </p>
           <p>
             • Maximum A6 bonus:{" "}
-            <strong>{formatDamageIncrease(maxAdditionalDamage)}</strong>
+            <strong>{formatDamageIncrease(maxAdditionalDamage)}</strong>{" "}
             (reached at{" "}
             {formatBreakEffect(
               (maxAdditionalDamage / damagePerTenPercent) * 0.1 +
@@ -106,21 +106,21 @@ const RuanMeiChart = () => {
       </div>
 
       {/* Primary Chart - Total Damage Scaling */}
-      <div className="mb-8">
+      <div className="mb-4">
         <h3 className="text-lg font-semibold text-slate-700 mb-4">
           Skill Damage Scaling by Break Effect
         </h3>
         <ResponsiveContainer width="100%" height={500}>
           <AreaChart
             data={data}
-            margin={{ top: 30, right: 30, left: 60, bottom: 80 }}
+            margin={{ top: 30, right: 30, left: 60, bottom: 60 }}
           >
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis
               dataKey="break_effect_percentage"
               type="number"
               domain={["dataMin", "dataMax"]}
-              tickFormatter={formatBreakEffect}
+              tickFormatter={(value) => formatBreakEffect(value / 100)}
             >
               <Label
                 value="Break Effect"
@@ -147,15 +147,15 @@ const RuanMeiChart = () => {
 
                 if (active && payload && payload.length) {
                   const breakEffect = Number(label);
-                  const totalDamage = payload.find(
-                    (p) => p.dataKey === "total_skill_dmg_increase",
-                  )?.value;
                   const baseDamage = payload.find(
                     (p) => p.dataKey === "base_skill_dmg_increase",
                   )?.value;
                   const additionalDamage = payload.find(
                     (p) => p.dataKey === "additional_dmg_from_a6",
                   )?.value;
+                  
+                  // Calculate total from base + additional damage
+                  const totalDamage = Number(baseDamage || 0) + Number(additionalDamage || 0);
 
                   return (
                     <div className="bg-white p-3 border border-slate-200 shadow-md rounded">
@@ -222,7 +222,7 @@ const RuanMeiChart = () => {
             <Legend
               verticalAlign="bottom"
               height={60}
-              wrapperStyle={{ paddingTop: 20 }}
+              wrapperStyle={{ paddingTop: 60 }}
               payload={[
                 { value: "Base Damage", type: "rect", color: "#3b82f6" },
                 { value: "A6 Bonus", type: "rect", color: "#ec4899" },
@@ -339,10 +339,6 @@ const RuanMeiChart = () => {
                 <p>
                   • <strong>Maximum damage:</strong> 180% Break Effect for full
                   A6 potential
-                </p>
-                <p>
-                  • Beyond 180%, prioritize Speed, Effect Hit Rate, or defensive
-                  stats
                 </p>
               </div>
             </div>
