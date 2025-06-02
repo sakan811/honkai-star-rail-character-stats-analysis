@@ -58,15 +58,16 @@ const RuanMeiChart = () => {
       <div className="mb-4 md:mb-6">
         <h2 className="text-lg font-semibold text-slate-800 mb-2">Overview</h2>
         <p className="text-sm md:text-base text-slate-700">
-          Ruan Mei&apos;s A6 trace enhances her skill effect that provides all allies&apos; damage increases based on Break
-          Effect investment. Her base skill provides a{" "}
-          {formatDamageIncrease(baseDamage)} damage increase. Once Break Effect
-          exceeds {thresholdPercentage}%, her A6 trace activates, granting an
-          additional {formatDamageIncrease(damagePerTenPercent)} damage increase
-          for every 10% Break Effect above the threshold, capping at{" "}
-          {formatDamageIncrease(maxAdditionalDamage)}{" "}
-          all allies&apos; damage increases. This analysis explores optimal Break Effect
-          investment for maximizing her damage contribution.
+          Ruan Mei&apos;s A6 trace enhances her skill effect that provides all
+          allies&apos; damage increases based on Break Effect investment. Her
+          base skill provides a {formatDamageIncrease(baseDamage)} damage
+          increase. Once Break Effect exceeds {thresholdPercentage}%, her A6
+          trace activates, granting an additional{" "}
+          {formatDamageIncrease(damagePerTenPercent)} damage increase for every
+          10% Break Effect above the threshold, capping at{" "}
+          {formatDamageIncrease(maxAdditionalDamage)} all allies&apos; damage
+          increases. This analysis explores optimal Break Effect investment for
+          maximizing her damage contribution.
         </p>
       </div>
 
@@ -153,9 +154,10 @@ const RuanMeiChart = () => {
                   const additionalDamage = payload.find(
                     (p) => p.dataKey === "additional_dmg_from_a6",
                   )?.value;
-                  
+
                   // Calculate total from base + additional damage
-                  const totalDamage = Number(baseDamage || 0) + Number(additionalDamage || 0);
+                  const totalDamage =
+                    Number(baseDamage || 0) + Number(additionalDamage || 0);
 
                   return (
                     <div className="bg-white p-3 border border-slate-200 shadow-md rounded">
