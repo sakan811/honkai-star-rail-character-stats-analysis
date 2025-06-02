@@ -1,3 +1,4 @@
+from simulations.characters.harmony.ruan_mei import RuanMei
 from simulations.characters.remembrance.castorice import Castorice
 from simulations.characters.remembrance.hyacine import Hyacine
 from simulations.data_transformer import output_df
@@ -11,7 +12,7 @@ logger = get_default_logger()
 
 def main() -> None:
     # Initialize characters
-    character_list: list[Character] = [Hyacine(), Castorice()]
+    character_list: list[Character] = [Hyacine(), Castorice(), RuanMei()]
 
     # Get the workspace root directory (parent of the hsr_simulations directory)
     # This assumes the script is in hsr_simulations/main.py

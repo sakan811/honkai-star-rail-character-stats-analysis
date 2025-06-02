@@ -3,7 +3,7 @@ from simulations.characters.base_character import Character
 
 class RuanMei(Character):
     START_BREAK_EFFECT: float = 1.0
-    END_BREAK_EFFECT: float = 3.0
+    END_BREAK_EFFECT: float = 2.0
     BASE_SKILL_DMG_MULT: float = 0.32
     A6_BREAK_EFFECT_THRESHOLD: float = 1.2  # 120%
     A6_DMG_PER_10_PERCENT: float = 0.06  # 6% per 10% break effect

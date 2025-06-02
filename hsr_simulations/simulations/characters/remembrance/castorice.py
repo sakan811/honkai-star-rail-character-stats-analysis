@@ -19,8 +19,9 @@ class Castorice(Character):
     GALLAGHER_HEAL_AMOUNT = 1600
     SKILL_HP_CONSUMPTION_RATE = 0.30  # 30% of current HP consumed per skill
 
-    def __init__(self):
-        self.current_combined_allies_hp = 0
+    def __init__(self) -> None:
+        super().__init__()
+        self.current_combined_allies_hp = 0.0
 
     def calculate_allies_hp_vs_newbud(self) -> dict[str, list[str | float]]:
         """
@@ -44,14 +45,14 @@ class Castorice(Character):
         for base_combined_hp in range(
             self.MIN_COMBINED_ALLIES_HP, self.MAX_COMBINED_ALLIES_HP + 1, 1000
         ):
-            current_newbud = 0
+            current_newbud = 0.0
             skill_counter = 0
             heal_counter = 0
 
             # Initialize team HP (3 equal allies + Castorice)
             ally_hp = (base_combined_hp - self.CASTORICE_BASE_HP) / 3
             team = {
-                "castorice": self.CASTORICE_BASE_HP,
+                "castorice": float(self.CASTORICE_BASE_HP),
                 "ally1": ally_hp,
                 "ally2": ally_hp,
                 "ally3": ally_hp,
@@ -64,7 +65,7 @@ class Castorice(Character):
             # Simulate until ultimate is ready
             while current_newbud < self.NEWBUD_REQUIRED:
                 # Castorice uses skill: consume 30% of each ally's current HP
-                hp_consumed_total = 0
+                hp_consumed_total = 0.0
                 for ally in team:
                     hp_consumed = team[ally] * self.SKILL_HP_CONSUMPTION_RATE
                     hp_consumed_total += hp_consumed
