@@ -20,4 +20,20 @@ vi.mock("next/font/google", () => ({
   }),
 }));
 
-// Don't use regex patterns with vi.mock - it only accepts string paths
+// Mock ResizeObserver for Recharts
+global.ResizeObserver = vi.fn().mockImplementation(() => ({
+  observe: vi.fn(),
+  unobserve: vi.fn(),
+  disconnect: vi.fn(),
+}));
+
+// Mock fetch for CSV data loading
+global.fetch = vi.fn();
+
+// Mock window.fs for file reading (used in some components)
+Object.defineProperty(window, 'fs', {
+  value: {
+    readFile: vi.fn(),
+  },
+  writable: true,
+});
