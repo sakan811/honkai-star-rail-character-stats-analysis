@@ -6,9 +6,9 @@ import RuanMeiChart from "../../components/characters/RuanMeiChart";
 export default function RuanMeiPage() {
   return (
     <ChartPageLayout
-      title="Ruan Mei A6 Break Effect Damage Analysis"
-      buttonColor="bg-rose-400"
-      hoverColor="hover:bg-rose-600"
+      title="Ruan Mei A6 Trace Break Effect Analysis"
+      buttonColor="bg-blue-400"
+      hoverColor="hover:bg-blue-600"
     >
       <RuanMeiChart />
     </ChartPageLayout>
